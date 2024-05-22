@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  web:
+    image: white-cloud-api
+    build: ./api
+    container_name: white-cloud-api
+    tty: true
+    command: sh ./startproject.sh
+    ports:
+      - 8000:8000
+    volumes:
+      - ./api/src:/api/src/

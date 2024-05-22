@@ -1,0 +1,22 @@
+{
+    "name": "white-cloud-api-container",
+    "service": "white-cloud-api",
+    "workspaceFolder": "/api",
+    "dockerComposeFile": "../../docker-compose.yml",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.debugpy",
+                "ms-python.vscode-pylance",
+                "ms-python.isort",
+                "donjayamanne.python-extension-pack",
+                "kevinrose.vsc-python-indent",
+
+                "ecmel.vscode-html-css",
+                "christian-kohler.path-intellisense",
+                "formulahendry.auto-rename-tag"
+            ]
+        }
+    }
+}
