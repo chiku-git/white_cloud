@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  web:
+  api:
     image: white-cloud-api
     build: ./api
     container_name: white-cloud-api
@@ -10,4 +10,4 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./api/src:/api/src/
+      - ./api/src:/api/src

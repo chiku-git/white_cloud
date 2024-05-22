@@ -1,6 +1,6 @@
 {
     "name": "white-cloud-api-container",
-    "service": "white-cloud-api",
+    "service": "api",
     "workspaceFolder": "/api",
     "dockerComposeFile": "../../docker-compose.yml",
     "customizations": {
