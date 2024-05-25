@@ -13,6 +13,9 @@
                 "donjayamanne.python-extension-pack",
                 "kevinrose.vsc-python-indent",
 
+                "ms-python.black-formatter",
+                "ms-python.flake8",
+
                 "ecmel.vscode-html-css",
                 "christian-kohler.path-intellisense",
                 "formulahendry.auto-rename-tag"
