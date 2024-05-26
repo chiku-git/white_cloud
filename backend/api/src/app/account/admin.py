@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import User
+
+from .models import AuthCode, User
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -43,4 +44,31 @@ class UserAdmin(admin.ModelAdmin):
     ]
 
 
+class AuthCodeAdmin(admin.ModelAdmin):
+    readonly_fields = ("created_at",)
+    fieldsets = [
+        (
+            "基本情報",
+            {
+                "fields": [
+                    "email",
+                    "auth_code",
+                    "email_send_count",
+                    "authentication_tries",
+                    "is_locked",
+                ]
+            },
+        ),
+        (
+            "システム情報",
+            {
+                "fields": [
+                    "created_at",
+                ]
+            },
+        ),
+    ]
+
+
 admin.site.register(User, UserAdmin)
+admin.site.register(AuthCode, AuthCodeAdmin)
