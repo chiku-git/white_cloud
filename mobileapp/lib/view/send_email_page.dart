@@ -48,41 +48,43 @@ class _EmailFormField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final addressState = ref.watch(emailAddressStateProvider);
+    final vo = ref.watch(emailVOProvider);
 
     return TextFormField(
       decoration: InputDecoration(
           labelText: Strings.emailAddress,
           border: const OutlineInputBorder(),
-          suffixIcon: addressState.hasError
+          suffixIcon: vo.state.hasError
               ? const Icon(Icons.error)
-              : null
+              : null,
+          errorMaxLines: 3,
+          errorText: _getErrorMessage(vo)
       ),
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.emailAddress,
-      validator: (address) {
-        if (address == null) return null;
-
-        final state = EmailAddressValidator(target: address).validate();
-
-        // (!) 非同期で更新しないとエラーになる
-        Future(() {
-          ref.read(emailAddressStateProvider.notifier).update(state);
-        });
-
-        switch(state) {
-          case EmailAddressState.empty:
-            // 空
-            return null;
-          case EmailAddressState.invalid:
-            // 無効なメールアドレス
-            return Strings.inputValidEmailAddress;
-          case EmailAddressState.valid:
-            // 正常なメールアドレス
-            return null;
-        }
+      onChanged: (email) {
+        ref.read(emailVOProvider.notifier).validate(email: email);
       },
     );
+  }
+
+  String? _getErrorMessage(EmailVO vo) {
+    switch(vo.state) {
+      case EmailState.empty:
+        // 空
+        return null;
+      case EmailState.invalidFormat:
+        // 無効なメールアドレスフォーマット
+        return Strings.inputValidEmailAddress;
+      case EmailState.invalidEmail:
+        // 無効なメールアドレス（認証コード送信APIでエラーとなった場合）
+        return vo.sendAuthCodeError?.message;
+      case EmailState.valid:
+        // 正常なメールアドレス
+        return null;
+      default:
+        return null;
+    }
   }
 }
 
@@ -91,11 +93,17 @@ class _SubmitButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final addressState = ref.watch(emailAddressStateProvider);
-
+    final vo = ref.watch(emailVOProvider);
     return OutlinedButton(
-        onPressed: addressState.isValid ? () {
-          Navigator.pushNamed(context, AuthEmailPage.path);
+        onPressed: vo.state.isValid ? () {
+          ref.read(emailVOProvider.notifier).sendAuthCode(
+              onSuccess: (res) {
+                Navigator.pushNamed(context, AuthEmailPage.path);
+              },
+              onFailure: (error) {
+                // NOP
+              }
+          );
         } : null,
         child: const Text(Strings.sendEmail)
     );

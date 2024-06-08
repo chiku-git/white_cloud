@@ -1,30 +1,40 @@
 class EmailAddressValidator {
-  final String target;
+  final List<String> _invalidEmails = [];
 
-  EmailAddressValidator({required this.target});
+  /// メールアドレスを検証する
+  EmailState validate({required String email}) {
+    final hasMatch = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    ).hasMatch(email);
 
-  EmailAddressState validate() {
-    final isValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',).hasMatch(target);
-
-    if (target.isEmpty) {
+    if (email.isEmpty) {
       // 空
-      return EmailAddressState.empty;
-    } else if (!isValid) {
-      // 不正
-      return EmailAddressState.invalid;
+      return EmailState.empty;
+    } else if (!hasMatch) {
+      // フォーマット不正
+      return EmailState.invalidFormat;
+    } else if (_invalidEmails.contains(email)) {
+      // APIエラーで使用できないメールアドレス
+      return EmailState.invalidEmail;
     } else {
       // 正常
-      return EmailAddressState.valid;
+      return EmailState.valid;
     }
+  }
+
+  /// 使用できないメールアドレスを追加する
+  addInvalidEmail({required String email}) {
+    _invalidEmails.add(email);
   }
 }
 
-enum EmailAddressState {
+enum EmailState {
   valid,
   empty,
-  invalid
+  invalidFormat,
+  invalidEmail,
   ;
 
   get isValid => this == valid;
-  get hasError => this == invalid;
+  get hasError => this == invalidFormat || this == invalidEmail;
 }

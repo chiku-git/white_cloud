@@ -22,4 +22,10 @@ class Strings {
   static const introMessage = "メッセージ";
   static const aster = "*";
   static const register = "登録する";
+
+  // エラー
+  static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";
+  static const timeoutErrorMessage = "申し訳ありませんが、サーバーへのリクエストがタイムアウトしました。しばらく待ってから再度お試しください。";
+  static const connectionErrorMessage = "申し訳ありませんが、サーバーへの接続に失敗しました。インターネット接続を確認して、再度お試しください。";
+  static const unexpectedErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";
 }
