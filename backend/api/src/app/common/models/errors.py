@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from rest_framework import status
 
 
@@ -11,7 +12,16 @@ class BusinessError(BaseException):
 class MailAddressLockedError(BusinessError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     code = "ERR_EMAIL_ADDRESS_LOCKED"
-    message = "このメールアドレスは使用できません。別のメールアドレスで認証を行ってください。"
+    message = (
+        "このメールアドレスは使用できません。別のメールアドレスで認証を行ってください。"
+    )
+    detail = message
+
+
+class MailAddressExistsError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_EMAIL_ADDRESS_HAS_RESISTERD"
+    message = "このメールアドレスは既に登録されています。別のメールアドレスで認証を行ってください。"
     detail = message
 
 
@@ -37,4 +47,24 @@ class InvalidFormatError(BusinessError):
             f"{target}のフォーマットが正しくありません。再度入力してください。"
         )
         self.detail = self.message
+        super().__init__(*args)
+
+
+class ConstraintError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_CONSTRAINT"
+
+    def __init__(self, error: ValidationError, *args: object):
+        self.message = "エラーが発生しました。操作をやり直してください。"
+        self.detail = str(error)
+        super().__init__(*args)
+
+
+class UnknownError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_UNKNOWN"
+    message = "不明なエラーが発生しました。操作をやり直してください。"
+
+    def __init__(self, error: Exception, *args: object):
+        self.detail = str(error)
         super().__init__(*args)

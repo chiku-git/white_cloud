@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 from rest_framework import status
 
-from .errors import BusinessError
+from .errors import BusinessError, UnknownError
 
 
 class _APIResponse(JsonResponse):
@@ -62,3 +62,8 @@ class APIErrorResponse(_APIResponse):
             self.code = code
             self.message = message
             self.detail = detail
+
+
+class UnkownErrorResponse(APIErrorResponse):
+    def __init__(self, error: Exception, **kwargs):
+        super().__init__(UnknownError(error), **kwargs)

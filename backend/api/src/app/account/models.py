@@ -49,7 +49,12 @@ class UserManager(BaseUserManager):
         )
 
     def create_superuser(
-        self, username, email, bio=None, password=None, **extra_fields
+        self,
+        username,
+        email,
+        bio=None,
+        password=None,
+        **extra_fields,
     ):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_superuser", True)
@@ -62,6 +67,9 @@ class UserManager(BaseUserManager):
             password=password,
             **extra_fields,
         )
+
+    def find_by_email(self, email):
+        return self.filter(email=email).first()
 
 
 class User(AbstractBaseUser, PermissionsMixin):

@@ -8,7 +8,7 @@ class Strings {
   static const webviewError = "読み込み中にエラーが発生しました。";
   static const emailAddress = "メールアドレス";
   static const inputValidEmailAddress = "有効なメールアドレスを入力してください";
-  static const sendEmailAddressPageTitle = "登録するメールアドレスを入力して、送信するをタップしてください。";
+  static const sendEmailAddressPageTitle = "登録するメールアドレスを入力して、送信ボタンをタップしてください。";
   static const sendEmail = "送信する";
   static const sentAuthCodeByEmail = "認証コードを送信しました。";
   static const reSendAuthCode = "認証コードを再送信する";
