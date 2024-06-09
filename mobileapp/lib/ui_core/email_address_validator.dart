@@ -29,12 +29,18 @@ class EmailAddressValidator {
 }
 
 enum EmailState {
+  // API送信前
   valid,
   empty,
   invalidFormat,
   invalidEmail,
+  // API送信中、結果
+  sending,
+  sendSuccess,
+  sendFailed,
   ;
 
   get isValid => this == valid;
-  get hasError => this == invalidFormat || this == invalidEmail;
+  get hasError =>
+      this == invalidFormat || this == invalidEmail || this == sendFailed;
 }

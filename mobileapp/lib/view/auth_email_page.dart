@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:white_cloud/component/custom_align.dart';
 import 'package:white_cloud/importer.dart';
 
 class AuthEmailPage extends StatelessWidget {

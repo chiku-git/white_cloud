@@ -34,7 +34,7 @@ class _Body extends StatelessWidget {
           Margin.vertical(30),
           const _EmailFormField(),
           Margin.vertical(30),
-          const BottomRightAlign(
+          BottomRightAlign(
               child: _SubmitButton()
           )
         ],
@@ -77,6 +77,7 @@ class _EmailFormField extends ConsumerWidget {
         // 無効なメールアドレスフォーマット
         return Strings.inputValidEmailAddress;
       case EmailState.invalidEmail:
+      case EmailState.sendFailed:
         // 無効なメールアドレス（認証コード送信APIでエラーとなった場合）
         return vo.sendAuthCodeError?.message;
       case EmailState.valid:
@@ -88,17 +89,25 @@ class _EmailFormField extends ConsumerWidget {
   }
 }
 
-class _SubmitButton extends ConsumerWidget {
-  const _SubmitButton();
+class _SubmitButton extends ConsumerWidget with UIMixin {
+  final _buttonStateMap = {
+    EmailState.sending: ButtonState.loading,
+    EmailState.sendSuccess: ButtonState.success,
+    EmailState.sendFailed: ButtonState.failed,
+  };
+
+  _SubmitButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vo = ref.watch(emailVOProvider);
-    return OutlinedButton(
+    return OutlinedProgressButton(
+        state: _buttonStateMap[vo.state] ?? ButtonState.idle,
         onPressed: vo.state.isValid ? () {
+          unFocus(context);
           ref.read(emailVOProvider.notifier).sendAuthCode(
               onSuccess: (res) {
-                Navigator.pushNamed(context, AuthEmailPage.path);
+                _navigateToAuthEmail(ref, context);
               },
               onFailure: (error) {
                 // NOP
@@ -107,5 +116,14 @@ class _SubmitButton extends ConsumerWidget {
         } : null,
         child: const Text(Strings.sendEmail)
     );
+  }
+
+  /// メールアドレスの認証画面に遷移する
+  _navigateToAuthEmail(WidgetRef ref, BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      ref.read(emailVOProvider.notifier)
+          .update(newState: EmailState.valid);
+      Navigator.pushNamed(context, AuthEmailPage.path);
+    });
   }
 }

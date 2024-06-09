@@ -29,14 +29,26 @@ class EmailVONotifier extends StateNotifier<EmailVO> {
     required Function onSuccess,
     required Function onFailure,
   }) {
+    update(newState: EmailState.sending);
+    _sendAuthCode(onSuccess: onSuccess, onFailure: onFailure);
+  }
+
+  /// 認証コードを送信する
+  _sendAuthCode({
+    required Function onSuccess,
+    required Function onFailure,
+  }) {
     final email = state.email;
     ApiRepository().sendAuthCode(email: email).then((result) {
       result.when(
-          onSuccess: (res) => onSuccess(res),
+          onSuccess: (res) {
+            update(newState: EmailState.sendSuccess);
+            onSuccess(res);
+          },
           onFailure: (error) {
             _emailAddressValidator.addInvalidEmail(email: email);
             update(
-              newState: EmailState.invalidEmail,
+              newState: EmailState.sendFailed,
               email: email,
               sendAuthCodeError: error,
             );
