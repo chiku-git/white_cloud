@@ -17,12 +17,24 @@ class ApiClient {
       final response = await _service.sendAuthCode(request);
       return ApiResult<SendAuthCodeResponse>.onSuccess(response.data!);
     } catch (error) {
-      return _handleCommonError(error: error);
+      return _handleCommonError<SendAuthCodeResponse>(error: error);
+    }
+  }
+
+  /// メールアドレスを認証する
+  Future<ApiResult<AuthenticateEmailResponse>> authenticateEmail({
+    required AuthenticateEmailRequest request,
+  }) async {
+    try {
+      final response = await _service.authenticateEmail(request);
+      return ApiResult<AuthenticateEmailResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<AuthenticateEmailResponse>(error: error);
     }
   }
 
   /// WebAPIで共通となるエラーをハンドルする
-  ApiResult<SendAuthCodeResponse> _handleCommonError({required Object error}) {
+  ApiResult<T> _handleCommonError<T>({required Object error}) {
     if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.badResponse:
@@ -30,31 +42,31 @@ class ApiClient {
           final errorBody = error.response?.data['error'];
           final status = error.response?.statusCode ?? 999;
           if (400 <= status && status < 600 && errorBody != null) {
-            return ApiResult.onFailure(ErrorResponse.fromJson(errorBody));
+            return ApiResult<T>.onFailure(ErrorResponse.fromJson(errorBody));
           } else {
-            return ApiResult.onFailure(
+            return ApiResult<T>.onFailure(
                 ErrorResponse.systemError(detail: error.message));
           }
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.receiveTimeout:
         case DioExceptionType.sendTimeout:
           // タイムアウト
-          return ApiResult.onFailure(
+          return ApiResult<T>.onFailure(
               ErrorResponse.timeoutError(detail: error.message));
         case DioExceptionType.connectionError:
           // 接続エラー
-          return ApiResult.onFailure(
+          return ApiResult<T>.onFailure(
               ErrorResponse.connectionError(detail: error.message));
         case DioExceptionType.badCertificate:
         case DioExceptionType.cancel:
         case DioExceptionType.unknown:
           // その他エラー
-          return ApiResult.onFailure(
+          return ApiResult<T>.onFailure(
               ErrorResponse.unexpectedError(detail: error.message));
       }
     } else {
       // その他エラー
-      return ApiResult.onFailure(
+      return ApiResult<T>.onFailure(
           ErrorResponse.unexpectedError(detail: error.toString()));
     }
   }

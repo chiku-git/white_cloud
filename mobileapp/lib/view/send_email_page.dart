@@ -107,7 +107,7 @@ class _SubmitButton extends ConsumerWidget with UIMixin {
           unFocus(context);
           ref.read(emailVOProvider.notifier).sendAuthCode(
               onSuccess: (res) {
-                _navigateToAuthEmail(ref, context);
+                _navigateToAuthEmail(ref, context, res.email);
               },
               onFailure: (error) {
                 // NOP
@@ -119,11 +119,11 @@ class _SubmitButton extends ConsumerWidget with UIMixin {
   }
 
   /// メールアドレスの認証画面に遷移する
-  _navigateToAuthEmail(WidgetRef ref, BuildContext context) {
+  _navigateToAuthEmail(WidgetRef ref, BuildContext context, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
       ref.read(emailVOProvider.notifier)
           .update(newState: EmailState.valid);
-      Navigator.pushNamed(context, AuthEmailPage.path);
+      Navigator.pushNamed(context, AuthEmailPage.path, arguments: email);
     });
   }
 }

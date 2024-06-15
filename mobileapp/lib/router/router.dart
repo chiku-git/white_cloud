@@ -19,7 +19,8 @@ class AppRouter {
       case SendEmailPage.path:
         return _getDefaultRouter(page: const SendEmailPage());
       case AuthEmailPage.path:
-        return _getDefaultRouter(page: const AuthEmailPage());
+        final email = settings.arguments as String;
+        return _getDefaultRouter(page: AuthEmailPage(email: email));
       case UserRegistrationPage.path:
         return _getDefaultRouter(page: const UserRegistrationPage());
       case PhotoCropPage.path:

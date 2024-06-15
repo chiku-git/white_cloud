@@ -26,8 +26,8 @@ class EmailVONotifier extends StateNotifier<EmailVO> {
 
   /// 認証コードを送信する
   sendAuthCode({
-    required Function onSuccess,
-    required Function onFailure,
+    required Function(SendAuthCodeResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
   }) {
     update(newState: EmailState.sending);
     _sendAuthCode(onSuccess: onSuccess, onFailure: onFailure);

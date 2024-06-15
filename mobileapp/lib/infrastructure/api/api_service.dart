@@ -12,4 +12,10 @@ abstract class ApiService {
   Future<ApiResponse<SendAuthCodeResponse>> sendAuthCode(
       @Body() SendAuthCodeRequest request
   );
+
+  /// メールアドレス認証API
+  @POST('/account/authenticate-email/v1/')
+  Future<ApiResponse<AuthenticateEmailResponse>> authenticateEmail(
+      @Body() AuthenticateEmailRequest request
+  );
 }
