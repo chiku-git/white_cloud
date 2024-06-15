@@ -12,8 +12,22 @@ class BusinessError(BaseException):
 class MailAddressLockedError(BusinessError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     code = "ERR_EMAIL_ADDRESS_LOCKED"
+    message = "このメールアドレスはロックされています。別のメールアドレスで認証を行ってください。"
+    detail = message
+
+
+class MailAddressNotExistsError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_EMAIL_ADDRESS_NOT_EXISTS"
+    message = "メールアドレスが不正です。再度認証コードを送信してください。"
+    detail = message
+
+
+class AuthCodeNotMatchError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_AUTH_CODE_NOT_MATCH"
     message = (
-        "このメールアドレスは使用できません。別のメールアドレスで認証を行ってください。"
+        "認証コードが一致しません。認証コードを正しく入力し、再度認証を行ってください。"
     )
     detail = message
 
@@ -21,7 +35,7 @@ class MailAddressLockedError(BusinessError):
 class MailAddressExistsError(BusinessError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     code = "ERR_EMAIL_ADDRESS_HAS_RESISTERD"
-    message = "このメールアドレスは既に登録されています。別のメールアドレスで認証を行ってください。"
+    message = "このメールアドレスは既に使用されています。別のメールアドレスで認証を行ってください。"
     detail = message
 
 

@@ -1,7 +1,7 @@
 import random
 import uuid
 
-from common.constants import MAX_SEND_AUTH_CODE_COUNT
+from common.constants import MAX_AUTH_EMAIL_COUNT, MAX_SEND_AUTH_CODE_COUNT
 from common.validators import validate_email
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -170,6 +170,9 @@ class _AuthCodeManager(models.Manager):
     def find_or_null(self, pk):
         return self.filter(pk=pk).first()
 
+    def delete(self, pk):
+        self.filter(pk=pk).delete()
+
 
 class AuthCode(models.Model):
     email = models.EmailField(
@@ -207,6 +210,8 @@ class AuthCode(models.Model):
 
     def save(self):
         if self.email_send_count >= MAX_SEND_AUTH_CODE_COUNT:
+            self.is_locked = True
+        if self.authentication_tries >= MAX_AUTH_EMAIL_COUNT:
             self.is_locked = True
         self.full_clean()
         super().save()
