@@ -1,7 +1,13 @@
+import datetime
 import json
+from uuid import UUID
 
+from django.db.models.fields.files import ImageFieldFile
 from django.http import JsonResponse
+import pytz
 from rest_framework import status
+
+from app.settings import TIME_ZONE
 
 from .errors import BusinessError, UnknownError
 
@@ -28,9 +34,17 @@ class _APIResponse(JsonResponse):
 
     class JsonEncoder(json.JSONEncoder):
         def default(self, obj):
-            if isinstance(obj, object):
+            if isinstance(obj, UUID):
+                return str(obj)
+            if isinstance(obj, datetime.datetime):
+                return obj.astimezone(pytz.timezone(TIME_ZONE)).isoformat(
+                    sep=" ", timespec="seconds"
+                )
+            if isinstance(obj, ImageFieldFile):
+                return obj.url
+            if isinstance(obj, object) and hasattr(obj, "__dict__"):
                 return obj.__dict__
-            return json.JSONEncoder.default(self, obj)
+            return super().default(obj)
 
 
 class APISuccessResponse(_APIResponse):

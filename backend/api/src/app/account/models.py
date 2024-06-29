@@ -2,7 +2,7 @@ import random
 import uuid
 
 from common.constants import MAX_AUTH_EMAIL_COUNT, MAX_SEND_AUTH_CODE_COUNT
-from common.validators import validate_email
+from common.validators import validate_email, validate_user_name
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -14,17 +14,26 @@ from django.db import models
 class UserManager(BaseUserManager):
     """ユーザーマネージャ"""
 
-    def _create_user(self, username, email, bio, password, **extra_fields):
+    def _create_user(
+        self,
+        username,
+        email,
+        bio,
+        password,
+        image,
+        **extra_fields,
+    ):
         email = self.normalize_email(email)
         user = self.model(
             username=username,
             email=email,
             bio=bio,
+            image=image,
             **extra_fields,
         )
         user.set_password(password)
-        user.save(using=self._db)
         user.full_clean()
+        user.save(using=self._db)
 
         return user
 
@@ -34,6 +43,7 @@ class UserManager(BaseUserManager):
         email,
         bio=None,
         password=None,
+        image=None,
         **extra_fields,
     ):
         extra_fields.setdefault("is_active", True)
@@ -45,6 +55,7 @@ class UserManager(BaseUserManager):
             email=email,
             bio=bio,
             password=password,
+            image=image,
             **extra_fields,
         )
 
@@ -54,6 +65,7 @@ class UserManager(BaseUserManager):
         email,
         bio=None,
         password=None,
+        image=None,
         **extra_fields,
     ):
         extra_fields.setdefault("is_active", True)
@@ -65,6 +77,7 @@ class UserManager(BaseUserManager):
             email=email,
             bio=bio,
             password=password,
+            image=image,
             **extra_fields,
         )
 
@@ -88,6 +101,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=False,
         blank=False,
         null=False,
+        validators=[
+            validate_user_name,
+        ],
+    )
+
+    image = models.ImageField(
+        verbose_name="写真",
+        upload_to="images/user/",
+        null=True,
+        blank=True,
     )
 
     email = models.EmailField(
@@ -95,6 +118,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=100,
         unique=True,
         blank=False,
+        validators=[
+            validate_email,
+        ],
     )
 
     bio = models.TextField(
@@ -139,6 +165,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    def get_public_props(self) -> dict:
+        image = None
+        if self.image:
+            image = self.image
+
+        return {
+            "id": self.id,
+            "userName": self.username,
+            "image": image,
+            "email": self.email,
+            "bio": self.bio,
+            "createdAt": self.created_at,
+        }
 
     def __str__(self):
         return self.username

@@ -1,3 +1,5 @@
+import json
+
 from common.models.errors import (
     AuthCodeNotMatchError,
     BusinessError,
@@ -6,6 +8,7 @@ from common.models.errors import (
     MailAddressLockedError,
     MailAddressNotExistsError,
     MissingParameterError,
+    UserExistsError,
 )
 from common.models.responses import (
     APIErrorResponse,
@@ -109,3 +112,42 @@ class AuthenticateEmailV1API(APIView):
     class Response:
         def __init__(self, email: str):
             self.email = email
+
+
+class RegisterUserV1API(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.data["user"])
+
+            username = data["userName"]
+            email = data["email"]
+            bio = data["bio"]
+            password = data["password"]
+            image = request.FILES.get("image")
+
+            user = User.objects.find_by_email(email=email)
+
+            if user is not None:  # メールアドレスが存在する（会員が存在する）
+                raise UserExistsError()
+
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                bio=bio,
+                email=email,
+                image=image,
+            )
+
+            return APISuccessResponse(body=RegisterUserV1API.Response(user=user))
+        except KeyError as e:
+            return APIErrorResponse(MissingParameterError(e))
+        except BusinessError as e:
+            return APIErrorResponse(e)
+        except ValidationError as e:
+            return APIErrorResponse(ConstraintError(e))
+        except Exception as e:
+            return UnkownErrorResponse(e)
+
+    class Response:
+        def __init__(self, user: User):
+            self.user = user.get_public_props()

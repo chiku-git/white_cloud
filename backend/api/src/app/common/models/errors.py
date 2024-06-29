@@ -56,11 +56,14 @@ class InvalidFormatError(BusinessError):
     status_code = status.HTTP_400_BAD_REQUEST
     code = "ERR_INVALID_FORMAT"
 
-    def __init__(self, target: str, *args: object):
+    def __init__(self, target: str, detail: dict = None, *args: object):
         self.message = (
             f"{target}のフォーマットが正しくありません。再度入力してください。"
         )
         self.detail = self.message
+        if detail is not None:
+            self.detail = detail
+
         super().__init__(*args)
 
 
@@ -71,6 +74,16 @@ class ConstraintError(BusinessError):
     def __init__(self, error: ValidationError, *args: object):
         self.message = "エラーが発生しました。操作をやり直してください。"
         self.detail = str(error)
+        super().__init__(*args)
+
+
+class UserExistsError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_USER_EXISTS"
+
+    def __init__(self, *args: object):
+        self.message = "このメールアドレスは既に登録されています。別のメールアドレスで登録してください。"
+        self.detail = self.message
         super().__init__(*args)
 
 
