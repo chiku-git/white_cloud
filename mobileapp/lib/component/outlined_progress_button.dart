@@ -28,7 +28,6 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
   final FocusNode? focusNode;
   final bool autofocus;
   final Clip clipBehavior;
-  final MaterialStatesController? statesController;
   final Widget child;
   final ButtonState state;
   late final Size progressSize;
@@ -63,7 +62,6 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
     this.focusNode,
     this.autofocus = false,
     this.clipBehavior = Clip.none,
-    this.statesController,
     this.state = ButtonState.idle,
     Size? progressSize,
   }) {
@@ -105,7 +103,6 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
       focusNode: focusNode,
       autofocus: autofocus,
       clipBehavior: clipBehavior,
-      statesController: statesController,
       child: () {
         final iconSize = progressSize.height + 7.0;
         switch (state) {

@@ -1,13 +1,17 @@
-import 'package:white_cloud/component/confirm_dialog.dart';
 import 'package:white_cloud/importer.dart';
 
-class UserRegistrationPage extends StatelessWidget {
+class UserRegistrationPage extends ConsumerWidget with UIMixin {
   static const String path = "/user/register";
+  final UserFormData user;
 
-  const UserRegistrationPage({super.key});
+  const UserRegistrationPage({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future(() {
+      ref.read(registerUserProvider.notifier).updateUser(user: user);
+    });
+
     return SafeArea(
         child: PopScope(
           canPop: false,
@@ -44,7 +48,6 @@ class _Body extends StatelessWidget with ThemeMixin {
   @override
   Widget build(BuildContext context) {
     final colorScheme = getColorScheme(context);
-
     return Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: ListView(
@@ -66,7 +69,7 @@ class _Body extends StatelessWidget with ThemeMixin {
             ),
             Margin.vertical(20),
             const BottomRightAlign(
-                child: RegisterUserButtonWidget()
+                child: _RegisterUserButtonWidget()
             )
           ],
         ));
@@ -79,47 +82,132 @@ class _BodyContent extends ConsumerWidget {
     return Column(
       children: [
         Margin.vertical(20),
-        const PhotoWidget(),
+        const _UserImageWidget(),
         Margin.vertical(40),
-        TextFieldWidget(
-          label: Strings.userName,
-          maxLength: 20,
-          maxLines: 1,
-          onChanged: (text) {
-            ref.read(registerUserProvider.notifier).update(name: text);
-          },
-          required: true,
-          inputAction: TextInputAction.next,
-        ),
+        const _UserNameInputWidget(),
         Margin.vertical(20),
-        TextFieldWidget(
-          label: Strings.introMessage,
-          maxLength: 100,
-          onChanged: (text) {
-            ref.read(registerUserProvider.notifier).update(note: text);
-          },
-        ),
+        _PasswordInputWidget(),
+        Margin.vertical(40),
+        const _BioInputWidget(),
       ],
     );
   }
 }
 
-class PhotoWidget extends ConsumerWidget with ThemeMixin {
-  const PhotoWidget({super.key});
+class _UserNameInputWidget extends ConsumerWidget {
+  const _UserNameInputWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(registerUserProvider).user;
+    return TextFormField(
+      initialValue: user.userName,
+      decoration: const InputDecoration(
+        labelText: Strings.userName,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.text,
+      maxLength: 20,
+      maxLines: 1,
+      onChanged: (userName) {
+        ref.read(registerUserProvider.notifier).update(userName: userName);
+      },
+      textInputAction: TextInputAction.next,
+    );
+  }
+}
+
+class _PasswordInputWidget extends ConsumerWidget {
+  late final ValueNotifier<bool> _passwordVisibilityNotifier;
+  late final PasswordValidator _passwordValidator;
+  _PasswordInputWidget() {
+    _passwordVisibilityNotifier = ValueNotifier(true);
+    _passwordValidator = PasswordValidator();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListenableBuilder(
+      listenable: _passwordVisibilityNotifier,
+      builder: (BuildContext context, Widget? child) {
+        return TextFormField(
+          decoration: InputDecoration(
+              labelText: Strings.password,
+              border: const OutlineInputBorder(),
+              errorMaxLines: 4,
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    bool isVisible = _passwordVisibilityNotifier.value;
+                    _passwordVisibilityNotifier.value = !isVisible;
+                  },
+                  icon: _passwordVisibilityNotifier.value
+                      ? const Icon(Icons.visibility_off)
+                      : const Icon(Icons.visibility)
+              )
+          ),
+          keyboardType: TextInputType.visiblePassword,
+          maxLines: 1,
+          obscureText: _passwordVisibilityNotifier.value,
+          textInputAction: TextInputAction.next,
+          autovalidateMode: AutovalidateMode.always,
+          onChanged: (password) {
+            ref.read(registerUserProvider.notifier).update(password: password);
+          },
+          validator: (password) {
+            switch(_passwordValidator.validate(password)) {
+              case PasswordValidateState.tooShort:
+                return Strings.passwordErrorTooShort;
+              case PasswordValidateState.invalidFormat:
+                return Strings.passwordErrorInvalidFormat;
+              default:
+                return null;
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class _BioInputWidget extends ConsumerWidget {
+  const _BioInputWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(registerUserProvider).user;
+
+    return TextFormField(
+      initialValue: user.bio,
+      decoration: const InputDecoration(
+        labelText: Strings.introMessage,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.text,
+      maxLength: 100,
+      onChanged: (bio) {
+        ref.read(registerUserProvider.notifier).update(bio: bio);
+      },
+      textInputAction: TextInputAction.done,
+    );
+  }
+}
+
+class _UserImageWidget extends ConsumerWidget with ThemeMixin {
+  const _UserImageWidget();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = getColorScheme(context);
-    final user = ref.watch(registerUserProvider);
-    final photo = user.photo != null
-        ? Image.memory(user.photo!.bytes, fit: BoxFit.cover,)
+    final user = ref.watch(registerUserProvider).user;
+    final image = user.image != null && user.image!.bytes != null
+        ? Image.memory(user.image!.bytes!, fit: BoxFit.cover,)
         : const PlaceHolderPersonImage();
     final photoFrameSize = MediaQuery.of(context).size.width * 0.35;
 
     return Stack(
       children: [
         TappableCirclePhotoFrame(
-            image: photo,
+            image: image,
             diameter: photoFrameSize,
             borderWidth: 3.0,
             onTap: () {
@@ -154,60 +242,60 @@ class PhotoWidget extends ConsumerWidget with ThemeMixin {
 
   _onTapPhotoFrame(BuildContext context, WidgetRef ref) {
     Future(() {
-      PhotoCropPage.pickAndTrim(Navigator.of(context)).then((bytes) => {
-        if (bytes != null) {
-          ref.read(registerUserProvider.notifier).update(photo: bytes),
+      ImageCropPage.pickAndTrim(Navigator.of(context)).then((image) => {
+        if (image != null && image.bytes != null) {
+          ref.read(registerUserProvider.notifier).update(image: image),
         }
       });
     });
   }
 }
 
-class TextFieldWidget extends ConsumerWidget {
-  final String label;
-  final int maxLength;
-  final int? maxLines;
-  final Function(String) onChanged;
-  final bool required;
-  final TextInputAction inputAction;
-  const TextFieldWidget({
-    super.key,
-    required this.label,
-    required this.maxLength,
-    this.maxLines,
-    required this.onChanged,
-    this.required = false,
-    this.inputAction = TextInputAction.done
-  });
+class _RegisterUserButtonWidget extends ConsumerWidget with UIMixin {
+  const _RegisterUserButtonWidget();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: label + (required ? Strings.aster : ""),
-        border: const OutlineInputBorder(),
-      ),
-      keyboardType: TextInputType.text,
-      maxLength: maxLength,
-      maxLines: maxLines,
-      onChanged: onChanged,
-      textInputAction: inputAction,
-    );
-  }
-}
+    final state = ref.watch(registerUserProvider);
 
-class RegisterUserButtonWidget extends ConsumerWidget {
-  const RegisterUserButtonWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(registerUserProvider);
-
-    return OutlinedButton(
-        onPressed: user.isValid ? () {
-          Navigator.of(context).pushNamed(DashBoardPage.path);
+    return OutlinedProgressButton(
+        state: () {
+          switch(state.apiState) {
+            case ApiState.idle:
+              return ButtonState.idle;
+            case ApiState.loading:
+              return ButtonState.loading;
+            case ApiState.success:
+              return ButtonState.success;
+            default:
+              return ButtonState.idle;
+          }
+        }(),
+        onPressed: state.canRegister() ? () {
+          hideBanner(context);
+          ref.read(registerUserProvider.notifier).registerUser(
+              user: state.user,
+              onSuccess: (res) {
+                DBRepository().saveUserFromJson(json: res.user.toJson());
+                _navigateToDashBoardPage(context);
+              },
+              onFailure: (err) {
+                ScaffoldMessenger.of(context).showMaterialBanner(
+                    ErrorBanner(
+                        context: context,
+                        message: err.message,
+                    )
+                );
+              }
+          );
         } : null,
         child: const Text(Strings.register)
     );
+  }
+
+  _navigateToDashBoardPage(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      Navigator.of(context).pushNamed(DashBoardPage.path);
+    });
   }
 }

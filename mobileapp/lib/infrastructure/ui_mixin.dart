@@ -7,4 +7,17 @@ mixin class UIMixin {
       FocusManager.instance.primaryFocus!.unfocus();
     }
   }
+
+  showErrorBanner(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      ErrorBanner(
+        context: context,
+        message: message,
+      ),
+    );
+  }
+
+  hideBanner(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+  }
 }

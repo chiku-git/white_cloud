@@ -22,6 +22,9 @@ class Strings {
   static const introMessage = "メッセージ";
   static const aster = "*";
   static const register = "登録する";
+  static const password = "パスワード";
+  static const passwordErrorTooShort = "パスワードが短すぎます。8文字以上入力してください";
+  static const passwordErrorInvalidFormat = "パスワードは少なくとも8文字以上で、大文字、小文字、数字、および特殊文字（@\$!%*?&）を含めてください。";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

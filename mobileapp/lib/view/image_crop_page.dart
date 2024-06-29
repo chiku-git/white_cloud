@@ -1,26 +1,31 @@
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:white_cloud/importer.dart';
+import 'package:mime/mime.dart';
 
-class PhotoCropPage extends ConsumerWidget {
-  static Future<Uint8List?> pickAndTrim(NavigatorState state) async {
+class ImageCropPage extends ConsumerWidget {
+  static Future<ImageData?> pickAndTrim(NavigatorState state) async {
     final source = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (source != null && source.path.isNotEmpty) {
-      return await trim(state, File(source.path));
+    if (source != null && lookupMimeType(source.path) != null && source.path.isNotEmpty) {
+      final bytes = await trim(state, File(source.path));
+      return ImageData(
+        fileName: source.name,
+        mimeType: lookupMimeType(source.path)!,
+        bytes: bytes,
+      );
     } else {
       return null;
     }
   }
 
   static Future<Uint8List?> trim(NavigatorState state, File image) async {
-    final binary = await state.pushNamed(path, arguments: image);
-    return binary as Uint8List?;
+    return await state.pushNamed(path, arguments: image) as Uint8List?;
   }
 
   static const String path = '/photo-crop/';
-  final File photo;
+  final File image;
 
-  const PhotoCropPage({super.key, required this.photo});
+  const ImageCropPage({super.key, required this.image});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +34,7 @@ class PhotoCropPage extends ConsumerWidget {
         appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          child: _Body(photo: photo),
+          child: _Body(image: image),
         ),
       ),
     );
@@ -37,8 +42,8 @@ class PhotoCropPage extends ConsumerWidget {
 }
 
 class _Body extends StatefulWidget {
-  final File photo;
-  const _Body({required this.photo});
+  final File image;
+  const _Body({required this.image});
 
   @override
   State<StatefulWidget> createState() => _BodyState();
@@ -56,7 +61,7 @@ class _BodyState extends State<_Body> with ThemeMixin {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.photo.readAsBytes(),
+      future: widget.image.readAsBytes(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -65,13 +70,8 @@ class _BodyState extends State<_Body> with ThemeMixin {
         return Stack(
           alignment: Alignment.center,
           children: [
-            _CroppingWidget(
-                controller: _controller,
-                image: snapshot.data
-            ),
-            _SubmitCroppingBtnWidget(
-                controller: _controller
-            ),
+            _CroppingWidget(controller: _controller, bytes: snapshot.data),
+            _SubmitCroppingBtnWidget(controller: _controller),
             const _LoadingWidget()
           ],
         );
@@ -86,29 +86,28 @@ class _LoadingWidget extends ConsumerWidget with ThemeMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     XCropState state = ref.watch(photoCropStateProvider);
-    final colorScheme = state.isInit ? getColorScheme(context) : darkColorScheme;
+    final colorScheme =
+        state.isInit ? getColorScheme(context) : darkColorScheme;
 
     return Visibility(
         visible: state.isWorking,
         child: ProgressWidget(
           color: colorScheme.primary,
-        )
-    );
+        ));
   }
 }
 
-
 class _CroppingWidget extends ConsumerWidget with ThemeMixin {
   final CropController controller;
-  final Uint8List image;
+  final Uint8List bytes;
 
-  const _CroppingWidget({required this.controller, required this.image});
+  const _CroppingWidget({required this.controller, required this.bytes});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Crop(
       controller: controller,
-      image: image,
+      image: bytes,
       baseColor: getColorScheme(context).onTertiary,
       maskColor: Colors.black.withOpacity(0.75),
       cornerDotBuilder: (size, edgeAlignment) {
@@ -136,25 +135,21 @@ class _SubmitCroppingBtnWidget extends ConsumerWidget with ThemeMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(photoCropStateProvider);
     final isEnabled = state.isReady;
-    final colorScheme = state.isInit ? getColorScheme(context) : darkColorScheme;
+    final colorScheme =
+        state.isInit ? getColorScheme(context) : darkColorScheme;
 
     return Positioned(
       bottom: 20,
       child: OutlinedButton(
-        onPressed: isEnabled ? () {
-          controller.crop();
-        } : null,
+        onPressed: isEnabled
+            ? () => controller.crop()
+            : null,
         style: OutlinedButton.styleFrom(
-            side: isEnabled ? BorderSide(
-                color: colorScheme.primary
-            ) : null
-        ),
+            side: isEnabled ? BorderSide(color: colorScheme.primary) : null),
         child: Text(
           Strings.trimming,
           style: TextStyle(
-              fontSize: 16,
-              color: isEnabled ? colorScheme.primary : null
-          ),
+              fontSize: 16, color: isEnabled ? colorScheme.primary : null),
         ),
       ),
     );

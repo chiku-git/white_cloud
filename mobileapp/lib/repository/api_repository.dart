@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:white_cloud/importer.dart';
 
 class ApiRepository {
@@ -38,5 +40,28 @@ class ApiRepository {
         code: code,
       ),
     );
+  }
+
+  /// 会員登録する
+  Future<ApiResult<RegisterUserResponse>> registerUser({
+    required UserFormData user,
+  }) async {
+    final request = FormData.fromMap(
+      {
+        "user": MultipartFile.fromString(
+            json.encode(user.toJson()),
+            contentType: MediaType.parse('application/json'),
+        ),
+        "image": user.image != null && user.image!.bytes != null
+            ? MultipartFile.fromBytes(
+                user.image!.bytes!,
+                filename: user.image!.fileName,
+                contentType: MediaType.parse(user.image!.mimeType),
+              )
+            : null
+      },
+      ListFormat.multiCompatible,
+    );
+    return await _client.registerUser(request: request);
   }
 }

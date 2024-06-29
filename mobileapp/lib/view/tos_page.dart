@@ -107,7 +107,7 @@ class _AcceptTosLayout extends ConsumerWidget with ThemeMixin {
       visible: progress >= _maxProgress ? true : false,
       child: Container(
         height: 75,
-        color: themeColor.background.withOpacity(0.8),
+        color: themeColor.surface.withOpacity(0.8),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
           child: Row(
@@ -116,8 +116,8 @@ class _AcceptTosLayout extends ConsumerWidget with ThemeMixin {
               Expanded(
                 child: OutlinedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        themeColor.background
+                    backgroundColor: WidgetStateProperty.all(
+                        themeColor.surface
                     )
                   ),
                     onPressed: () {
@@ -130,8 +130,8 @@ class _AcceptTosLayout extends ConsumerWidget with ThemeMixin {
               Expanded(
                 child: OutlinedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            themeColor.background
+                        backgroundColor: WidgetStateProperty.all(
+                            themeColor.surface
                         )
                     ),
                     onPressed: () {

@@ -33,6 +33,18 @@ class ApiClient {
     }
   }
 
+  /// 会員登録する
+  Future<ApiResult<RegisterUserResponse>> registerUser({
+    required FormData request,
+  }) async {
+    try {
+      final response = await _service.registerUser(request);
+      return ApiResult<RegisterUserResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<RegisterUserResponse>(error: error);
+    }
+  }
+
   /// WebAPIで共通となるエラーをハンドルする
   ApiResult<T> _handleCommonError<T>({required Object error}) {
     if (error is DioException) {

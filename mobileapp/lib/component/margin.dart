@@ -6,4 +6,8 @@ class Margin {
   static SizedBox vertical(double size) {
     return SizedBox(height: size,);
   }
+
+  static SizedBox horizontal(double size) {
+    return SizedBox(width: size,);
+  }
 }

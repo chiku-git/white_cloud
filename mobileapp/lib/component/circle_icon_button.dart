@@ -28,7 +28,6 @@ class CircleIconButton extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final Clip clipBehavior;
-  final MaterialStatesController? statesController;
   final Widget child;
 
   const CircleIconButton({
@@ -61,7 +60,6 @@ class CircleIconButton extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.clipBehavior = Clip.none,
-    this.statesController,
   });
 
   @override
@@ -98,7 +96,6 @@ class CircleIconButton extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       clipBehavior: clipBehavior,
-      statesController: statesController,
       child: child,
     );
   }

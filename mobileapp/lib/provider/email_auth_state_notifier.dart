@@ -34,8 +34,8 @@ class EmailAuthStateNotifier extends StateNotifier<EmailAuthVO> {
   get authCode => state.digits.join("");
 
   authenticateEmail({
-    required Function onSuccess,
-    required Function onFailure,
+    required Function(AuthenticateEmailResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
   }) {
     updateAuthState(authState: EmailAuthState.authenticating);
     ApiRepository().authenticateEmail(email: email, code: authCode).then(

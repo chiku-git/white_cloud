@@ -14,9 +14,10 @@ class AuthEmailPage extends ConsumerWidget {
 
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(),
-      body: _Body(),
-    ));
+          appBar: AppBar(),
+          body: _Body(),
+        )
+    );
   }
 }
 
@@ -252,7 +253,7 @@ class _AuthButtonWidget extends ConsumerWidget with UIMixin {
                 // 認証処理
                 notifier.authenticateEmail(
                     onSuccess: (res) {
-                      _navigateToUserRegistrationPage(context);
+                      _navigateToUserRegistrationPage(context, res.email);
                     },
                     onFailure: (error) {
                       // NOP
@@ -264,9 +265,10 @@ class _AuthButtonWidget extends ConsumerWidget with UIMixin {
     );
   }
 
-  _navigateToUserRegistrationPage(BuildContext context) {
+  _navigateToUserRegistrationPage(BuildContext context, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      Navigator.of(context).pushNamed(UserRegistrationPage.path);
+      final user = UserFormData.init(email: email);
+      Navigator.of(context).pushNamed(UserRegistrationPage.path, arguments: user);
     });
   }
 }

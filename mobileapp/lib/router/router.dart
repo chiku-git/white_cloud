@@ -20,12 +20,13 @@ class AppRouter {
         return _getDefaultRouter(page: const SendEmailPage());
       case AuthEmailPage.path:
         final email = settings.arguments as String;
-        return _getDefaultRouter(page: AuthEmailPage(email: email));
+        return _getDefaultRouter(page: AuthEmailPage(email: email,));
       case UserRegistrationPage.path:
-        return _getDefaultRouter(page: const UserRegistrationPage());
-      case PhotoCropPage.path:
-        final photo = settings.arguments as File;
-        return _getDefaultRouter(page: PhotoCropPage(photo: photo));
+        final user = settings.arguments as UserFormData;
+        return _getDefaultRouter(page: UserRegistrationPage(user: user,));
+      case ImageCropPage.path:
+        final image = settings.arguments as File;
+        return _getDefaultRouter(page: ImageCropPage(image: image));
       case DashBoardPage.path:
         return _getDefaultRouter(page: const DashBoardPage());
       default:

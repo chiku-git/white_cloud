@@ -113,7 +113,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
   final Color? focusColor;
   final Color? hoverColor;
   final Color? highlightColor;
-  final MaterialStateProperty<Color?>? overlayColor;
   final Color? splashColor;
   final InteractiveInkFeatureFactory? splashFactory;
   final double? radius;
@@ -125,7 +124,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
   final bool canRequestFocus;
   final void Function(bool)? onFocusChange;
   final bool autofocus;
-  final MaterialStatesController? statesController;
   final Duration? hoverDuration;
 
   const TappableCirclePhotoFrame({
@@ -147,7 +145,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
     this.focusColor,
     this.hoverColor,
     this.highlightColor,
-    this.overlayColor,
     this.splashColor,
     this.splashFactory,
     this.radius,
@@ -155,7 +152,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
     this.customBorder,
     this.focusNode,
     this.onFocusChange,
-    this.statesController,
     this.hoverDuration,
     this.enableFeedback = true,
     this.excludeFromSemantics = false,
@@ -202,7 +198,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
       focusColor: focusColor,
       hoverColor: hoverColor,
       highlightColor: highlightColor,
-      overlayColor: overlayColor,
       splashColor: splashColor,
       splashFactory: splashFactory,
       radius: radius,
@@ -210,7 +205,6 @@ class TappableCirclePhotoFrame extends CirclePhotoFrame {
       customBorder: customBorder,
       focusNode: focusNode,
       onFocusChange: onFocusChange,
-      statesController: statesController,
       hoverDuration: hoverDuration,
       child: super.build(context),
     );

@@ -10,12 +10,15 @@ abstract class ApiService {
   /// 認証コード送信API
   @POST('/account/send-auth-code/v1/')
   Future<ApiResponse<SendAuthCodeResponse>> sendAuthCode(
-      @Body() SendAuthCodeRequest request
-  );
+      @Body() SendAuthCodeRequest request);
 
   /// メールアドレス認証API
   @POST('/account/authenticate-email/v1/')
   Future<ApiResponse<AuthenticateEmailResponse>> authenticateEmail(
-      @Body() AuthenticateEmailRequest request
-  );
+      @Body() AuthenticateEmailRequest request);
+
+  /// 会員登録API
+  @POST('/account/register/v1/')
+  Future<ApiResponse<RegisterUserResponse>> registerUser(
+      @Body() FormData request);
 }

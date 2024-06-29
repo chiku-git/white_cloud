@@ -26,7 +26,7 @@ class _Body extends StatelessWidget with ThemeMixin {
     return Container(
       color: isLightTheme(context)
           ? AppColors.lightSkyBlue
-          : getColorScheme(context).background,
+          : getColorScheme(context).surface,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -97,7 +97,7 @@ class _Divider extends StatelessWidget with ThemeMixin {
             endIndent: 10,
           ),
           Container(
-            color: isLight ? AppColors.lightSkyBlue : themeColor.background,
+            color: isLight ? AppColors.lightSkyBlue : themeColor.surface,
             padding: const EdgeInsets.symmetric(
                 horizontal: 20
             ),
@@ -138,7 +138,7 @@ class _ButtonWidget extends StatelessWidget with ThemeMixin {
                   width: 0.5,
                   color: themeColor.outline
                 ),
-                backgroundColor: isLight ? themeColor.background : null
+                backgroundColor: isLight ? themeColor.surface : null
               ),
               onPressed: () {
                 onPressed.call();

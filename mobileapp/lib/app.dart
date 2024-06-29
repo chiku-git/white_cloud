@@ -1,7 +1,13 @@
+import 'package:white_cloud/infrastructure/database.dart';
+
 import 'importer.dart';
 
 class WhiteCloudApp extends StatelessWidget {
-  const WhiteCloudApp({super.key});
+  WhiteCloudApp({super.key}) {
+    Future(() {
+      Database().init();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
