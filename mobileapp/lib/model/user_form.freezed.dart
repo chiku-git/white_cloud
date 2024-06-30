@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_form_data.dart';
+part of 'user_form.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$UserFormData {
+mixin _$UserForm {
   String get userName => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
@@ -23,15 +23,14 @@ mixin _$UserFormData {
   ImageData? get image => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $UserFormDataCopyWith<UserFormData> get copyWith =>
+  $UserFormCopyWith<UserForm> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserFormDataCopyWith<$Res> {
-  factory $UserFormDataCopyWith(
-          UserFormData value, $Res Function(UserFormData) then) =
-      _$UserFormDataCopyWithImpl<$Res, UserFormData>;
+abstract class $UserFormCopyWith<$Res> {
+  factory $UserFormCopyWith(UserForm value, $Res Function(UserForm) then) =
+      _$UserFormCopyWithImpl<$Res, UserForm>;
   @useResult
   $Res call(
       {String userName,
@@ -44,9 +43,9 @@ abstract class $UserFormDataCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserFormDataCopyWithImpl<$Res, $Val extends UserFormData>
-    implements $UserFormDataCopyWith<$Res> {
-  _$UserFormDataCopyWithImpl(this._value, this._then);
+class _$UserFormCopyWithImpl<$Res, $Val extends UserForm>
+    implements $UserFormCopyWith<$Res> {
+  _$UserFormCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -100,11 +99,11 @@ class _$UserFormDataCopyWithImpl<$Res, $Val extends UserFormData>
 }
 
 /// @nodoc
-abstract class _$$UserFormDataImplCopyWith<$Res>
-    implements $UserFormDataCopyWith<$Res> {
-  factory _$$UserFormDataImplCopyWith(
-          _$UserFormDataImpl value, $Res Function(_$UserFormDataImpl) then) =
-      __$$UserFormDataImplCopyWithImpl<$Res>;
+abstract class _$$UserFormImplCopyWith<$Res>
+    implements $UserFormCopyWith<$Res> {
+  factory _$$UserFormImplCopyWith(
+          _$UserFormImpl value, $Res Function(_$UserFormImpl) then) =
+      __$$UserFormImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -119,11 +118,11 @@ abstract class _$$UserFormDataImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$UserFormDataImplCopyWithImpl<$Res>
-    extends _$UserFormDataCopyWithImpl<$Res, _$UserFormDataImpl>
-    implements _$$UserFormDataImplCopyWith<$Res> {
-  __$$UserFormDataImplCopyWithImpl(
-      _$UserFormDataImpl _value, $Res Function(_$UserFormDataImpl) _then)
+class __$$UserFormImplCopyWithImpl<$Res>
+    extends _$UserFormCopyWithImpl<$Res, _$UserFormImpl>
+    implements _$$UserFormImplCopyWith<$Res> {
+  __$$UserFormImplCopyWithImpl(
+      _$UserFormImpl _value, $Res Function(_$UserFormImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -135,7 +134,7 @@ class __$$UserFormDataImplCopyWithImpl<$Res>
     Object? email = null,
     Object? image = freezed,
   }) {
-    return _then(_$UserFormDataImpl(
+    return _then(_$UserFormImpl(
       userName: null == userName
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
@@ -162,8 +161,8 @@ class __$$UserFormDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UserFormDataImpl extends _UserFormData {
-  _$UserFormDataImpl(
+class _$UserFormImpl extends _UserForm {
+  _$UserFormImpl(
       {required this.userName,
       required this.password,
       required this.bio,
@@ -184,14 +183,14 @@ class _$UserFormDataImpl extends _UserFormData {
 
   @override
   String toString() {
-    return 'UserFormData(userName: $userName, password: $password, bio: $bio, email: $email, image: $image)';
+    return 'UserForm(userName: $userName, password: $password, bio: $bio, email: $email, image: $image)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserFormDataImpl &&
+            other is _$UserFormImpl &&
             (identical(other.userName, userName) ||
                 other.userName == userName) &&
             (identical(other.password, password) ||
@@ -208,18 +207,18 @@ class _$UserFormDataImpl extends _UserFormData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UserFormDataImplCopyWith<_$UserFormDataImpl> get copyWith =>
-      __$$UserFormDataImplCopyWithImpl<_$UserFormDataImpl>(this, _$identity);
+  _$$UserFormImplCopyWith<_$UserFormImpl> get copyWith =>
+      __$$UserFormImplCopyWithImpl<_$UserFormImpl>(this, _$identity);
 }
 
-abstract class _UserFormData extends UserFormData {
-  factory _UserFormData(
+abstract class _UserForm extends UserForm {
+  factory _UserForm(
       {required final String userName,
       required final String password,
       required final String bio,
       required final String email,
-      final ImageData? image}) = _$UserFormDataImpl;
-  _UserFormData._() : super._();
+      final ImageData? image}) = _$UserFormImpl;
+  _UserForm._() : super._();
 
   @override
   String get userName;
@@ -233,7 +232,7 @@ abstract class _UserFormData extends UserFormData {
   ImageData? get image;
   @override
   @JsonKey(ignore: true)
-  _$$UserFormDataImplCopyWith<_$UserFormDataImpl> get copyWith =>
+  _$$UserFormImplCopyWith<_$UserFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

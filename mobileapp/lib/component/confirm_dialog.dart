@@ -121,3 +121,14 @@ class ConfirmDialog extends StatelessWidget {
     return newActions;
   }
 }
+
+enum ConfirmDialogState {
+  positive,
+  negative,
+  neutral,
+  ;
+
+  bool get isPositive => this == positive;
+  bool get isNegative => this == negative;
+  bool get isNeutral  => this == neutral;
+}

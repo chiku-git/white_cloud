@@ -10,7 +10,9 @@ class AuthEmailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(emailAuthStateProvider.notifier).email = email;
+    Future(() {
+      ref.read(emailAuthFormProvider.notifier).update(email: email);
+    });
 
     return SafeArea(
         child: Scaffold(
@@ -50,15 +52,15 @@ class _Body extends StatelessWidget {
 class _AuthErrorWidget extends ConsumerWidget with ThemeMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vo = ref.watch(emailAuthStateProvider);
+    final form = ref.watch(emailAuthFormProvider);
 
     return Visibility(
-      visible: vo.error != null,
+      visible: form.hasError,
       child: TopLeftAlign(
         child: Padding(
             padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
             child: Text(
-              vo.error?.message ?? "",
+              form.error?.message ?? "",
               style: TextStyle(
                 color: getColorScheme(context).error
               ),
@@ -73,14 +75,9 @@ class _AuthErrorWidget extends ConsumerWidget with ThemeMixin {
 class _AuthCodeReSendLinkWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vo = ref.watch(emailAuthStateProvider);
-
     return Column(
       children: [
-        Visibility(
-            visible: vo.error == null,
-            child: Margin.vertical(15)
-        ),
+        Margin.vertical(15),
         TopLeftAlign(
             child: InkWell(
               splashColor: Colors.transparent,
@@ -112,36 +109,31 @@ class _AuthCodeReSendLinkWidget extends ConsumerWidget {
 class _AuthCodeInputWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(emailAuthStateProvider);
+    ref.watch(emailAuthFormProvider);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: _generateForms(
         length: AuthEmailPage.authCodeLength,
-        notifier: ref.read(emailAuthStateProvider.notifier),
+        notifier: ref.read(emailAuthFormProvider.notifier),
       ),
     );
   }
 
   List<Widget> _generateForms({
     required int length,
-    required EmailAuthStateNotifier notifier,
+    required EmailAuthFormNotifier notifier,
   }) {
     return List.generate(
         length,
-        (index) => _SingleDigitTextForm(
-          idx: index,
-          notifier: notifier,
-        )
+        (index) => _SingleDigitTextForm(idx: index)
     );
   }
 }
 
 class _SingleDigitTextForm extends StatefulWidget {
   final int idx;
-  final EmailAuthStateNotifier notifier;
-
-  const _SingleDigitTextForm({required this.idx, required this.notifier});
+  const _SingleDigitTextForm({required this.idx});
 
   @override
   State<StatefulWidget> createState() => _SingleDigitTextState();
@@ -154,7 +146,7 @@ class _SingleDigitTextState extends State<_SingleDigitTextForm>
   int get idx => widget.idx;
   bool get isFirst => idx == 0;
   bool get isLast => idx == (AuthEmailPage.authCodeLength - 1);
-  EmailAuthStateNotifier get _notifier => widget.notifier;
+  WidgetRef? _ref;
 
   @override
   void initState() {
@@ -172,6 +164,7 @@ class _SingleDigitTextState extends State<_SingleDigitTextForm>
   onKeyDown(KeyEvent e) {
     final digit = StringWrapper(e.character);
     final label = StringWrapper(e.logicalKey.keyLabel);
+    final notifier = _ref?.read(emailAuthFormProvider.notifier);
 
     if (digit.isNotNullOrEmpty()) {
       _controller.text = digit.value!;
@@ -179,12 +172,12 @@ class _SingleDigitTextState extends State<_SingleDigitTextForm>
         focusNode.nextFocus();
       }
       Future(() {
-        _notifier.put(idx, _controller.text);
+        notifier?.put(idx, _controller.text);
       });
     } else if (label.contains("backspace", ignoreCase: true)) {
       _controller.clear();
       Future(() {
-        _notifier.clear(idx);
+        notifier?.clear(idx);
       });
     }
   }
@@ -192,37 +185,40 @@ class _SingleDigitTextState extends State<_SingleDigitTextForm>
   @override
   void dispose() {
     _controller.dispose();
-    if (isFirst) {
-      _notifier.dispose();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 50,
-      child: TextFormField(
-        controller: _controller,
-        decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            counterText: '', // カウンターを非表示にする
-            counterStyle: const TextStyle(fontSize: 0),
-            errorText: _notifier.hasError() ? "" : null,
-            errorStyle: const TextStyle(fontSize: 0)),
-        style: TextStyle(
-          fontSize: 22,
-          color: _notifier.hasError() ? getColorScheme(context).error : null,
-        ),
-        maxLength: 1,
-        showCursor: false,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        focusNode: focusNode,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        autofocus: isFirst ? true : false,
-      ),
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        _ref = ref;
+        final notifier = ref.watch(emailAuthFormProvider.notifier);
+        return SizedBox(
+          width: 50,
+          child: TextFormField(
+            controller: _controller,
+            decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                counterText: '', // カウンターを非表示にする
+                counterStyle: const TextStyle(fontSize: 0),
+                errorText: notifier.hasError ? "" : null,
+                errorStyle: const TextStyle(fontSize: 0)),
+            style: TextStyle(
+              fontSize: 22,
+              color: notifier.hasError ? getColorScheme(context).error : null,
+            ),
+            maxLength: 1,
+            showCursor: false,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            focusNode: focusNode,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            autofocus: isFirst ? true : false,
+          ),
+        );
+      }
     );
   }
 }
@@ -230,34 +226,23 @@ class _SingleDigitTextState extends State<_SingleDigitTextForm>
 class _AuthButtonWidget extends ConsumerWidget with UIMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(emailAuthStateProvider);
-    final vo = ref.read(emailAuthStateProvider);
-    final notifier = ref.read(emailAuthStateProvider.notifier);
+    final form = ref.watch(emailAuthFormProvider);
+    final apiState = ref.watch(apiProvider);
 
     return OutlinedProgressButton(
-        state: () {
-          switch(vo.authState) {
-            case EmailAuthState.idle:
-              return ButtonState.idle;
-            case EmailAuthState.authenticating:
-              return ButtonState.loading;
-            case EmailAuthState.authSuccess:
-              return ButtonState.success;
-            case EmailAuthState.authFailed:
-              return ButtonState.failed;
-          }
-        }(),
-        onPressed: notifier.isFilled() && !notifier.hasError()
+        state: ButtonState.fromApiState(apiState),
+        onPressed: form.isFilled && !form.hasError
             ? () {
                 unFocus(context);
                 // 認証処理
-                notifier.authenticateEmail(
+                ref.read(apiProvider.notifier).authenticateEmail(
+                    form: form,
                     onSuccess: (res) {
-                      _navigateToUserRegistrationPage(context, res.email);
+                      _navigateToUserRegistrationPage(context, ref, form.email);
                     },
-                    onFailure: (error) {
-                      // NOP
-                    }
+                    onFailure: (err) {
+                      ref.read(emailAuthFormProvider.notifier).update(error: err);
+                    },
                 );
               }
             : null,
@@ -265,10 +250,11 @@ class _AuthButtonWidget extends ConsumerWidget with UIMixin {
     );
   }
 
-  _navigateToUserRegistrationPage(BuildContext context, String email) {
+  _navigateToUserRegistrationPage(BuildContext context, WidgetRef ref, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      final user = UserFormData.init(email: email);
-      Navigator.of(context).pushNamed(UserRegistrationPage.path, arguments: user);
+      final form = UserForm.init(email: email);
+      ref.read(apiProvider.notifier).refresh();
+      Navigator.of(context).pushNamed(UserRegistrationPage.path, arguments: form);
     });
   }
 }

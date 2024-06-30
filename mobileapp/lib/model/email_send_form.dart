@@ -1,17 +1,17 @@
 import 'package:white_cloud/importer.dart';
 
-part 'email_vo.freezed.dart';
+part 'email_send_form.freezed.dart';
 
 @freezed
-class EmailVO with _$EmailVO {
-  factory EmailVO({
+class EmailSendForm with _$EmailSendForm {
+  factory EmailSendForm({
     required EmailState state,
     required String email,
     ErrorResponse? sendAuthCodeError,
-  }) = _EmailVO;
+  }) = _EmailSendForm;
 
   /// 初期データ取得
-  factory EmailVO.init() => EmailVO(
+  factory EmailSendForm.init() => EmailSendForm(
         state: EmailState.empty,
         email: "",
         sendAuthCodeError: null,

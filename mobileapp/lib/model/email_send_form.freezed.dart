@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'email_vo.dart';
+part of 'email_send_form.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,19 +15,21 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$EmailVO {
+mixin _$EmailSendForm {
   EmailState get state => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   ErrorResponse? get sendAuthCodeError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $EmailVOCopyWith<EmailVO> get copyWith => throw _privateConstructorUsedError;
+  $EmailSendFormCopyWith<EmailSendForm> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $EmailVOCopyWith<$Res> {
-  factory $EmailVOCopyWith(EmailVO value, $Res Function(EmailVO) then) =
-      _$EmailVOCopyWithImpl<$Res, EmailVO>;
+abstract class $EmailSendFormCopyWith<$Res> {
+  factory $EmailSendFormCopyWith(
+          EmailSendForm value, $Res Function(EmailSendForm) then) =
+      _$EmailSendFormCopyWithImpl<$Res, EmailSendForm>;
   @useResult
   $Res call({EmailState state, String email, ErrorResponse? sendAuthCodeError});
 
@@ -35,9 +37,9 @@ abstract class $EmailVOCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EmailVOCopyWithImpl<$Res, $Val extends EmailVO>
-    implements $EmailVOCopyWith<$Res> {
-  _$EmailVOCopyWithImpl(this._value, this._then);
+class _$EmailSendFormCopyWithImpl<$Res, $Val extends EmailSendForm>
+    implements $EmailSendFormCopyWith<$Res> {
+  _$EmailSendFormCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -81,10 +83,11 @@ class _$EmailVOCopyWithImpl<$Res, $Val extends EmailVO>
 }
 
 /// @nodoc
-abstract class _$$EmailVOImplCopyWith<$Res> implements $EmailVOCopyWith<$Res> {
-  factory _$$EmailVOImplCopyWith(
-          _$EmailVOImpl value, $Res Function(_$EmailVOImpl) then) =
-      __$$EmailVOImplCopyWithImpl<$Res>;
+abstract class _$$EmailSendFormImplCopyWith<$Res>
+    implements $EmailSendFormCopyWith<$Res> {
+  factory _$$EmailSendFormImplCopyWith(
+          _$EmailSendFormImpl value, $Res Function(_$EmailSendFormImpl) then) =
+      __$$EmailSendFormImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({EmailState state, String email, ErrorResponse? sendAuthCodeError});
@@ -94,11 +97,11 @@ abstract class _$$EmailVOImplCopyWith<$Res> implements $EmailVOCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$EmailVOImplCopyWithImpl<$Res>
-    extends _$EmailVOCopyWithImpl<$Res, _$EmailVOImpl>
-    implements _$$EmailVOImplCopyWith<$Res> {
-  __$$EmailVOImplCopyWithImpl(
-      _$EmailVOImpl _value, $Res Function(_$EmailVOImpl) _then)
+class __$$EmailSendFormImplCopyWithImpl<$Res>
+    extends _$EmailSendFormCopyWithImpl<$Res, _$EmailSendFormImpl>
+    implements _$$EmailSendFormImplCopyWith<$Res> {
+  __$$EmailSendFormImplCopyWithImpl(
+      _$EmailSendFormImpl _value, $Res Function(_$EmailSendFormImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -108,7 +111,7 @@ class __$$EmailVOImplCopyWithImpl<$Res>
     Object? email = null,
     Object? sendAuthCodeError = freezed,
   }) {
-    return _then(_$EmailVOImpl(
+    return _then(_$EmailSendFormImpl(
       state: null == state
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
@@ -127,8 +130,8 @@ class __$$EmailVOImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$EmailVOImpl implements _EmailVO {
-  _$EmailVOImpl(
+class _$EmailSendFormImpl implements _EmailSendForm {
+  _$EmailSendFormImpl(
       {required this.state, required this.email, this.sendAuthCodeError});
 
   @override
@@ -140,14 +143,14 @@ class _$EmailVOImpl implements _EmailVO {
 
   @override
   String toString() {
-    return 'EmailVO(state: $state, email: $email, sendAuthCodeError: $sendAuthCodeError)';
+    return 'EmailSendForm(state: $state, email: $email, sendAuthCodeError: $sendAuthCodeError)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$EmailVOImpl &&
+            other is _$EmailSendFormImpl &&
             (identical(other.state, state) || other.state == state) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.sendAuthCodeError, sendAuthCodeError) ||
@@ -160,15 +163,15 @@ class _$EmailVOImpl implements _EmailVO {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$EmailVOImplCopyWith<_$EmailVOImpl> get copyWith =>
-      __$$EmailVOImplCopyWithImpl<_$EmailVOImpl>(this, _$identity);
+  _$$EmailSendFormImplCopyWith<_$EmailSendFormImpl> get copyWith =>
+      __$$EmailSendFormImplCopyWithImpl<_$EmailSendFormImpl>(this, _$identity);
 }
 
-abstract class _EmailVO implements EmailVO {
-  factory _EmailVO(
+abstract class _EmailSendForm implements EmailSendForm {
+  factory _EmailSendForm(
       {required final EmailState state,
       required final String email,
-      final ErrorResponse? sendAuthCodeError}) = _$EmailVOImpl;
+      final ErrorResponse? sendAuthCodeError}) = _$EmailSendFormImpl;
 
   @override
   EmailState get state;
@@ -178,6 +181,6 @@ abstract class _EmailVO implements EmailVO {
   ErrorResponse? get sendAuthCodeError;
   @override
   @JsonKey(ignore: true)
-  _$$EmailVOImplCopyWith<_$EmailVOImpl> get copyWith =>
+  _$$EmailSendFormImplCopyWith<_$EmailSendFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

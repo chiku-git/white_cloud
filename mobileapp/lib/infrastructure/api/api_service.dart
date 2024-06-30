@@ -3,7 +3,7 @@ import 'package:retrofit/http.dart';
 import 'package:white_cloud/importer.dart';
 part 'api_service.g.dart';
 
-@RestApi(baseUrl: 'http://10.0.2.2:8000/api')
+@RestApi(baseUrl: Config.apiUrlLocal)
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 

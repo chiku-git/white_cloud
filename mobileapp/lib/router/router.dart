@@ -8,9 +8,7 @@ class AppRouter {
 
   final RouteSettings settings;
 
-  Route<dynamic>? get route => _switchRoute();
-
-  Route<dynamic>? _switchRoute() {
+  Route<dynamic>? switchRoute() {
     switch(settings.name) {
       case TopPage.path:
         return _getDefaultRouter(page: const TopPage());
@@ -22,8 +20,8 @@ class AppRouter {
         final email = settings.arguments as String;
         return _getDefaultRouter(page: AuthEmailPage(email: email,));
       case UserRegistrationPage.path:
-        final user = settings.arguments as UserFormData;
-        return _getDefaultRouter(page: UserRegistrationPage(user: user,));
+        final form = settings.arguments as UserForm;
+        return _getDefaultRouter(page: UserRegistrationPage(user: form,));
       case ImageCropPage.path:
         final image = settings.arguments as File;
         return _getDefaultRouter(page: ImageCropPage(image: image));

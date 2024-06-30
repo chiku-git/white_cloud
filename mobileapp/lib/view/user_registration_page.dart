@@ -2,14 +2,14 @@ import 'package:white_cloud/importer.dart';
 
 class UserRegistrationPage extends ConsumerWidget with UIMixin {
   static const String path = "/user/register";
-  final UserFormData user;
+  final UserForm user;
 
   const UserRegistrationPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future(() {
-      ref.read(registerUserProvider.notifier).updateUser(user: user);
+      ref.read(userFormProvider.notifier).updateUser(user: user);
     });
 
     return SafeArea(
@@ -99,9 +99,10 @@ class _UserNameInputWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(registerUserProvider).user;
+    final form = ref.watch(userFormProvider);
+
     return TextFormField(
-      initialValue: user.userName,
+      initialValue: form.userName,
       decoration: const InputDecoration(
         labelText: Strings.userName,
         border: OutlineInputBorder(),
@@ -110,7 +111,7 @@ class _UserNameInputWidget extends ConsumerWidget {
       maxLength: 20,
       maxLines: 1,
       onChanged: (userName) {
-        ref.read(registerUserProvider.notifier).update(userName: userName);
+        ref.read(userFormProvider.notifier).update(userName: userName);
       },
       textInputAction: TextInputAction.next,
     );
@@ -151,7 +152,7 @@ class _PasswordInputWidget extends ConsumerWidget {
           textInputAction: TextInputAction.next,
           autovalidateMode: AutovalidateMode.always,
           onChanged: (password) {
-            ref.read(registerUserProvider.notifier).update(password: password);
+            ref.read(userFormProvider.notifier).update(password: password);
           },
           validator: (password) {
             switch(_passwordValidator.validate(password)) {
@@ -174,10 +175,10 @@ class _BioInputWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(registerUserProvider).user;
+    final form = ref.watch(userFormProvider);
 
     return TextFormField(
-      initialValue: user.bio,
+      initialValue: form.bio,
       decoration: const InputDecoration(
         labelText: Strings.introMessage,
         border: OutlineInputBorder(),
@@ -185,7 +186,7 @@ class _BioInputWidget extends ConsumerWidget {
       keyboardType: TextInputType.text,
       maxLength: 100,
       onChanged: (bio) {
-        ref.read(registerUserProvider.notifier).update(bio: bio);
+        ref.read(userFormProvider.notifier).update(bio: bio);
       },
       textInputAction: TextInputAction.done,
     );
@@ -198,9 +199,9 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = getColorScheme(context);
-    final user = ref.watch(registerUserProvider).user;
-    final image = user.image != null && user.image!.bytes != null
-        ? Image.memory(user.image!.bytes!, fit: BoxFit.cover,)
+    final form = ref.watch(userFormProvider);
+    final image = form.image != null && form.image!.bytes != null
+        ? Image.memory(form.image!.bytes!, fit: BoxFit.cover,)
         : const PlaceHolderPersonImage();
     final photoFrameSize = MediaQuery.of(context).size.width * 0.35;
 
@@ -244,7 +245,7 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
     Future(() {
       ImageCropPage.pickAndTrim(Navigator.of(context)).then((image) => {
         if (image != null && image.bytes != null) {
-          ref.read(registerUserProvider.notifier).update(image: image),
+          ref.read(userFormProvider.notifier).update(image: image),
         }
       });
     });
@@ -256,28 +257,18 @@ class _RegisterUserButtonWidget extends ConsumerWidget with UIMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(registerUserProvider);
+    final apiState = ref.watch(apiProvider);
+    final form = ref.watch(userFormProvider);
 
     return OutlinedProgressButton(
-        state: () {
-          switch(state.apiState) {
-            case ApiState.idle:
-              return ButtonState.idle;
-            case ApiState.loading:
-              return ButtonState.loading;
-            case ApiState.success:
-              return ButtonState.success;
-            default:
-              return ButtonState.idle;
-          }
-        }(),
-        onPressed: state.canRegister() ? () {
+        state: ButtonState.fromApiState(apiState),
+        onPressed: form.isValid ? () {
           hideBanner(context);
-          ref.read(registerUserProvider.notifier).registerUser(
-              user: state.user,
+          ref.read(apiProvider.notifier).registerUser(
+              form: form,
               onSuccess: (res) {
                 DBRepository().saveUserFromJson(json: res.user.toJson());
-                _navigateToDashBoardPage(context);
+                _navigateToDashBoardPage(context, ref);
               },
               onFailure: (err) {
                 ScaffoldMessenger.of(context).showMaterialBanner(
@@ -293,8 +284,9 @@ class _RegisterUserButtonWidget extends ConsumerWidget with UIMixin {
     );
   }
 
-  _navigateToDashBoardPage(BuildContext context) {
+  _navigateToDashBoardPage(BuildContext context, WidgetRef ref) {
     Future.delayed(const Duration(milliseconds: 300), () {
+      ref.read(apiProvider.notifier).refresh();
       Navigator.of(context).pushNamed(DashBoardPage.path);
     });
   }

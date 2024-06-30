@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'email_auth_vo.dart';
+part of 'email_auth_form.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,36 +15,33 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$EmailAuthVO {
+mixin _$EmailAuthForm {
   List<String> get digits => throw _privateConstructorUsedError;
-  EmailAuthState get authState => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
   int get length => throw _privateConstructorUsedError;
   ErrorResponse? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $EmailAuthVOCopyWith<EmailAuthVO> get copyWith =>
+  $EmailAuthFormCopyWith<EmailAuthForm> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $EmailAuthVOCopyWith<$Res> {
-  factory $EmailAuthVOCopyWith(
-          EmailAuthVO value, $Res Function(EmailAuthVO) then) =
-      _$EmailAuthVOCopyWithImpl<$Res, EmailAuthVO>;
+abstract class $EmailAuthFormCopyWith<$Res> {
+  factory $EmailAuthFormCopyWith(
+          EmailAuthForm value, $Res Function(EmailAuthForm) then) =
+      _$EmailAuthFormCopyWithImpl<$Res, EmailAuthForm>;
   @useResult
   $Res call(
-      {List<String> digits,
-      EmailAuthState authState,
-      int length,
-      ErrorResponse? error});
+      {List<String> digits, String email, int length, ErrorResponse? error});
 
   $ErrorResponseCopyWith<$Res>? get error;
 }
 
 /// @nodoc
-class _$EmailAuthVOCopyWithImpl<$Res, $Val extends EmailAuthVO>
-    implements $EmailAuthVOCopyWith<$Res> {
-  _$EmailAuthVOCopyWithImpl(this._value, this._then);
+class _$EmailAuthFormCopyWithImpl<$Res, $Val extends EmailAuthForm>
+    implements $EmailAuthFormCopyWith<$Res> {
+  _$EmailAuthFormCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -55,7 +52,7 @@ class _$EmailAuthVOCopyWithImpl<$Res, $Val extends EmailAuthVO>
   @override
   $Res call({
     Object? digits = null,
-    Object? authState = null,
+    Object? email = null,
     Object? length = null,
     Object? error = freezed,
   }) {
@@ -64,10 +61,10 @@ class _$EmailAuthVOCopyWithImpl<$Res, $Val extends EmailAuthVO>
           ? _value.digits
           : digits // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      authState: null == authState
-          ? _value.authState
-          : authState // ignore: cast_nullable_to_non_nullable
-              as EmailAuthState,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
       length: null == length
           ? _value.length
           : length // ignore: cast_nullable_to_non_nullable
@@ -93,48 +90,45 @@ class _$EmailAuthVOCopyWithImpl<$Res, $Val extends EmailAuthVO>
 }
 
 /// @nodoc
-abstract class _$$EmailAuthVOImplCopyWith<$Res>
-    implements $EmailAuthVOCopyWith<$Res> {
-  factory _$$EmailAuthVOImplCopyWith(
-          _$EmailAuthVOImpl value, $Res Function(_$EmailAuthVOImpl) then) =
-      __$$EmailAuthVOImplCopyWithImpl<$Res>;
+abstract class _$$EmailAuthFormImplCopyWith<$Res>
+    implements $EmailAuthFormCopyWith<$Res> {
+  factory _$$EmailAuthFormImplCopyWith(
+          _$EmailAuthFormImpl value, $Res Function(_$EmailAuthFormImpl) then) =
+      __$$EmailAuthFormImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {List<String> digits,
-      EmailAuthState authState,
-      int length,
-      ErrorResponse? error});
+      {List<String> digits, String email, int length, ErrorResponse? error});
 
   @override
   $ErrorResponseCopyWith<$Res>? get error;
 }
 
 /// @nodoc
-class __$$EmailAuthVOImplCopyWithImpl<$Res>
-    extends _$EmailAuthVOCopyWithImpl<$Res, _$EmailAuthVOImpl>
-    implements _$$EmailAuthVOImplCopyWith<$Res> {
-  __$$EmailAuthVOImplCopyWithImpl(
-      _$EmailAuthVOImpl _value, $Res Function(_$EmailAuthVOImpl) _then)
+class __$$EmailAuthFormImplCopyWithImpl<$Res>
+    extends _$EmailAuthFormCopyWithImpl<$Res, _$EmailAuthFormImpl>
+    implements _$$EmailAuthFormImplCopyWith<$Res> {
+  __$$EmailAuthFormImplCopyWithImpl(
+      _$EmailAuthFormImpl _value, $Res Function(_$EmailAuthFormImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? digits = null,
-    Object? authState = null,
+    Object? email = null,
     Object? length = null,
     Object? error = freezed,
   }) {
-    return _then(_$EmailAuthVOImpl(
+    return _then(_$EmailAuthFormImpl(
       digits: null == digits
           ? _value._digits
           : digits // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      authState: null == authState
-          ? _value.authState
-          : authState // ignore: cast_nullable_to_non_nullable
-              as EmailAuthState,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
       length: null == length
           ? _value.length
           : length // ignore: cast_nullable_to_non_nullable
@@ -149,13 +143,14 @@ class __$$EmailAuthVOImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$EmailAuthVOImpl implements _EmailAuthVO {
-  _$EmailAuthVOImpl(
+class _$EmailAuthFormImpl extends _EmailAuthForm {
+  _$EmailAuthFormImpl(
       {required final List<String> digits,
-      required this.authState,
+      required this.email,
       required this.length,
       required this.error})
-      : _digits = digits;
+      : _digits = digits,
+        super._();
 
   final List<String> _digits;
   @override
@@ -166,7 +161,7 @@ class _$EmailAuthVOImpl implements _EmailAuthVO {
   }
 
   @override
-  final EmailAuthState authState;
+  final String email;
   @override
   final int length;
   @override
@@ -174,49 +169,49 @@ class _$EmailAuthVOImpl implements _EmailAuthVO {
 
   @override
   String toString() {
-    return 'EmailAuthVO(digits: $digits, authState: $authState, length: $length, error: $error)';
+    return 'EmailAuthForm(digits: $digits, email: $email, length: $length, error: $error)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$EmailAuthVOImpl &&
+            other is _$EmailAuthFormImpl &&
             const DeepCollectionEquality().equals(other._digits, _digits) &&
-            (identical(other.authState, authState) ||
-                other.authState == authState) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.length, length) || other.length == length) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_digits), authState, length, error);
+      const DeepCollectionEquality().hash(_digits), email, length, error);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$EmailAuthVOImplCopyWith<_$EmailAuthVOImpl> get copyWith =>
-      __$$EmailAuthVOImplCopyWithImpl<_$EmailAuthVOImpl>(this, _$identity);
+  _$$EmailAuthFormImplCopyWith<_$EmailAuthFormImpl> get copyWith =>
+      __$$EmailAuthFormImplCopyWithImpl<_$EmailAuthFormImpl>(this, _$identity);
 }
 
-abstract class _EmailAuthVO implements EmailAuthVO {
-  factory _EmailAuthVO(
+abstract class _EmailAuthForm extends EmailAuthForm {
+  factory _EmailAuthForm(
       {required final List<String> digits,
-      required final EmailAuthState authState,
+      required final String email,
       required final int length,
-      required final ErrorResponse? error}) = _$EmailAuthVOImpl;
+      required final ErrorResponse? error}) = _$EmailAuthFormImpl;
+  _EmailAuthForm._() : super._();
 
   @override
   List<String> get digits;
   @override
-  EmailAuthState get authState;
+  String get email;
   @override
   int get length;
   @override
   ErrorResponse? get error;
   @override
   @JsonKey(ignore: true)
-  _$$EmailAuthVOImplCopyWith<_$EmailAuthVOImpl> get copyWith =>
+  _$$EmailAuthFormImplCopyWith<_$EmailAuthFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

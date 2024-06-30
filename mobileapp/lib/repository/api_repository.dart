@@ -44,19 +44,19 @@ class ApiRepository {
 
   /// 会員登録する
   Future<ApiResult<RegisterUserResponse>> registerUser({
-    required UserFormData user,
+    required UserForm form,
   }) async {
     final request = FormData.fromMap(
       {
         "user": MultipartFile.fromString(
-            json.encode(user.toJson()),
+            json.encode(form.toJson()),
             contentType: MediaType.parse('application/json'),
         ),
-        "image": user.image != null && user.image!.bytes != null
+        "image": form.image != null && form.image!.bytes != null
             ? MultipartFile.fromBytes(
-                user.image!.bytes!,
-                filename: user.image!.fileName,
-                contentType: MediaType.parse(user.image!.mimeType),
+                form.image!.bytes!,
+                filename: form.image!.fileName,
+                contentType: MediaType.parse(form.image!.mimeType),
               )
             : null
       },

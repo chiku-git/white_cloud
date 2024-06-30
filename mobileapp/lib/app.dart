@@ -2,7 +2,7 @@ import 'package:white_cloud/infrastructure/database.dart';
 
 import 'importer.dart';
 
-class WhiteCloudApp extends StatelessWidget {
+class WhiteCloudApp extends ConsumerWidget {
   WhiteCloudApp({super.key}) {
     Future(() {
       Database().init();
@@ -10,12 +10,14 @@ class WhiteCloudApp extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: Strings.appName,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      onGenerateRoute: (settings) => AppRouter.of(settings: settings).route,
+      onGenerateRoute: (settings) {
+        return AppRouter.of(settings: settings).switchRoute();
+      },
       initialRoute: TopPage.path,
     );
   }

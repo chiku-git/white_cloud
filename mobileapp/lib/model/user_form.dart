@@ -1,32 +1,32 @@
 import 'package:white_cloud/importer.dart';
 
-part 'user_form_data.freezed.dart';
+part 'user_form.freezed.dart';
 
 @freezed
-abstract class UserFormData implements _$UserFormData {
-  UserFormData._();
-  factory UserFormData({
+abstract class UserForm implements _$UserForm {
+  UserForm._();
+  factory UserForm({
     required String userName,
     required String password,
     required String bio,
     required String email,
     ImageData? image,
-  }) = _UserFormData;
+  }) = _UserForm;
 
-  factory UserFormData.init({
+  factory UserForm.init({
     String? userName,
     String? bio,
     String? email,
     ImageData? image,
   }) =>
-      UserFormData(
+      UserForm(
           userName: userName ?? "",
           password: "",
           bio: bio ?? "",
           email: email ?? "",
           image: image);
 
-  bool isValid() =>
+  get isValid =>
       userName.isNotEmpty &&
       password.isNotEmpty &&
       email.isNotEmpty &&

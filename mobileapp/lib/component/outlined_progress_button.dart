@@ -86,7 +86,9 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
         shadowColor: shadowColor,
         surfaceTintColor: surfaceTintColor,
         elevation: elevation,
-        padding: state == ButtonState.idle ? padding : EdgeInsets.zero,
+        padding: [ButtonState.idle, ButtonState.failure].contains(state)
+            ? padding
+            : EdgeInsets.zero,
         minimumSize: minimumSize,
         fixedSize: fixedSize,
         maximumSize: maximumSize,
@@ -123,12 +125,8 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
                   : AppColors.lightSuccessGreen,
               Icons.check,
             );
-          case ButtonState.failed:
-            return Icon(
-              size: iconSize,
-              color: getColorScheme(context).error,
-              Icons.close,
-            );
+          case ButtonState.failure:
+            return child;
         }
       }(),
     );
@@ -139,6 +137,19 @@ enum ButtonState {
   idle,
   loading,
   success,
-  failed,
+  failure,
   ;
+
+  factory ButtonState.fromApiState(ApiState state) {
+    switch (state) {
+      case ApiState.idle:
+        return idle;
+      case ApiState.loading:
+        return loading;
+      case ApiState.success:
+        return success;
+      case ApiState.failure:
+        return failure;
+    }
+  }
 }

@@ -48,28 +48,28 @@ class _EmailFormField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vo = ref.watch(emailVOProvider);
+    final form = ref.watch(emailSendFormProvider);
 
     return TextFormField(
       decoration: InputDecoration(
           labelText: Strings.emailAddress,
           border: const OutlineInputBorder(),
-          suffixIcon: vo.state.hasError
+          suffixIcon: form.state.hasError
               ? const Icon(Icons.error)
               : null,
           errorMaxLines: 3,
-          errorText: _getErrorMessage(vo)
+          errorText: _getErrorMessage(form)
       ),
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.emailAddress,
       onChanged: (email) {
-        ref.read(emailVOProvider.notifier).validate(email: email);
+        ref.read(emailSendFormProvider.notifier).validate(email: email);
       },
     );
   }
 
-  String? _getErrorMessage(EmailVO vo) {
-    switch(vo.state) {
+  String? _getErrorMessage(EmailSendForm form) {
+    switch(form.state) {
       case EmailState.empty:
         // 空
         return null;
@@ -77,9 +77,9 @@ class _EmailFormField extends ConsumerWidget {
         // 無効なメールアドレスフォーマット
         return Strings.inputValidEmailAddress;
       case EmailState.invalidEmail:
-      case EmailState.sendFailed:
+      case EmailState.apiError:
         // 無効なメールアドレス（認証コード送信APIでエラーとなった場合）
-        return vo.sendAuthCodeError?.message;
+        return form.sendAuthCodeError?.message;
       case EmailState.valid:
         // 正常なメールアドレス
         return null;
@@ -90,28 +90,25 @@ class _EmailFormField extends ConsumerWidget {
 }
 
 class _SubmitButton extends ConsumerWidget with UIMixin {
-  final _buttonStateMap = {
-    EmailState.sending: ButtonState.loading,
-    EmailState.sendSuccess: ButtonState.success,
-    EmailState.sendFailed: ButtonState.failed,
-  };
-
   _SubmitButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vo = ref.watch(emailVOProvider);
+    final form = ref.watch(emailSendFormProvider);
+    final apiState = ref.watch(apiProvider);
+
     return OutlinedProgressButton(
-        state: _buttonStateMap[vo.state] ?? ButtonState.idle,
-        onPressed: vo.state.isValid ? () {
+        state: ButtonState.fromApiState(apiState),
+        onPressed: form.state.isValid ? () {
           unFocus(context);
-          ref.read(emailVOProvider.notifier).sendAuthCode(
+          ref.read(apiProvider.notifier).sendAuthCode(
+              form: form,
               onSuccess: (res) {
                 _navigateToAuthEmail(ref, context, res.email);
               },
-              onFailure: (error) {
-                // NOP
-              }
+              onFailure: (err) {
+                ref.read(emailSendFormProvider.notifier).notifyApiError(err);
+              },
           );
         } : null,
         child: const Text(Strings.sendEmail)
@@ -121,8 +118,8 @@ class _SubmitButton extends ConsumerWidget with UIMixin {
   /// メールアドレスの認証画面に遷移する
   _navigateToAuthEmail(WidgetRef ref, BuildContext context, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      ref.read(emailVOProvider.notifier)
-          .update(newState: EmailState.valid);
+      ref.read(emailSendFormProvider.notifier).update(newState: EmailState.valid);
+      ref.read(apiProvider.notifier).refresh();
       Navigator.pushNamed(context, AuthEmailPage.path, arguments: email);
     });
   }

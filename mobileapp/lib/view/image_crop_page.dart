@@ -155,3 +155,33 @@ class _SubmitCroppingBtnWidget extends ConsumerWidget with ThemeMixin {
     );
   }
 }
+
+enum XCropState {
+  init,
+  ready,
+  cropping,
+  done
+  ;
+
+  bool get isInit => this == init;
+  bool get isReady => this == ready;
+  bool get isCropping => this == cropping;
+  bool get isDone => this == done;
+  bool get isWorking => isInit || isCropping;
+  bool get isIdle => !isWorking;
+
+  XCropState computeNewState(CropStatus status) {
+    switch(this) {
+      case init:
+        return status == CropStatus.ready ? ready : this;
+      case ready:
+        return status == CropStatus.cropping ? cropping : this;
+      case cropping:
+        return status == CropStatus.ready ? done : this;
+      case done:
+        return this;
+      default:
+        return this;
+    }
+  }
+}
