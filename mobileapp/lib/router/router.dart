@@ -27,6 +27,8 @@ class AppRouter {
         return _getDefaultRouter(page: ImageCropPage(image: image));
       case DashBoardPage.path:
         return _getDefaultRouter(page: const DashBoardPage());
+      case LoginPage.path:
+        return _getDefaultRouter(page: const LoginPage());
       default:
         return null;
     }

@@ -56,7 +56,7 @@ class _Body extends StatelessWidget with ThemeMixin {
                       children: [
                         _ButtonWidget(
                             onPressed: () {
-                              // ログイン画面へ
+                              Navigator.pushNamed(context, LoginPage.path);
                             },
                             text: Strings.login),
                         const _Divider(),

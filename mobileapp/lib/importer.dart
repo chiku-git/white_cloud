@@ -56,3 +56,4 @@ export 'component/banner.dart';
 export 'component/confirm_dialog.dart';
 export 'repository/db_repository.dart';
 export 'provider/api_state_notifier.dart';
+export 'view/login_page.dart';
