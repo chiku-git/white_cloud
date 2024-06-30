@@ -3,3 +3,4 @@
 __pycache__/
 db-volumes/
 *.sqlite3
+**/media/**/*
