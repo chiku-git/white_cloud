@@ -56,7 +56,7 @@ class _Body extends StatelessWidget with ThemeMixin {
                       children: [
                         _ButtonWidget(
                             onPressed: () {
-                              Navigator.pushNamed(context, LoginPage.path);
+                              _tryLogin(context);
                             },
                             text: Strings.login),
                         const _Divider(),
@@ -75,6 +75,13 @@ class _Body extends StatelessWidget with ThemeMixin {
         ),
       ),
     );
+  }
+
+  _tryLogin(BuildContext context) async {
+    final result = await Navigator.pushNamed(context, LoginPage.path);
+    if (result == true && context.mounted) {
+      Navigator.pushNamed(context, DashBoardPage.path);
+    }
   }
 }
 

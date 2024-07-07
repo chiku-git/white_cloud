@@ -286,7 +286,6 @@ class _RegisterUserButtonWidget extends ConsumerWidget with UIMixin {
 
   _navigateToDashBoardPage(BuildContext context, WidgetRef ref) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      ref.read(apiProvider.notifier).refresh();
       Navigator.of(context).pushNamed(DashBoardPage.path);
     });
   }

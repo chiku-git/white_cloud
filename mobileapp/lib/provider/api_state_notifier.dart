@@ -1,7 +1,8 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/login.dart';
 
 final apiProvider =
-StateNotifierProvider.autoDispose<ApiStateNotifier, ApiState>(
+StateNotifierProvider<ApiStateNotifier, ApiState>(
         (ref) => ApiStateNotifier());
 
 class ApiStateNotifier extends StateNotifier<ApiState> {
@@ -71,8 +72,28 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
     );
   }
 
-  refresh() {
-    state = ApiState.idle;
+  /// ログインする
+  login({
+    required String email,
+    required String password,
+    required Function(LoginResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().login(email: email, password: password).then(
+          (result) => {
+        result.when(
+          onSuccess: (res) {
+            state = ApiState.success;
+            onSuccess(res);
+          },
+          onFailure: (err) {
+            state = ApiState.failure;
+            onFailure(err);
+          },
+        ),
+      },
+    );
   }
 }
 

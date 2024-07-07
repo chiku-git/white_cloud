@@ -45,6 +45,18 @@ class ApiClient {
     }
   }
 
+  /// ログイン
+  Future<ApiResult<LoginResponse>> login({
+    required LoginRequest request,
+  }) async {
+    try {
+      final response = await _service.login(request);
+      return ApiResult<LoginResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<LoginResponse>(error: error);
+    }
+  }
+
   /// WebAPIで共通となるエラーをハンドルする
   ApiResult<T> _handleCommonError<T>({required Object error}) {
     if (error is DioException) {

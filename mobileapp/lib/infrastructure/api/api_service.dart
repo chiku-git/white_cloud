@@ -21,4 +21,9 @@ abstract class ApiService {
   @POST('/account/register/v1/')
   Future<ApiResponse<RegisterUserResponse>> registerUser(
       @Body() FormData request);
+
+  /// ログインAPI
+  @POST('/account/login/v1/')
+  Future<ApiResponse<LoginResponse>> login(
+      @Body() LoginRequest request);
 }

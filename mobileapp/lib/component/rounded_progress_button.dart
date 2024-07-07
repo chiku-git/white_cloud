@@ -1,6 +1,6 @@
 import 'package:white_cloud/importer.dart';
 
-class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
+class RoundedProgressButton extends StatelessWidget with ThemeMixin {
   final void Function()? onPressed;
   final void Function()? onLongPress;
   final void Function(bool)? onHover;
@@ -34,7 +34,7 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
   final Color? progressColor;
   final Color? successColor;
 
-  OutlinedProgressButton({
+  RoundedProgressButton({
     super.key,
     required this.onPressed,
     required this.child,
@@ -47,7 +47,7 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
     this.disabledBackgroundColor,
     this.shadowColor,
     this.surfaceTintColor,
-    this.elevation,
+    this.elevation = 0,
     this.padding,
     this.minimumSize,
     this.fixedSize,
@@ -76,7 +76,7 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
   Widget build(BuildContext context) {
     final isDark = isDarkTheme(context);
 
-    return OutlinedButton(
+    return ElevatedButton(
       key: super.key,
       onPressed: onPressed,
       onLongPress: onLongPress,
@@ -135,26 +135,5 @@ class OutlinedProgressButton extends StatelessWidget with ThemeMixin {
         }
       }(),
     );
-  }
-}
-
-enum ButtonState {
-  idle,
-  loading,
-  success,
-  failure,
-  ;
-
-  factory ButtonState.fromApiState(ApiState state) {
-    switch (state) {
-      case ApiState.idle:
-        return idle;
-      case ApiState.loading:
-        return loading;
-      case ApiState.success:
-        return success;
-      case ApiState.failure:
-        return failure;
-    }
   }
 }

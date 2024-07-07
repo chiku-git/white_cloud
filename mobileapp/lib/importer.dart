@@ -57,3 +57,7 @@ export 'component/confirm_dialog.dart';
 export 'repository/db_repository.dart';
 export 'provider/api_state_notifier.dart';
 export 'view/login_page.dart';
+export 'model/api/user_info.dart';
+export 'model/api/login.dart';
+export 'provider/login_form_state_notifier.dart';
+export 'component/rounded_progress_button.dart';

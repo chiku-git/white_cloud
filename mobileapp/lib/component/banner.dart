@@ -26,6 +26,6 @@ class ErrorBanner extends MaterialBanner {
       backgroundColor: Theme.of(context).colorScheme.error.withOpacity(0.9),
       padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
       elevation: 1,
-      margin: const EdgeInsets.only(left: 10, top: 10, right: 10)
+      margin: const EdgeInsets.only(left: 10, top: 0, right: 10)
   );
 }

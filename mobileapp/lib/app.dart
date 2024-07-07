@@ -19,7 +19,38 @@ class WhiteCloudApp extends ConsumerWidget {
         return AppRouter.of(settings: settings).switchRoute();
       },
       initialRoute: TopPage.path,
+      navigatorObservers: [
+        AppNavigatorObserver()
+      ],
     );
+  }
+}
+
+class AppNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+    final context = route.navigator?.context;
+
+    if (context != null) {
+      // メッセージを非表示にする
+      _hideBanner(context);
+    }
+  }
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    final context = route.navigator?.context;
+
+    if (context != null) {
+      // メッセージを非表示にする
+      _hideBanner(context);
+    }
+  }
+
+  _hideBanner(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
   }
 }
 

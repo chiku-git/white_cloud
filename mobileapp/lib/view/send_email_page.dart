@@ -118,8 +118,6 @@ class _SubmitButton extends ConsumerWidget with UIMixin {
   /// メールアドレスの認証画面に遷移する
   _navigateToAuthEmail(WidgetRef ref, BuildContext context, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      ref.read(emailSendFormProvider.notifier).update(newState: EmailState.valid);
-      ref.read(apiProvider.notifier).refresh();
       Navigator.pushNamed(context, AuthEmailPage.path, arguments: email);
     });
   }

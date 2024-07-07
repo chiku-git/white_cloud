@@ -64,4 +64,17 @@ class ApiRepository {
     );
     return await _client.registerUser(request: request);
   }
+
+  /// ログインする
+  Future<ApiResult<LoginResponse>> login({
+    required String email,
+    required String password,
+  }) async {
+    return await _client.login(
+      request: LoginRequest(
+        email: email,
+        password: password,
+      ),
+    );
+  }
 }

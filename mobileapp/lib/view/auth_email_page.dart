@@ -253,7 +253,6 @@ class _AuthButtonWidget extends ConsumerWidget with UIMixin {
   _navigateToUserRegistrationPage(BuildContext context, WidgetRef ref, String email) {
     Future.delayed(const Duration(milliseconds: 300), () {
       final form = UserForm.init(email: email);
-      ref.read(apiProvider.notifier).refresh();
       Navigator.of(context).pushNamed(UserRegistrationPage.path, arguments: form);
     });
   }
