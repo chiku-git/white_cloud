@@ -87,6 +87,26 @@ class UserExistsError(BusinessError):
         super().__init__(*args)
 
 
+class UserLockedError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_USER_LOCKED"
+
+    def __init__(self, *args: object):
+        self.message = "この会員はロックされています。ログインできません。"
+        self.detail = self.message
+        super().__init__(*args)
+
+
+class LoginError(BusinessError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "ERR_LOGIN_FAILED"
+
+    def __init__(self, *args: object):
+        self.message = "認証に失敗しました。メールアドレスまたはパスワードが正しくありません。もう一度試してください。"
+        self.detail = self.message
+        super().__init__(*args)
+
+
 class UnknownError(BusinessError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     code = "ERR_UNKNOWN"

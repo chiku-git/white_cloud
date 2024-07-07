@@ -4,11 +4,13 @@ from common.models.errors import (
     AuthCodeNotMatchError,
     BusinessError,
     ConstraintError,
+    LoginError,
     MailAddressExistsError,
     MailAddressLockedError,
     MailAddressNotExistsError,
     MissingParameterError,
     UserExistsError,
+    UserLockedError,
 )
 from common.models.responses import (
     APIErrorResponse,
@@ -16,6 +18,7 @@ from common.models.responses import (
     UnkownErrorResponse,
 )
 from django.forms import ValidationError
+from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
 from .models import AuthCode, User
@@ -150,4 +153,34 @@ class RegisterUserV1API(APIView):
 
     class Response:
         def __init__(self, user: User):
+            self.user = user.get_public_props()
+
+
+class LoginV1API(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            email = request.data["email"]
+            password = request.data["password"]
+
+            user = User.objects.find_by_email(email=email)
+            if not user or not user.check_password(password):
+                raise LoginError()
+
+            if not user.is_active:
+                raise UserLockedError()
+
+            token = Token.objects.get_or_create(user=user)[0]
+            return APISuccessResponse(
+                body=LoginV1API.Response(token=token.key, user=user)
+            )
+        except KeyError as e:
+            return APIErrorResponse(MissingParameterError(e))
+        except BusinessError as e:
+            return APIErrorResponse(e)
+        except Exception as e:
+            return UnkownErrorResponse(e)
+
+    class Response:
+        def __init__(self, user: User, token: str):
+            self.token = token
             self.user = user.get_public_props()
