@@ -61,3 +61,7 @@ export 'model/api/user_info.dart';
 export 'model/api/login.dart';
 export 'provider/login_form_state_notifier.dart';
 export 'component/rounded_progress_button.dart';
+export 'view/post_page.dart';
+export 'model/db/user.dart';
+export 'model/post_form.dart';
+export 'model/api/post.dart';

@@ -77,4 +77,15 @@ class ApiRepository {
       ),
     );
   }
+
+  /// 新規投稿する
+  Future<ApiResult<CreatePostResponse>> createPost({
+    required String body,
+  }) async {
+    return await _client.createPost(
+      request: CreatePostRequest(
+        body: body
+      ),
+    );
+  }
 }

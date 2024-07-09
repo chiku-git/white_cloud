@@ -1,5 +1,5 @@
 import 'package:white_cloud/infrastructure/database.dart';
-import '../model/db/user.dart';
+import 'package:white_cloud/importer.dart';
 
 class DBRepository {
   static DBRepository? _instance;
@@ -22,5 +22,9 @@ class DBRepository {
 
   saveUserFromJson({required Map<String, dynamic> json}) {
     saveUser(user: User.fromJson(json));
+  }
+
+  User getLatestUser() {
+    return _database.getLatestUser();
   }
 }

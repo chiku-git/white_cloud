@@ -36,6 +36,9 @@ class AppRouter {
         return _getDefaultRouter(page: const DashBoardPage());
       case LoginPage.path:
         return _getSlideAnimRouter(page: const LoginPage());
+      case PostPage.path:
+        final form = settings.arguments as PostForm;
+        return _getSlideAnimRouter(page: PostPage(form: form,));
       default:
         return null;
     }
@@ -53,7 +56,15 @@ class AppRouter {
       );
 
   _getSlideAnimRouter({required Widget page}) => PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => page,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ProviderScope(
+            overrides: [
+              apiProvider.overrideWith((ref) => ApiStateNotifier()),
+            ],
+            child: page
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0, 1);
         const end = Offset.zero;

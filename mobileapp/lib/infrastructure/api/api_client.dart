@@ -2,12 +2,26 @@ import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
 
 class ApiClient {
+  static ApiClient? _instance;
   late final AppDio _dio;
   ApiService get _service => ApiService(_dio);
 
-  ApiClient({AppDio? dio}) {
+  factory ApiClient() {
+    return _instance ?? () {
+      _instance = ApiClient._();
+      return _instance!;
+    }();
+  }
+
+  ApiClient._({AppDio? dio}) {
     _dio = dio ?? AppDio();
   }
+
+  /// 認証トークン
+  late String _token;
+
+  /// 認証情報
+  String get _authorization => "Token $_token";
 
   /// 認証コードを送信する
   Future<ApiResult<SendAuthCodeResponse>> sendAuthCode({
@@ -51,9 +65,26 @@ class ApiClient {
   }) async {
     try {
       final response = await _service.login(request);
+      // 認証トークンをセットする
+      _token = response.data!.token;
       return ApiResult<LoginResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<LoginResponse>(error: error);
+    }
+  }
+
+  /// 投稿
+  Future<ApiResult<CreatePostResponse>> createPost({
+    required CreatePostRequest request,
+  }) async {
+    try {
+      final response = await _service.createPost(
+          _authorization,
+          request
+      );
+      return ApiResult<CreatePostResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<CreatePostResponse>(error: error);
     }
   }
 

@@ -26,4 +26,10 @@ abstract class ApiService {
   @POST('/account/login/v1/')
   Future<ApiResponse<LoginResponse>> login(
       @Body() LoginRequest request);
+
+  /// 投稿作成API
+  @POST('/post/create/v1/')
+  Future<ApiResponse<CreatePostResponse>> createPost(
+      @Header('Authorization') String token,
+      @Body() CreatePostRequest request);
 }
