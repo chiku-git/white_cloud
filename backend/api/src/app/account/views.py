@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from common.models.errors import (
@@ -169,7 +170,13 @@ class LoginV1API(APIView):
             if not user.is_active:
                 raise UserLockedError()
 
+            # トークンの生成
             token = Token.objects.get_or_create(user=user)[0]
+
+            # ログイン情報の更新と保存
+            self._updateLoginDateTime(user)
+
+            # 返却
             return APISuccessResponse(
                 body=LoginV1API.Response(token=token.key, user=user)
             )
@@ -179,6 +186,11 @@ class LoginV1API(APIView):
             return APIErrorResponse(e)
         except Exception as e:
             return UnkownErrorResponse(e)
+
+    def _updateLoginDateTime(self, user: User):
+        user.last_login_at = datetime.datetime.now()
+        user.full_clean()
+        user.save()
 
     class Response:
         def __init__(self, user: User, token: str):

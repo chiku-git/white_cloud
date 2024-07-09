@@ -177,7 +177,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             "image": image,
             "email": self.email,
             "bio": self.bio,
+            "lastLoginAt": self.last_login_at,
             "createdAt": self.created_at,
+            "updatedAt": self.updated_at,
         }
 
     def __str__(self):
