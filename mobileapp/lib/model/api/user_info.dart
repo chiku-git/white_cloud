@@ -12,6 +12,8 @@ class UserInfo with _$UserInfo {
     required String bio,
     String? image,
     required String createdAt,
+    required String updatedAt,
+    required String lastLoginAt,
   }) = _UserInfo;
 
   factory UserInfo.fromJson(json) => _$UserInfoFromJson(json);

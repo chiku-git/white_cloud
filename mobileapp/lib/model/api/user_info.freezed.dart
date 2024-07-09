@@ -26,6 +26,8 @@ mixin _$UserInfo {
   String get bio => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
+  String get updatedAt => throw _privateConstructorUsedError;
+  String get lastLoginAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,7 +46,9 @@ abstract class $UserInfoCopyWith<$Res> {
       String email,
       String bio,
       String? image,
-      String createdAt});
+      String createdAt,
+      String updatedAt,
+      String lastLoginAt});
 }
 
 /// @nodoc
@@ -66,6 +70,8 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
     Object? bio = null,
     Object? image = freezed,
     Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? lastLoginAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -92,6 +98,14 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastLoginAt: null == lastLoginAt
+          ? _value.lastLoginAt
+          : lastLoginAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -110,7 +124,9 @@ abstract class _$$UserInfoImplCopyWith<$Res>
       String email,
       String bio,
       String? image,
-      String createdAt});
+      String createdAt,
+      String updatedAt,
+      String lastLoginAt});
 }
 
 /// @nodoc
@@ -130,6 +146,8 @@ class __$$UserInfoImplCopyWithImpl<$Res>
     Object? bio = null,
     Object? image = freezed,
     Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? lastLoginAt = null,
   }) {
     return _then(_$UserInfoImpl(
       id: null == id
@@ -156,6 +174,14 @@ class __$$UserInfoImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastLoginAt: null == lastLoginAt
+          ? _value.lastLoginAt
+          : lastLoginAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -169,7 +195,9 @@ class _$UserInfoImpl implements _UserInfo {
       required this.email,
       required this.bio,
       this.image,
-      required this.createdAt});
+      required this.createdAt,
+      required this.updatedAt,
+      required this.lastLoginAt});
 
   factory _$UserInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserInfoImplFromJson(json);
@@ -186,10 +214,14 @@ class _$UserInfoImpl implements _UserInfo {
   final String? image;
   @override
   final String createdAt;
+  @override
+  final String updatedAt;
+  @override
+  final String lastLoginAt;
 
   @override
   String toString() {
-    return 'UserInfo(id: $id, userName: $userName, email: $email, bio: $bio, image: $image, createdAt: $createdAt)';
+    return 'UserInfo(id: $id, userName: $userName, email: $email, bio: $bio, image: $image, createdAt: $createdAt, updatedAt: $updatedAt, lastLoginAt: $lastLoginAt)';
   }
 
   @override
@@ -204,13 +236,17 @@ class _$UserInfoImpl implements _UserInfo {
             (identical(other.bio, bio) || other.bio == bio) &&
             (identical(other.image, image) || other.image == image) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.lastLoginAt, lastLoginAt) ||
+                other.lastLoginAt == lastLoginAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, userName, email, bio, image, createdAt);
+  int get hashCode => Object.hash(runtimeType, id, userName, email, bio, image,
+      createdAt, updatedAt, lastLoginAt);
 
   @JsonKey(ignore: true)
   @override
@@ -233,7 +269,9 @@ abstract class _UserInfo implements UserInfo {
       required final String email,
       required final String bio,
       final String? image,
-      required final String createdAt}) = _$UserInfoImpl;
+      required final String createdAt,
+      required final String updatedAt,
+      required final String lastLoginAt}) = _$UserInfoImpl;
 
   factory _UserInfo.fromJson(Map<String, dynamic> json) =
       _$UserInfoImpl.fromJson;
@@ -250,6 +288,10 @@ abstract class _UserInfo implements UserInfo {
   String? get image;
   @override
   String get createdAt;
+  @override
+  String get updatedAt;
+  @override
+  String get lastLoginAt;
   @override
   @JsonKey(ignore: true)
   _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>

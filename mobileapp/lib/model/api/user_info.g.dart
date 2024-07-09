@@ -14,6 +14,8 @@ _$UserInfoImpl _$$UserInfoImplFromJson(Map<String, dynamic> json) =>
       bio: json['bio'] as String,
       image: json['image'] as String?,
       createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      lastLoginAt: json['lastLoginAt'] as String,
     );
 
 Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
@@ -24,4 +26,6 @@ Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
       'bio': instance.bio,
       'image': instance.image,
       'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'lastLoginAt': instance.lastLoginAt,
     };

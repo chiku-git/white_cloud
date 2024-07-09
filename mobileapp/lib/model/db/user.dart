@@ -16,6 +16,8 @@ class User {
   late String email;
   String? image;
   late DateTime createdAt;
+  late DateTime updatedAt;
+  late DateTime lastLoginAt;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return _$UserFromJson(json);

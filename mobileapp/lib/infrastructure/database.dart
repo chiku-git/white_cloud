@@ -28,7 +28,8 @@ class Database {
     await isar.writeTxn(() async => await isar.users.put(user));
   }
 
+  /// 最新のユーザー（ログイン日時が最も新しいもの）を取得する
   User getLatestUser() {
-    return isar.users.getSync(11)!; // TODO 仮
+    return isar.users.where().sortByLastLoginAtDesc().findFirstSync()!;
   }
 }

@@ -42,8 +42,18 @@ const UserSchema = CollectionSchema(
       name: r'image',
       type: IsarType.string,
     ),
-    r'userName': PropertySchema(
+    r'lastLoginAt': PropertySchema(
       id: 5,
+      name: r'lastLoginAt',
+      type: IsarType.dateTime,
+    ),
+    r'updatedAt': PropertySchema(
+      id: 6,
+      name: r'updatedAt',
+      type: IsarType.dateTime,
+    ),
+    r'userName': PropertySchema(
+      id: 7,
       name: r'userName',
       type: IsarType.string,
     )
@@ -92,7 +102,9 @@ void _userSerialize(
   writer.writeString(offsets[2], object.email);
   writer.writeString(offsets[3], object.id);
   writer.writeString(offsets[4], object.image);
-  writer.writeString(offsets[5], object.userName);
+  writer.writeDateTime(offsets[5], object.lastLoginAt);
+  writer.writeDateTime(offsets[6], object.updatedAt);
+  writer.writeString(offsets[7], object.userName);
 }
 
 User _userDeserialize(
@@ -107,8 +119,10 @@ User _userDeserialize(
   object.email = reader.readString(offsets[2]);
   object.id = reader.readString(offsets[3]);
   object.image = reader.readStringOrNull(offsets[4]);
+  object.lastLoginAt = reader.readDateTime(offsets[5]);
   object.localId = id;
-  object.userName = reader.readString(offsets[5]);
+  object.updatedAt = reader.readDateTime(offsets[6]);
+  object.userName = reader.readString(offsets[7]);
   return object;
 }
 
@@ -130,6 +144,10 @@ P _userDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
+      return (reader.readDateTime(offset)) as P;
+    case 6:
+      return (reader.readDateTime(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -805,6 +823,59 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     });
   }
 
+  QueryBuilder<User, User, QAfterFilterCondition> lastLoginAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastLoginAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> lastLoginAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastLoginAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> lastLoginAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastLoginAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> lastLoginAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastLoginAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> localIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -849,6 +920,59 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'localId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> updatedAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> updatedAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> updatedAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> updatedAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1052,6 +1176,30 @@ extension UserQuerySortBy on QueryBuilder<User, User, QSortBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> sortByLastLoginAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastLoginAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByLastLoginAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastLoginAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> sortByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
@@ -1126,6 +1274,18 @@ extension UserQuerySortThenBy on QueryBuilder<User, User, QSortThenBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> thenByLastLoginAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastLoginAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByLastLoginAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastLoginAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> thenByLocalId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localId', Sort.asc);
@@ -1135,6 +1295,18 @@ extension UserQuerySortThenBy on QueryBuilder<User, User, QSortThenBy> {
   QueryBuilder<User, User, QAfterSortBy> thenByLocalIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
 
@@ -1186,6 +1358,18 @@ extension UserQueryWhereDistinct on QueryBuilder<User, User, QDistinct> {
     });
   }
 
+  QueryBuilder<User, User, QDistinct> distinctByLastLoginAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastLoginAt');
+    });
+  }
+
+  QueryBuilder<User, User, QDistinct> distinctByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt');
+    });
+  }
+
   QueryBuilder<User, User, QDistinct> distinctByUserName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1231,6 +1415,18 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
     });
   }
 
+  QueryBuilder<User, DateTime, QQueryOperations> lastLoginAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastLoginAt');
+    });
+  }
+
+  QueryBuilder<User, DateTime, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
+    });
+  }
+
   QueryBuilder<User, String, QQueryOperations> userNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'userName');
@@ -1248,7 +1444,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User()
   ..bio = json['bio'] as String
   ..email = json['email'] as String
   ..image = json['image'] as String?
-  ..createdAt = DateTime.parse(json['createdAt'] as String);
+  ..createdAt = DateTime.parse(json['createdAt'] as String)
+  ..updatedAt = DateTime.parse(json['updatedAt'] as String)
+  ..lastLoginAt = DateTime.parse(json['lastLoginAt'] as String);
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
@@ -1257,4 +1455,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'image': instance.image,
       'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'lastLoginAt': instance.lastLoginAt.toIso8601String(),
     };
