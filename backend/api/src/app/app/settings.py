@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # myself
     "account",
+    "post",
     # third party
     "rest_framework",
     "drf_extra_fields",
-    'rest_framework.authtoken'
+    "rest_framework.authtoken",
 ]
 
 REST_FRAMEWORK = {
@@ -52,8 +53,8 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
     ],
 }
 
