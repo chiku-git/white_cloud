@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/search_user.dart';
 part 'api_service.g.dart';
 
 @RestApi(baseUrl: Config.apiUrlLocal)
@@ -32,4 +33,10 @@ abstract class ApiService {
   Future<ApiResponse<CreatePostResponse>> createPost(
       @Header('Authorization') String token,
       @Body() CreatePostRequest request);
+
+  /// 会員検索API
+  @POST('/account/search/users/v1/')
+  Future<ApiResponse<SearchUserResponse>> searchUser(
+      @Header('Authorization') String token,
+      @Body() SearchUserRequest request);
 }

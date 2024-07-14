@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/search_user.dart';
 
 class ApiRepository {
   static ApiRepository? _instance;
@@ -85,6 +86,19 @@ class ApiRepository {
     return await _client.createPost(
       request: CreatePostRequest(
         body: body
+      ),
+    );
+  }
+
+  /// 会員を検索すう
+  Future<ApiResult<SearchUserResponse>> searchUser({
+    required String keyword,
+    required int page,
+  }) async {
+    return await _client.searchUser(
+      request: SearchUserRequest(
+          keyword: keyword,
+          page: page,
       ),
     );
   }
