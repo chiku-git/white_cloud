@@ -2,7 +2,7 @@ from django.forms import ValidationError
 from rest_framework import status
 
 
-class BusinessError(BaseException):
+class BusinessError(Exception):
     status_code: int
     code: str
     message: str

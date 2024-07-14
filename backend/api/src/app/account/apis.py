@@ -19,10 +19,13 @@ from common.models.responses import (
     UnkownErrorResponse,
 )
 from django.forms import ValidationError
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from .models import AuthCode, User
+from .serializers import SearchUserSerializer
 
 
 # Create your views here.
@@ -196,3 +199,54 @@ class LoginV1API(APIView):
         def __init__(self, user: User, token: str):
             self.token = token
             self.user = user.get_public_props()
+
+
+class SearchUserV1API(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    PAGE_SIZE = 10
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = SearchUserSerializer(data=request.data)
+
+            if serializer.is_valid():
+                # ユーザを検索する
+                users = self.search(request=request)
+                results = self.create_search_result(users=users)
+
+                return APISuccessResponse(body=SearchUserV1API.Response(users=results))
+            else:
+                raise KeyError(serializer.errors)
+
+        except KeyError as e:
+            return APIErrorResponse(MissingParameterError(e))
+        except BusinessError as e:
+            return APIErrorResponse(e)
+        except Exception as e:
+            return UnkownErrorResponse(e)
+
+    def search(self, request) -> list[User]:
+        keyword = request.data["keyword"]
+        page = int(request.data["page"])
+        me = request.user
+
+        start = page * self.PAGE_SIZE
+        end = start + self.PAGE_SIZE
+
+        return (
+            User.objects.filter(username__icontains=keyword)
+            .order_by("-last_login_at")
+            .exclude(id=me.id)[start:end]
+        )
+
+    def create_search_result(self, users: list[User]) -> list[dict]:
+        results = []
+        for user in users:
+            results.append(user.get_minimal_props())
+
+        return results
+
+    class Response:
+        def __init__(self, users: list[User]):
+            self.users = users

@@ -182,6 +182,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             "updatedAt": self.updated_at,
         }
 
+    def get_minimal_props(self) -> dict:
+        image = None
+        if self.image:
+            image = self.image
+
+        return {
+            "id": self.id,
+            "userName": self.username,
+            "image": image,
+            "bio": self.bio,
+        }
+
     def __str__(self):
         return self.username
 
