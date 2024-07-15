@@ -1,5 +1,7 @@
+import multiprocessing
 import random
 import string
+from multiprocessing import Pool
 
 from common.bases.api_bases import NoLoginAPI
 from common.bases.serializer_bases import BaseSerializer
@@ -16,27 +18,33 @@ class CreateTestUsersV1API(NoLoginAPI):
 
         if serializer.is_valid(raise_exception=True):
             count = serializer.validated_data["count"]
-
-            for i in range(count):
-                signature = self.randomname(10)
-                User.objects.create_user(
-                    username=f"test-{i}-{signature}",
-                    password="Chiku0228!",
-                    bio="こんにちは！私は自動作成されたユーザーです！",
-                    email=f"test-bulk-{i}-{signature}@test.com",
-                    image=None,
-                )
-
+            p = Pool(multiprocessing.cpu_count())
+            result = p.map(CreateTestUsersV1API.create, range(count))
             return APISuccessResponse(
-                body=CreateTestUsersV1API.Response(),
+                body=CreateTestUsersV1API.Response(result=result),
             )
 
-    def randomname(self, n):
+    @staticmethod
+    def create(i):
+        signature = CreateTestUsersV1API.randomname(10)
+        user = User.objects.create_user(
+            username=f"test-{i}-{signature}",
+            password="Chiku0228!",
+            bio="こんにちは！私は自動作成されたユーザーです！",
+            email=f"test-bulk-{i}-{signature}@test.com",
+            image=None,
+            extra_fields={"save_async": True},
+        )
+
+        return user.id
+
+    @staticmethod
+    def randomname(n):
         return "".join(random.choices(string.ascii_letters + string.digits, k=n))
 
     class Response:
-        def __init__(self):
-            self.result = "OK"
+        def __init__(self, result):
+            self.result = result
 
     class Serializer(BaseSerializer):
         count = serializers.IntegerField(

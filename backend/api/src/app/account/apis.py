@@ -220,22 +220,34 @@ class LoginV1API(NoLoginAPI):
 class SearchUserV1API(LoggedInAPI):
     """会員検索API"""
 
+    MAX_SIZE = 100
     PAGE_SIZE = 20
+    MAX_PAGE = MAX_SIZE / PAGE_SIZE  # 1検索ワードあたり最大100会員
 
     def post(self, request, *args, **kwargs):
         serializer = SearchUserSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
+            params = serializer.validated_data
+            page = params["page"]
+
+            # 上限ページ数チェック
+            if page >= self.MAX_PAGE:
+                return APISuccessResponse(
+                    body=SearchUserV1API.Response(
+                        users=[],
+                    ),
+                )
+
             # ユーザを検索する
             users = self._search(
-                data=serializer.validated_data,
+                data=params,
                 me=request.user,
             )
-            results = self._create_result(users=users)
 
             return APISuccessResponse(
                 body=SearchUserV1API.Response(
-                    users=results,
+                    users=self._create_result(users=users),
                 ),
             )
 

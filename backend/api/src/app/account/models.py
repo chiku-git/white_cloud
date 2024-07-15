@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
         image,
         **extra_fields,
     ):
+        save_async = extra_fields["save_async"]
         email = self.normalize_email(email)
         user = self.model(
             username=username,
@@ -33,7 +34,10 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.full_clean()
-        user.save(using=self._db)
+        if save_async:
+            user.asave()
+        else:
+            user.save()
 
         return user
 
@@ -49,6 +53,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("save_async", False)
 
         return self._create_user(
             username=username,
@@ -71,6 +76,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("save_async", False)
 
         return self._create_user(
             username=username,

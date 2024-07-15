@@ -93,9 +93,7 @@ class SearchUserSerializer(BaseSerializer):
     page = serializers.IntegerField(
         label="ページ",
         min_value=0,
-        max_value=5,
         error_messages={
-            "max_value": "ページは{max_value}以内で入力してください。",
             "min_value": "ページは{min_value}以上で入力してください。",
         },
     )
