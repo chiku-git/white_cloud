@@ -1,117 +1,136 @@
-from django.forms import ValidationError
 from rest_framework import status
+from rest_framework.exceptions import APIException
 
 
-class BusinessError(Exception):
-    status_code: int
-    code: str
-    message: str
-    detail: str = None
+class BusinessError(APIException):
+    def __init__(self, status_code=None, code=None, message=None, detail=None):
+        self.status_code = status_code
+        self.message = message
+        self.code = code
+        self.detail = detail
+        super().__init__(detail, code)
 
 
 class MailAddressLockedError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_EMAIL_ADDRESS_LOCKED"
-    message = "このメールアドレスはロックされています。別のメールアドレスで認証を行ってください。"
-    detail = message
-
-
-class MailAddressNotExistsError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_EMAIL_ADDRESS_NOT_EXISTS"
-    message = "メールアドレスが不正です。再度認証コードを送信してください。"
-    detail = message
-
-
-class AuthCodeNotMatchError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_AUTH_CODE_NOT_MATCH"
-    message = (
-        "認証コードが一致しません。認証コードを正しく入力し、再度認証を行ってください。"
-    )
-    detail = message
+    def __init__(self, email: str, detail: str | None = None):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_MAIL_LOCKED"
+        message = f"このメールアドレス({email})はロックされています。別のメールアドレスを使用してください。"
+        detail = detail if detail is not None else message
+        super().__init__(
+            status_code=status_code,
+            code=code,
+            message=message,
+            detail=detail,
+        )
 
 
 class MailAddressExistsError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_EMAIL_ADDRESS_HAS_RESISTERD"
-    message = "このメールアドレスは既に使用されています。別のメールアドレスで認証を行ってください。"
-    detail = message
-
-
-class MissingParameterError(BusinessError):
-    status_code = status.HTTP_400_BAD_REQUEST
-    code = "ERR_MISSING_PARAMETER"
-    message = "送信されたデータが不正です。操作をやり直してください。"
-
-    def __init__(self, key: str = None, e: KeyError = None, *args: object):
-        if e is not None:
-            key = str(e)
-
-        self.detail = f"{key}がありません。"
-        super().__init__(*args)
-
-
-class InvalidFormatError(BusinessError):
-    status_code = status.HTTP_400_BAD_REQUEST
-    code = "ERR_INVALID_FORMAT"
-
-    def __init__(self, target: str, detail: dict = None, *args: object):
-        self.message = (
-            f"{target}のフォーマットが正しくありません。再度入力してください。"
+    def __init__(self, message=None, detail=None):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_EMAIL_EXISTS"
+        message = (
+            message
+            if message is not None
+            else "このメールアドレスは既に登録されています。別のメールアドレスを使用してください"
         )
-        self.detail = self.message
-        if detail is not None:
-            self.detail = detail
-
-        super().__init__(*args)
+        detail = detail if detail is not None else message
+        super().__init__(status_code, code, message, detail)
 
 
-class ConstraintError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_CONSTRAINT"
+class MailAddressNotExistsError(BusinessError):
+    def __init__(self, status_code=None, code=None, message=None, detail=None):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_EMAIL_NOT_EXISTS"
+        message = "メールアドレスが存在しません。再度認証コードを送信してください。"
+        detail = detail if detail is not None else message
+        super().__init__(status_code, code, message, detail)
 
-    def __init__(self, error: ValidationError, *args: object):
-        self.message = "エラーが発生しました。操作をやり直してください。"
-        self.detail = str(error)
-        super().__init__(*args)
+
+class AuthCodeNotMatchError(BusinessError):
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_AUTH_CODE_NOT_MATCH"
+        message = "認証コードが一致しません。認証コードを正しく入力し、再度認証を行ってください。"
+        detail = message
+        super().__init__(status_code, code, message, detail)
+
+
+class ValidationFailedError(BusinessError):
+    def __init__(self, message: str, detail: str):
+        status_code = status.HTTP_400_BAD_REQUEST
+        code = "ERR_VALIDATION"
+        super().__init__(
+            status_code=status_code,
+            code=code,
+            message=message,
+            detail=detail,
+        )
 
 
 class UserExistsError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_USER_EXISTS"
-
-    def __init__(self, *args: object):
-        self.message = "このメールアドレスは既に登録されています。別のメールアドレスで登録してください。"
-        self.detail = self.message
-        super().__init__(*args)
-
-
-class UserLockedError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_USER_LOCKED"
-
-    def __init__(self, *args: object):
-        self.message = "この会員はロックされています。ログインできません。"
-        self.detail = self.message
-        super().__init__(*args)
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_USER_EXISTS"
+        message = "このメールアドレスは既に登録されています。別のメールアドレスで登録してください。"
+        detail = message
+        super().__init__(
+            status_code,
+            code,
+            message,
+            detail,
+        )
 
 
 class LoginError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_LOGIN_FAILED"
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_LOGIN_FAILED"
+        message = (
+            "認証に失敗しました。メールアドレスまたはパスワードが正しくありません。"
+        )
+        detail = message
+        super().__init__(status_code, code, message, detail)
 
-    def __init__(self, *args: object):
-        self.message = "認証に失敗しました。メールアドレスまたはパスワードが正しくありません。もう一度試してください。"
-        self.detail = self.message
-        super().__init__(*args)
+
+class UserLockedError(BusinessError):
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_USER_LOCKED"
+        message = "この会員はロックされています。ログインできません。"
+        detail = message
+        super().__init__(status_code, code, message, detail)
 
 
-class UnknownError(BusinessError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "ERR_UNKNOWN"
-    message = "不明なエラーが発生しました。操作をやり直してください。"
+class AuthenticationError(BusinessError):
+    def __init__(self, status_code, message, detail):
+        status_code = status_code
+        code = "ERR_API_AUTHENTICATION"
+        super().__init__(status_code, code, message, detail)
 
-    def __init__(self, error: Exception, *args: object):
-        self.detail = str(error)
-        super().__init__(*args)
+
+class APIExceptionError(BusinessError):
+    def __init__(self, status_code, detail):
+        status_code = status_code
+        code = "ERR_API_EXCEPTION"
+        message = "サーバーエラーが発生したため、処理を中断しました。"
+        super().__init__(status_code, code, message, detail)
+
+
+class ServerError(BusinessError):
+    def __init__(self, e: APIException):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_SERVER"
+        message = "サーバーエラーが発生したため、処理を中断しました。"
+        detail = {
+            "type": type(e).__name__,
+            "detail": (
+                e.get_full_details() if hasattr(e, "get_full_details") else str(e)
+            ),
+        }
+        super().__init__(
+            status_code=status_code,
+            code=code,
+            message=message,
+            detail=detail,
+        )

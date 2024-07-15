@@ -166,7 +166,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
-    def get_public_props(self) -> dict:
+    def get_public_full_properties(self) -> dict:
         image = None
         if self.image:
             image = self.image
@@ -182,7 +182,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             "updatedAt": self.updated_at,
         }
 
-    def get_minimal_props(self) -> dict:
+    def get_public_properties(self) -> dict:
         image = None
         if self.image:
             image = self.image

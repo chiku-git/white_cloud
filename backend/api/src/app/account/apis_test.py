@@ -1,23 +1,21 @@
 import random
 import string
 
-from common.models.errors import BusinessError, ConstraintError, MissingParameterError
-from common.models.responses import (
-    APIErrorResponse,
-    APISuccessResponse,
-    UnkownErrorResponse,
-)
-from django.forms import ValidationError
-from rest_framework.views import APIView
+from common.bases.api_bases import NoLoginAPI
+from common.bases.serializer_bases import BaseSerializer
+from common.models.responses import APISuccessResponse
+from rest_framework import serializers
 
 from .models import User
 
 
 # Create your views here.
-class CreateTestUsersV1API(APIView):
+class CreateTestUsersV1API(NoLoginAPI):
     def post(self, request, *args, **kwargs):
-        try:
-            count = request.data["count"]
+        serializer = CreateTestUsersV1API.Serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            count = serializer.validated_data["count"]
 
             for i in range(count):
                 signature = self.randomname(10)
@@ -29,15 +27,9 @@ class CreateTestUsersV1API(APIView):
                     image=None,
                 )
 
-            return APISuccessResponse(body=CreateTestUsersV1API.Response())
-        except KeyError as e:
-            return APIErrorResponse(MissingParameterError(e))
-        except BusinessError as e:
-            return APIErrorResponse(e)
-        except ValidationError as e:
-            return APIErrorResponse(ConstraintError(e))
-        except Exception as e:
-            return UnkownErrorResponse(e)
+            return APISuccessResponse(
+                body=CreateTestUsersV1API.Response(),
+            )
 
     def randomname(self, n):
         return "".join(random.choices(string.ascii_letters + string.digits, k=n))
@@ -45,3 +37,10 @@ class CreateTestUsersV1API(APIView):
     class Response:
         def __init__(self):
             self.result = "OK"
+
+    class Serializer(BaseSerializer):
+        count = serializers.IntegerField(
+            label="作成数",
+            max_value=999,
+            min_value=1,
+        )

@@ -2,17 +2,17 @@ import datetime
 import json
 from uuid import UUID
 
+import pytz
 from django.db.models.fields.files import ImageFieldFile
 from django.http import JsonResponse
-import pytz
 from rest_framework import status
 
 from app.settings import TIME_ZONE
 
-from .errors import BusinessError, UnknownError
+from .errors import BusinessError
 
 
-class _APIResponse(JsonResponse):
+class APIResponse(JsonResponse):
     def __init__(
         self,
         body=None,
@@ -20,8 +20,8 @@ class _APIResponse(JsonResponse):
         **kwargs,
     ):
         super().__init__(
-            data=_APIResponse.Data(body, error_body),
-            encoder=_APIResponse.JsonEncoder,
+            data=APIResponse.Data(body, error_body),
+            encoder=APIResponse.JsonEncoder,
             safe=False,
             json_dumps_params={"ensure_ascii": False},
             **kwargs,
@@ -47,7 +47,7 @@ class _APIResponse(JsonResponse):
             return super().default(obj)
 
 
-class APISuccessResponse(_APIResponse):
+class APISuccessResponse(APIResponse):
     status_code = status.HTTP_200_OK
 
     def __init__(self, body, **kwargs):
@@ -58,7 +58,7 @@ class APISuccessResponse(_APIResponse):
         )
 
 
-class APIErrorResponse(_APIResponse):
+class APIErrorResponse(APIResponse):
     def __init__(self, e: BusinessError, **kwargs):
         self.status_code = e.status_code
         super().__init__(
@@ -76,8 +76,3 @@ class APIErrorResponse(_APIResponse):
             self.code = code
             self.message = message
             self.detail = detail
-
-
-class UnkownErrorResponse(APIErrorResponse):
-    def __init__(self, error: Exception, **kwargs):
-        super().__init__(UnknownError(error), **kwargs)
