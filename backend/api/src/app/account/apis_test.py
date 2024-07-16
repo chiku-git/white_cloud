@@ -33,7 +33,7 @@ class CreateTestUsersV1API(NoLoginAPI):
             bio="こんにちは！私は自動作成されたユーザーです！",
             email=f"test-bulk-{i}-{signature}@test.com",
             image=None,
-            extra_fields={"save_async": True},
+            save_sync=False,
         )
 
         return user.id
