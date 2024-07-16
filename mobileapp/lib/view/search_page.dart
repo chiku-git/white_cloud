@@ -178,8 +178,51 @@ class _SearchUserResultState extends ConsumerState<SearchResultPage>
     return PagedListView(
         pagingController: _controller,
         builderDelegate: PagedChildBuilderDelegate<UserMiniInfo>(
-          itemBuilder: (context, item, index) => _UserInfoTile(user: item)
+          itemBuilder: (context, item, index) => _UserInfoTile(user: item),
+          firstPageProgressIndicatorBuilder: (context) {
+            return _FirstPageProgressIndicator();
+          },
+          noItemsFoundIndicatorBuilder: (context) {
+            return _NoItemsFoundIndicator(keyword: form.keyword,);
+          },
         ),
+    );
+  }
+}
+
+class _FirstPageProgressIndicator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Center(
+        child: RichText(
+          text: const TextSpan(
+            children: [
+              TextSpan(text: "検索ワードを入力して、キーボードの"),
+              WidgetSpan(
+                child: Icon(Icons.search),
+              ),
+              TextSpan(text: "をタップしてください。"),
+            ],
+          ),
+        )
+      ),
+    );
+  }
+}
+
+class _NoItemsFoundIndicator extends StatelessWidget {
+  final String keyword;
+  const _NoItemsFoundIndicator({required this.keyword});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Center(
+        child: Text("\"$keyword\"の検索結果はありません"),
+      ),
     );
   }
 }
