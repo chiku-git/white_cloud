@@ -1,11 +1,9 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/search_user.dart';
-import 'package:white_cloud/provider/search_form_notifier.dart';
 
-import '../model/api/user_mini_info.dart';
-import '../model/search_form.dart';
-
+// =========================================
+// メイン
+// =========================================
 class SearchPage extends StatelessWidget {
   static const String path = "/search/";
 
@@ -29,7 +27,9 @@ class SearchPage extends StatelessWidget {
           child: DefaultTabController(
             length: pages.length,
             child: Scaffold(
-              appBar: _SearchBar(pages: pages,),
+              appBar: _SearchBar(
+                pages: pages,
+              ),
               body: TabBarView(
                 children: pages,
               ),
@@ -40,7 +40,13 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-class _SearchBar extends StatelessWidget with ThemeMixin implements PreferredSizeWidget {
+// =========================================
+// 検索バー
+// =========================================
+/// 検索バー本体
+class _SearchBar extends StatelessWidget
+    with ThemeMixin
+    implements PreferredSizeWidget {
   final List<SearchResultPage> pages;
 
   _SearchBar({required this.pages});
@@ -58,7 +64,7 @@ class _SearchBar extends StatelessWidget with ThemeMixin implements PreferredSiz
             color: colors.onPrimary,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: _SearchBarForm(),
+          child: _SearchBarTextForm(),
         ),
         bottom: TabBar(
           tabs: pages.map((page) => Tab(text: page.title)).toList(),
@@ -72,97 +78,193 @@ class _SearchBar extends StatelessWidget with ThemeMixin implements PreferredSiz
   Size get preferredSize => const Size.fromHeight(120);
 }
 
-class _SearchBarForm extends ConsumerWidget {
+/// 検索バーのテキスト部分のフォーム
+class _SearchBarTextForm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = TextEditingController();
+    final notifier = ref.read(searchFormProvider.notifier);
 
     return TextFormField(
       controller: controller,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search),
+        prefixIcon: const Icon(Icons.search),
         suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            controller.clear();
-          },
+          icon: const Icon(Icons.clear),
+          onPressed: () => controller.clear()
         ),
         border: InputBorder.none,
-        hintText: "White Cloudを検索",
+        hintText: Strings.searchInWhiteCloud,
       ),
       textInputAction: TextInputAction.search,
       onFieldSubmitted: (String? keyword) {
         if (keyword?.isNotEmpty == true) {
-          ref.read(searchFormProvider.notifier).update(keyword: keyword);
+          notifier.update(keyword: keyword);
         }
       },
     );
   }
 }
 
+// =========================================
+// 検索結果（View）
+// =========================================
+/// 検索結果ページの基底クラス
 abstract class SearchResultPage extends ConsumerStatefulWidget {
   final String title;
-
   const SearchResultPage(this.title, {super.key});
 }
 
+/// "最近の投稿" 検索結果ページ
 class _SearchLatestPostResultPage extends SearchResultPage {
-  const _SearchLatestPostResultPage(): super("最新");
+  const _SearchLatestPostResultPage() : super(Strings.latest);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState()
-    => _SearchLatestPostResultState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SearchLatestPostResultState();
 }
 
+/// "ユーザー" 検索結果ページ
 class _SearchUserResultPage extends SearchResultPage {
-  const _SearchUserResultPage(): super("ユーザー");
+  const _SearchUserResultPage() : super(Strings.user);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState()
-    => _SearchUserResultState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SearchUserResultState();
 }
 
-class _SearchLatestPostResultState extends ConsumerState<SearchResultPage> {
+/// 初期表示 or ローディングページ
+class _FirstPageProgressIndicator extends StatelessWidget {
+  final ApiState apiState;
+  const _FirstPageProgressIndicator({required this.apiState});
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    if (apiState == ApiState.loading) {
+      return const ProgressWidget(size: 50,);
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 50),
+        child: Center(
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(text: Strings.firstSearchPrefixMessage),
+                  WidgetSpan(
+                    child: Icon(Icons.search),
+                  ),
+                  TextSpan(text: Strings.firstSearchSuffixMessage),
+                ],
+              ),
+            )
+        ),
+      );
+    }
   }
 }
 
-class _SearchUserResultState extends ConsumerState<SearchResultPage>
-    with AutomaticKeepAliveClientMixin {
-  final PagingController<int, UserMiniInfo> _controller =
-      PagingController(firstPageKey: 0);
+/// 検索結果0件の場合のページ
+class _NoItemsFoundIndicator extends StatelessWidget {
+  final String keyword;
+  const _NoItemsFoundIndicator({required this.keyword});
 
   @override
+  Widget build(BuildContext context) {
+    final msg = StringWrapper(Strings.noSearchResults);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Center(
+        child: Text(msg.embed(keyword)),
+      ),
+    );
+  }
+}
+
+/// 検索エラーの場合のページ
+class _SearchErrorPage extends StatelessWidget with ThemeMixin {
+  final ErrorResponse error;
+
+  const _SearchErrorPage({required this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = getColorScheme(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                WidgetSpan(
+                  child: Icon(
+                    Icons.error,
+                    color: colors.error,
+                    size: 18,
+                  ),
+                ),
+                const TextSpan(
+                  text: " ",
+                ),
+                TextSpan(
+                    text: error.message,
+                    style: TextStyle(
+                      color: colors.error,
+                    )
+                ),
+          ],
+        ),
+      )),
+    );
+  }
+}
+
+// =========================================
+// 検索結果（State）
+// =========================================
+/// 検索ページ基底State
+abstract class _SearchResultState<T, V> extends ConsumerState<SearchResultPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
   bool get wantKeepAlive => true;
+  ApiState apiState = ApiState.idle;
+  late final PagingController<int, T> controller;
+  ApiRepository get api => ApiRepository();
 
   @override
   void initState() {
     super.initState();
-    _controller.addPageRequestListener((page) async {
+    controller = PagingController(firstPageKey: 0);
+    controller.addPageRequestListener((page) async {
       final keyword = ref.read(searchFormProvider).keyword;
       if (keyword.isEmpty) return;
 
-      final result = await ApiRepository().searchUser(
-          keyword: keyword,
-          page: page
-      );
-
-      result.when(
+      // 検索開始
+      apiState = ApiState.loading;
+      (await fetchSearchResults(keyword, page)).when(
           onSuccess: (res) {
-            if (res.users.isNotEmpty) {
-              _controller.appendPage(res.users, page + 1);
+            apiState = ApiState.success;
+            List<T> results = getSearchResults(res as V);
+            if (results.isNotEmpty) {
+              controller.appendPage(results, page + 1);
             } else {
-              _controller.appendLastPage([]);
+              controller.appendLastPage([]);
             }
           },
           onFailure: (err) {
-            _controller.error = err.message;
+            apiState = ApiState.failure;
+            controller.error = err;
           }
       );
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -170,95 +272,71 @@ class _SearchUserResultState extends ConsumerState<SearchResultPage>
     super.build(context);
     final form = ref.watch(searchFormProvider);
     if (form.keyword.isNotEmpty) {
-      _controller
+      controller
         ..refresh()
-        ..notifyPageRequestListeners(_controller.firstPageKey);
+        ..notifyPageRequestListeners(controller.firstPageKey);
     }
 
     return PagedListView(
-        pagingController: _controller,
-        builderDelegate: PagedChildBuilderDelegate<UserMiniInfo>(
-          itemBuilder: (context, item, index) => _UserInfoTile(user: item),
+      pagingController: controller,
+      builderDelegate: PagedChildBuilderDelegate<T>(
+          itemBuilder: (context, item, index) => getTile(item),
           firstPageProgressIndicatorBuilder: (context) {
-            return _FirstPageProgressIndicator();
+            return _FirstPageProgressIndicator(
+              apiState: apiState,
+            );
           },
           noItemsFoundIndicatorBuilder: (context) {
-            return _NoItemsFoundIndicator(keyword: form.keyword,);
+            return _NoItemsFoundIndicator(
+              keyword: form.keyword,
+            );
           },
-        ),
+          newPageErrorIndicatorBuilder: (context) {
+            return _SearchErrorPage(
+              error: controller.error,
+            );
+          },
+          firstPageErrorIndicatorBuilder: (context) {
+            return _SearchErrorPage(
+              error: controller.error,
+            );
+          },
+          newPageProgressIndicatorBuilder: (context) {
+            return const ProgressWidget(size: 30,);
+          }
+      ),
     );
   }
+
+  Widget getTile(T item);
+  Future<ApiResult<dynamic>> fetchSearchResults(String keyword, int page);
+  List<T> getSearchResults(V res);
 }
 
-class _FirstPageProgressIndicator extends StatelessWidget {
+/// "最新の投稿" State
+class _SearchLatestPostResultState
+    extends _SearchResultState<PostInfo, SearchPostsResponse> {
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: Center(
-        child: RichText(
-          text: const TextSpan(
-            children: [
-              TextSpan(text: "検索ワードを入力して、キーボードの"),
-              WidgetSpan(
-                child: Icon(Icons.search),
-              ),
-              TextSpan(text: "をタップしてください。"),
-            ],
-          ),
-        )
-      ),
-    );
-  }
+  Future<ApiResult> fetchSearchResults(String keyword, int page) =>
+      api.searchPost(keyword: keyword, page: page);
+
+  @override
+  List<PostInfo> getSearchResults(SearchPostsResponse res) => res.posts;
+
+  @override
+  Widget getTile(PostInfo item) => PostContentTile(post: item);
 }
 
-class _NoItemsFoundIndicator extends StatelessWidget {
-  final String keyword;
-  const _NoItemsFoundIndicator({required this.keyword});
+/// "ユーザー" State
+class _SearchUserResultState
+    extends _SearchResultState<UserMiniInfo, SearchUserResponse> {
+  @override
+  Future<ApiResult> fetchSearchResults(String keyword, int page) =>
+      api.searchUser(keyword: keyword, page: page);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: Center(
-        child: Text("\"$keyword\"の検索結果はありません"),
-      ),
-    );
-  }
-}
-
-class _UserInfoTile extends StatelessWidget {
-  final UserMiniInfo user;
-  const _UserInfoTile({required this.user});
+  List<UserMiniInfo> getSearchResults(SearchUserResponse res) => res.users;
 
   @override
-  Widget build(BuildContext context) {
-    final imagePath = user.image;
-
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-      leading: CirclePhotoFrame(
-        image: imagePath != null
-            ? Image.network("${Config.localhost}$imagePath")
-            : const PlaceHolderPersonImage(),
-        borderWidth: 0,
-        diameter: 35,
-      ),
-      title: Text(
-        user.userName,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        user.bio,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20)
-        ),
-        child: Text("フォロー"),
-      ),
-    );
-  }
+  Widget getTile(UserMiniInfo item) => UserInfoTile(user: item);
 }

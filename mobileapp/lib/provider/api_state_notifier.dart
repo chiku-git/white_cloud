@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/search_user.dart';
 
 final apiProvider =
 StateNotifierProvider<ApiStateNotifier, ApiState>(
@@ -117,15 +116,6 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
         ),
       },
     );
-  }
-
-  /// 会員を検索する
-  Future<ApiResult<SearchUserResponse>> searchUser({
-    required String keyword,
-    required int page,
-  }) {
-    state = ApiState.loading;
-    return ApiRepository().searchUser(keyword: keyword, page: page);
   }
 }
 

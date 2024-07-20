@@ -21,7 +21,7 @@ class ErrorResponse with _$ErrorResponse {
   factory ErrorResponse({
     required String code,
     required String message,
-    required String detail,
+    required dynamic detail,
   }) = _ErrorResponse;
 
   factory ErrorResponse.fromJson(

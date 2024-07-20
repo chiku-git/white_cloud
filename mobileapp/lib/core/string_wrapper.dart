@@ -29,4 +29,8 @@ class StringWrapper {
 
     return text.contains(ignoreCase ? other.toLowerCase() : other);
   }
+
+  String embed(String text) {
+    return value?.replaceFirst("%s", text) ?? "";
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:white_cloud/importer.dart';
-
-part 'post.freezed.dart';
-part 'post.g.dart';
+part 'create_post.freezed.dart';
+part 'create_post.g.dart';
 
 @freezed
 class CreatePostRequest with _$CreatePostRequest {
@@ -16,20 +15,9 @@ class CreatePostRequest with _$CreatePostRequest {
 @freezed
 class CreatePostResponse with _$CreatePostResponse {
   factory CreatePostResponse({
-    required PostDetail post,
+    required PostInfo post,
   }) = _CreatePostResponse;
 
   factory CreatePostResponse.fromJson(Map<String, dynamic> json)
     => _$CreatePostResponseFromJson(json);
-}
-
-@freezed
-class PostDetail with _$PostDetail {
-  factory PostDetail({
-    required String id,
-    required String createdAt,
-  }) = _PostDetail;
-
-  factory PostDetail.fromJson(Map<String, dynamic> json)
-  => _$PostDetailFromJson(json);
 }

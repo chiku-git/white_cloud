@@ -28,6 +28,13 @@ class Strings {
   static const createPostTitle = "新規投稿";
   static const createPostHint = "共有したいことを書こう";
   static const doPost = "投稿";
+  static const followUser = "フォロー";
+  static const searchInWhiteCloud = "White Cloudを検索";
+  static const latest = "最新";
+  static const user = "ユーザー";
+  static const firstSearchPrefixMessage = "検索ワードを入力して、キーボードの";
+  static const firstSearchSuffixMessage = "をタップしてください。";
+  static const noSearchResults = "'%s'の検索結果はありません";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

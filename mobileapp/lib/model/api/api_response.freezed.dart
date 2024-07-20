@@ -196,7 +196,7 @@ ErrorResponse _$ErrorResponseFromJson(Map<String, dynamic> json) {
 mixin _$ErrorResponse {
   String get code => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  String get detail => throw _privateConstructorUsedError;
+  dynamic get detail => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -210,7 +210,7 @@ abstract class $ErrorResponseCopyWith<$Res> {
           ErrorResponse value, $Res Function(ErrorResponse) then) =
       _$ErrorResponseCopyWithImpl<$Res, ErrorResponse>;
   @useResult
-  $Res call({String code, String message, String detail});
+  $Res call({String code, String message, dynamic detail});
 }
 
 /// @nodoc
@@ -228,7 +228,7 @@ class _$ErrorResponseCopyWithImpl<$Res, $Val extends ErrorResponse>
   $Res call({
     Object? code = null,
     Object? message = null,
-    Object? detail = null,
+    Object? detail = freezed,
   }) {
     return _then(_value.copyWith(
       code: null == code
@@ -239,10 +239,10 @@ class _$ErrorResponseCopyWithImpl<$Res, $Val extends ErrorResponse>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      detail: null == detail
+      detail: freezed == detail
           ? _value.detail
           : detail // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
     ) as $Val);
   }
 }
@@ -255,7 +255,7 @@ abstract class _$$ErrorResponseImplCopyWith<$Res>
       __$$ErrorResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String code, String message, String detail});
+  $Res call({String code, String message, dynamic detail});
 }
 
 /// @nodoc
@@ -271,7 +271,7 @@ class __$$ErrorResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? code = null,
     Object? message = null,
-    Object? detail = null,
+    Object? detail = freezed,
   }) {
     return _then(_$ErrorResponseImpl(
       code: null == code
@@ -282,10 +282,10 @@ class __$$ErrorResponseImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      detail: null == detail
+      detail: freezed == detail
           ? _value.detail
           : detail // ignore: cast_nullable_to_non_nullable
-              as String,
+              as dynamic,
     ));
   }
 }
@@ -304,7 +304,7 @@ class _$ErrorResponseImpl implements _ErrorResponse {
   @override
   final String message;
   @override
-  final String detail;
+  final dynamic detail;
 
   @override
   String toString() {
@@ -318,12 +318,13 @@ class _$ErrorResponseImpl implements _ErrorResponse {
             other is _$ErrorResponseImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.message, message) || other.message == message) &&
-            (identical(other.detail, detail) || other.detail == detail));
+            const DeepCollectionEquality().equals(other.detail, detail));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, code, message, detail);
+  int get hashCode => Object.hash(
+      runtimeType, code, message, const DeepCollectionEquality().hash(detail));
 
   @JsonKey(ignore: true)
   @override
@@ -343,7 +344,7 @@ abstract class _ErrorResponse implements ErrorResponse {
   factory _ErrorResponse(
       {required final String code,
       required final String message,
-      required final String detail}) = _$ErrorResponseImpl;
+      required final dynamic detail}) = _$ErrorResponseImpl;
 
   factory _ErrorResponse.fromJson(Map<String, dynamic> json) =
       _$ErrorResponseImpl.fromJson;
@@ -353,7 +354,7 @@ abstract class _ErrorResponse implements ErrorResponse {
   @override
   String get message;
   @override
-  String get detail;
+  dynamic get detail;
   @override
   @JsonKey(ignore: true)
   _$$ErrorResponseImplCopyWith<_$ErrorResponseImpl> get copyWith =>

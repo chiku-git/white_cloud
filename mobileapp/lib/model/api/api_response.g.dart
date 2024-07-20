@@ -42,7 +42,7 @@ _$ErrorResponseImpl _$$ErrorResponseImplFromJson(Map<String, dynamic> json) =>
     _$ErrorResponseImpl(
       code: json['code'] as String,
       message: json['message'] as String,
-      detail: json['detail'] as String,
+      detail: json['detail'],
     );
 
 Map<String, dynamic> _$$ErrorResponseImplToJson(_$ErrorResponseImpl instance) =>

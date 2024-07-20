@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
 
-import '../../model/api/search_user.dart';
-
 class ApiClient {
   static ApiClient? _instance;
   late final AppDio _dio;
@@ -102,6 +100,21 @@ class ApiClient {
       return ApiResult<SearchUserResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<SearchUserResponse>(error: error);
+    }
+  }
+
+  /// 投稿検索
+  Future<ApiResult<SearchPostsResponse>> searchPost({
+    required SearchPostsRequest request,
+  }) async {
+    try {
+      final response = await _service.searchPost(
+          _authorization,
+          request
+      );
+      return ApiResult<SearchPostsResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<SearchPostsResponse>(error: error);
     }
   }
 

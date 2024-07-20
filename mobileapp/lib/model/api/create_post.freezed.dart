@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'post.dart';
+part of 'create_post.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -158,7 +158,7 @@ CreatePostResponse _$CreatePostResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CreatePostResponse {
-  PostDetail get post => throw _privateConstructorUsedError;
+  PostInfo get post => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -172,9 +172,9 @@ abstract class $CreatePostResponseCopyWith<$Res> {
           CreatePostResponse value, $Res Function(CreatePostResponse) then) =
       _$CreatePostResponseCopyWithImpl<$Res, CreatePostResponse>;
   @useResult
-  $Res call({PostDetail post});
+  $Res call({PostInfo post});
 
-  $PostDetailCopyWith<$Res> get post;
+  $PostInfoCopyWith<$Res> get post;
 }
 
 /// @nodoc
@@ -196,14 +196,14 @@ class _$CreatePostResponseCopyWithImpl<$Res, $Val extends CreatePostResponse>
       post: null == post
           ? _value.post
           : post // ignore: cast_nullable_to_non_nullable
-              as PostDetail,
+              as PostInfo,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $PostDetailCopyWith<$Res> get post {
-    return $PostDetailCopyWith<$Res>(_value.post, (value) {
+  $PostInfoCopyWith<$Res> get post {
+    return $PostInfoCopyWith<$Res>(_value.post, (value) {
       return _then(_value.copyWith(post: value) as $Val);
     });
   }
@@ -217,10 +217,10 @@ abstract class _$$CreatePostResponseImplCopyWith<$Res>
       __$$CreatePostResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({PostDetail post});
+  $Res call({PostInfo post});
 
   @override
-  $PostDetailCopyWith<$Res> get post;
+  $PostInfoCopyWith<$Res> get post;
 }
 
 /// @nodoc
@@ -240,7 +240,7 @@ class __$$CreatePostResponseImplCopyWithImpl<$Res>
       post: null == post
           ? _value.post
           : post // ignore: cast_nullable_to_non_nullable
-              as PostDetail,
+              as PostInfo,
     ));
   }
 }
@@ -254,7 +254,7 @@ class _$CreatePostResponseImpl implements _CreatePostResponse {
       _$$CreatePostResponseImplFromJson(json);
 
   @override
-  final PostDetail post;
+  final PostInfo post;
 
   @override
   String toString() {
@@ -289,171 +289,16 @@ class _$CreatePostResponseImpl implements _CreatePostResponse {
 }
 
 abstract class _CreatePostResponse implements CreatePostResponse {
-  factory _CreatePostResponse({required final PostDetail post}) =
+  factory _CreatePostResponse({required final PostInfo post}) =
       _$CreatePostResponseImpl;
 
   factory _CreatePostResponse.fromJson(Map<String, dynamic> json) =
       _$CreatePostResponseImpl.fromJson;
 
   @override
-  PostDetail get post;
+  PostInfo get post;
   @override
   @JsonKey(ignore: true)
   _$$CreatePostResponseImplCopyWith<_$CreatePostResponseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-PostDetail _$PostDetailFromJson(Map<String, dynamic> json) {
-  return _PostDetail.fromJson(json);
-}
-
-/// @nodoc
-mixin _$PostDetail {
-  String get id => throw _privateConstructorUsedError;
-  String get createdAt => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $PostDetailCopyWith<PostDetail> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PostDetailCopyWith<$Res> {
-  factory $PostDetailCopyWith(
-          PostDetail value, $Res Function(PostDetail) then) =
-      _$PostDetailCopyWithImpl<$Res, PostDetail>;
-  @useResult
-  $Res call({String id, String createdAt});
-}
-
-/// @nodoc
-class _$PostDetailCopyWithImpl<$Res, $Val extends PostDetail>
-    implements $PostDetailCopyWith<$Res> {
-  _$PostDetailCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? createdAt = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$PostDetailImplCopyWith<$Res>
-    implements $PostDetailCopyWith<$Res> {
-  factory _$$PostDetailImplCopyWith(
-          _$PostDetailImpl value, $Res Function(_$PostDetailImpl) then) =
-      __$$PostDetailImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String id, String createdAt});
-}
-
-/// @nodoc
-class __$$PostDetailImplCopyWithImpl<$Res>
-    extends _$PostDetailCopyWithImpl<$Res, _$PostDetailImpl>
-    implements _$$PostDetailImplCopyWith<$Res> {
-  __$$PostDetailImplCopyWithImpl(
-      _$PostDetailImpl _value, $Res Function(_$PostDetailImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? createdAt = null,
-  }) {
-    return _then(_$PostDetailImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$PostDetailImpl implements _PostDetail {
-  _$PostDetailImpl({required this.id, required this.createdAt});
-
-  factory _$PostDetailImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PostDetailImplFromJson(json);
-
-  @override
-  final String id;
-  @override
-  final String createdAt;
-
-  @override
-  String toString() {
-    return 'PostDetail(id: $id, createdAt: $createdAt)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PostDetailImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PostDetailImplCopyWith<_$PostDetailImpl> get copyWith =>
-      __$$PostDetailImplCopyWithImpl<_$PostDetailImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PostDetailImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _PostDetail implements PostDetail {
-  factory _PostDetail(
-      {required final String id,
-      required final String createdAt}) = _$PostDetailImpl;
-
-  factory _PostDetail.fromJson(Map<String, dynamic> json) =
-      _$PostDetailImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  String get createdAt;
-  @override
-  @JsonKey(ignore: true)
-  _$$PostDetailImplCopyWith<_$PostDetailImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
