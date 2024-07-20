@@ -134,3 +134,17 @@ class ServerError(BusinessError):
             message=message,
             detail=detail,
         )
+
+
+class TestError(BusinessError):
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_TEST"
+        message = "テストエラー！ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"
+        detail = message
+        super().__init__(
+            status_code=status_code,
+            code=code,
+            message=message,
+            detail=detail,
+        )

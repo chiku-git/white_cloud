@@ -1,4 +1,4 @@
-from common.bases.serializer_bases import BaseSerializer
+from common.bases.serializer_bases import BaseSerializer, SearchSerializer
 from common.validators import validate_email, validate_user_name
 from rest_framework import serializers
 
@@ -80,20 +80,5 @@ class LoginSerializer(BaseSerializer):
     password = _get_default_password_field()
 
 
-class SearchUserSerializer(BaseSerializer):
-    keyword = serializers.CharField(
-        label="キーワード",
-        allow_blank=False,
-        allow_null=False,
-        max_length=50,
-        error_messages={
-            "max_length": "キーワードは{max_length}以内で入力してください。",
-        },
-    )
-    page = serializers.IntegerField(
-        label="ページ",
-        min_value=0,
-        error_messages={
-            "min_value": "ページは{min_value}以上で入力してください。",
-        },
-    )
+class SearchUserSerializer(SearchSerializer):
+    pass

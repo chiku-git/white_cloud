@@ -49,7 +49,27 @@ class Post(models.Model):
 
     objects = PostManager()
 
+    def get_full_properties(self):
+        return {
+            "id": self.id,
+            "body": self.body,
+            "user": self.user.get_public_properties(),
+            "createdAt": self.created_at,
+            "updatedAt": self.updated_at,
+        }
+
     class Meta:
         verbose_name = "投稿"
         verbose_name_plural = "投稿"
         db_table = "posts"
+
+
+class PostResponse:
+    def __init__(self, post: Post) -> None:
+        self.id = post.id
+        self.body = post.body
+        self.user = post.user.get_public_properties()
+        self.createdAt = post.created_at
+        self.updatedAt = post.updated_at
+        self.likes = 0
+        self.comments = 0

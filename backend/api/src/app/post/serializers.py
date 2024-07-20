@@ -1,4 +1,4 @@
-from common.bases.serializer_bases import SerializerMixin
+from common.bases.serializer_bases import SearchSerializer, SerializerMixin
 from rest_framework import serializers
 
 from .models import Post
@@ -12,3 +12,7 @@ class CreatePostSerializer(SerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("body",)
+
+
+class SearchPostSerializer(SearchSerializer):
+    pass
