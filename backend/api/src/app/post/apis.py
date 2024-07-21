@@ -14,9 +14,11 @@ class CreatePostV1API(LoggedInAPI):
         serializer = CreatePostSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
+            data = serializer.validated_data
+
             post = self._create(
                 user=request.user,
-                body=request.data["body"],
+                body=data["body"],
             )
 
             return APISuccessResponse(
@@ -29,10 +31,7 @@ class CreatePostV1API(LoggedInAPI):
 
     class Response:
         def __init__(self, post: Post):
-            self.post = {
-                "id": post.id,
-                "createdAt": post.created_at,
-            }
+            self.post = PostResponse(post=post)
 
 
 class SearchPostV1API(LoggedInAPI):
