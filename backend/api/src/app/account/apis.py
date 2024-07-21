@@ -165,14 +165,20 @@ class RegisterUserV1API(NoLoginAPI):
             bio=bio,
             email=email,
             image=image,
+            last_login_at=datetime.datetime.now(),
         )
+
+        # トークンの生成
+        token = Token.objects.get_or_create(user=user)[0]
+
         return APISuccessResponse(
-            body=RegisterUserV1API.Response(user=user),
+            body=RegisterUserV1API.Response(user=user, token=token.key),
         )
 
     class Response:
-        def __init__(self, user: User):
+        def __init__(self, user: User, token: str):
             self.user = user.get_public_full_properties()
+            self.token = token
 
 
 class LoginV1API(NoLoginAPI):

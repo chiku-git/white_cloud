@@ -48,12 +48,14 @@ class UserManager(BaseUserManager):
         bio=None,
         password=None,
         image=None,
+        last_login_at=None,
         save_sync=True,
         **extra_fields,
     ):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("last_login_at", last_login_at)
 
         return self._create_user(
             username=username,
@@ -72,12 +74,14 @@ class UserManager(BaseUserManager):
         bio=None,
         password=None,
         image=None,
+        last_login_at=None,
         save_sync=True,
         **extra_fields,
     ):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("last_login_at", last_login_at)
 
         return self._create_user(
             username=username,
