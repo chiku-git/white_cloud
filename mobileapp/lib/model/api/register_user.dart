@@ -7,6 +7,7 @@ part 'register_user.g.dart';
 class RegisterUserResponse with _$RegisterUserResponse {
   factory RegisterUserResponse({
     required UserInfo user,
+    required String token,
   }) = _RegisterUserResponse;
 
   factory RegisterUserResponse.fromJson(Map<String, dynamic> json)

@@ -21,7 +21,7 @@ class ApiClient {
   }
 
   /// 認証トークン
-  late String _token;
+  String _token = "";
 
   /// 認証情報
   String get _authorization => "Token $_token";
@@ -62,6 +62,8 @@ class ApiClient {
       final response = await _request<RegisterUserResponse>((cancelToken) {
         return  _service.registerUser(request);
       });
+      // 認証トークンをセットする
+      _token = response.data!.token;
       return ApiResult<RegisterUserResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<RegisterUserResponse>(error: error);

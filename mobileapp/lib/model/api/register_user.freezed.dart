@@ -21,6 +21,7 @@ RegisterUserResponse _$RegisterUserResponseFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RegisterUserResponse {
   UserInfo get user => throw _privateConstructorUsedError;
+  String get token => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,7 @@ abstract class $RegisterUserResponseCopyWith<$Res> {
           $Res Function(RegisterUserResponse) then) =
       _$RegisterUserResponseCopyWithImpl<$Res, RegisterUserResponse>;
   @useResult
-  $Res call({UserInfo user});
+  $Res call({UserInfo user, String token});
 
   $UserInfoCopyWith<$Res> get user;
 }
@@ -54,12 +55,17 @@ class _$RegisterUserResponseCopyWithImpl<$Res,
   @override
   $Res call({
     Object? user = null,
+    Object? token = null,
   }) {
     return _then(_value.copyWith(
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserInfo,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -80,7 +86,7 @@ abstract class _$$RegisterUserResponseImplCopyWith<$Res>
       __$$RegisterUserResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({UserInfo user});
+  $Res call({UserInfo user, String token});
 
   @override
   $UserInfoCopyWith<$Res> get user;
@@ -98,12 +104,17 @@ class __$$RegisterUserResponseImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? user = null,
+    Object? token = null,
   }) {
     return _then(_$RegisterUserResponseImpl(
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserInfo,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -111,17 +122,19 @@ class __$$RegisterUserResponseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RegisterUserResponseImpl implements _RegisterUserResponse {
-  _$RegisterUserResponseImpl({required this.user});
+  _$RegisterUserResponseImpl({required this.user, required this.token});
 
   factory _$RegisterUserResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisterUserResponseImplFromJson(json);
 
   @override
   final UserInfo user;
+  @override
+  final String token;
 
   @override
   String toString() {
-    return 'RegisterUserResponse(user: $user)';
+    return 'RegisterUserResponse(user: $user, token: $token)';
   }
 
   @override
@@ -129,12 +142,13 @@ class _$RegisterUserResponseImpl implements _RegisterUserResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegisterUserResponseImpl &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.token, token) || other.token == token));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, user, token);
 
   @JsonKey(ignore: true)
   @override
@@ -153,14 +167,17 @@ class _$RegisterUserResponseImpl implements _RegisterUserResponse {
 }
 
 abstract class _RegisterUserResponse implements RegisterUserResponse {
-  factory _RegisterUserResponse({required final UserInfo user}) =
-      _$RegisterUserResponseImpl;
+  factory _RegisterUserResponse(
+      {required final UserInfo user,
+      required final String token}) = _$RegisterUserResponseImpl;
 
   factory _RegisterUserResponse.fromJson(Map<String, dynamic> json) =
       _$RegisterUserResponseImpl.fromJson;
 
   @override
   UserInfo get user;
+  @override
+  String get token;
   @override
   @JsonKey(ignore: true)
   _$$RegisterUserResponseImplCopyWith<_$RegisterUserResponseImpl>
