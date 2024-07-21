@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
 
@@ -5,6 +7,7 @@ class ApiClient {
   static ApiClient? _instance;
   late final AppDio _dio;
   ApiService get _service => ApiService(_dio);
+  final Queue<CancelToken> _cancelTokens = Queue();
 
   factory ApiClient() {
     return _instance ?? () {
@@ -28,7 +31,9 @@ class ApiClient {
     required SendAuthCodeRequest request,
   }) async {
     try {
-      final response = await _service.sendAuthCode(request);
+      final response = await _request<SendAuthCodeResponse>((cancelToken) {
+        return  _service.sendAuthCode(request);
+      });
       return ApiResult<SendAuthCodeResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<SendAuthCodeResponse>(error: error);
@@ -40,7 +45,9 @@ class ApiClient {
     required AuthenticateEmailRequest request,
   }) async {
     try {
-      final response = await _service.authenticateEmail(request);
+      final response = await _request<AuthenticateEmailResponse>((cancelToken) {
+        return  _service.authenticateEmail(request);
+      });
       return ApiResult<AuthenticateEmailResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<AuthenticateEmailResponse>(error: error);
@@ -52,7 +59,9 @@ class ApiClient {
     required FormData request,
   }) async {
     try {
-      final response = await _service.registerUser(request);
+      final response = await _request<RegisterUserResponse>((cancelToken) {
+        return  _service.registerUser(request);
+      });
       return ApiResult<RegisterUserResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<RegisterUserResponse>(error: error);
@@ -64,7 +73,9 @@ class ApiClient {
     required LoginRequest request,
   }) async {
     try {
-      final response = await _service.login(request);
+      final response = await _request<LoginResponse>((cancelToken) {
+        return  _service.login(request);
+      });
       // 認証トークンをセットする
       _token = response.data!.token;
       return ApiResult<LoginResponse>.onSuccess(response.data!);
@@ -78,10 +89,9 @@ class ApiClient {
     required CreatePostRequest request,
   }) async {
     try {
-      final response = await _service.createPost(
-          _authorization,
-          request
-      );
+      final response = await _request<CreatePostResponse>((cancelToken) {
+        return  _service.createPost(_authorization, request);
+      });
       return ApiResult<CreatePostResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<CreatePostResponse>(error: error);
@@ -93,10 +103,9 @@ class ApiClient {
     required SearchUserRequest request,
   }) async {
     try {
-      final response = await _service.searchUser(
-          _authorization,
-          request
-      );
+      final response = await _request<SearchUserResponse>((cancelToken) {
+        return _service.searchUser(_authorization, request, cancelToken);
+      });
       return ApiResult<SearchUserResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<SearchUserResponse>(error: error);
@@ -108,13 +117,34 @@ class ApiClient {
     required SearchPostsRequest request,
   }) async {
     try {
-      final response = await _service.searchPost(
-          _authorization,
-          request
-      );
+      final response = await _request<SearchPostsResponse>((cancelToken) {
+        return _service.searchPost(_authorization, request, cancelToken);
+      });
       return ApiResult<SearchPostsResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<SearchPostsResponse>(error: error);
+    }
+  }
+
+  Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
+    // リクエスト前処理
+    final cancelToken = CancelToken();
+    _cancelTokens.add(cancelToken);
+    // リクエスト
+    final response = await caller.call(cancelToken);
+    // リクエスト後処理
+    _cancelTokens.remove(cancelToken);
+    // 結果を返却
+    return response;
+  }
+
+  /// すべてのAPI処理をキャンセルする
+  cancelAllRequests() {
+    while(_cancelTokens.isNotEmpty) {
+      final cancelToken = _cancelTokens.removeFirst();
+      if (!cancelToken.isCancelled) {
+        cancelToken.cancel();
+      }
     }
   }
 
@@ -142,14 +172,17 @@ class ApiClient {
           // 接続エラー
           return ApiResult<T>.onFailure(
               ErrorResponse.connectionError(detail: error.message));
-        case DioExceptionType.badCertificate:
         case DioExceptionType.cancel:
+          // ユーザーキャンセル
+          return ApiResult<T>.onCancel();
+        case DioExceptionType.badCertificate:
         case DioExceptionType.unknown:
           // その他エラー
           return ApiResult<T>.onFailure(
               ErrorResponse.unexpectedError(detail: error.message));
       }
     } else {
+      print("this is error" + error.toString());
       // その他エラー
       return ApiResult<T>.onFailure(
           ErrorResponse.unexpectedError(detail: error.toString()));

@@ -8,4 +8,6 @@ abstract class ApiResult<T> with _$ApiResult<T> {
   factory ApiResult.onSuccess(T data) = Success<T>;
   /// 失敗時コールバック
   factory ApiResult.onFailure(ErrorResponse error) = Failure<T>;
+  /// キャンセル時コールバック
+  factory ApiResult.onCancel() = Cancel<T>;
 }

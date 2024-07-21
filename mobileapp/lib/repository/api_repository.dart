@@ -114,4 +114,6 @@ class ApiRepository {
       ),
     );
   }
+
+  cancelAllRequests() => _client.cancelAllRequests();
 }

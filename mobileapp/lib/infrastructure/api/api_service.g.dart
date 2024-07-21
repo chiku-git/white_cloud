@@ -182,6 +182,7 @@ class _ApiService implements ApiService {
   Future<ApiResponse<SearchUserResponse>> searchUser(
     String token,
     SearchUserRequest request,
+    CancelToken cancelToken,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -199,6 +200,7 @@ class _ApiService implements ApiService {
               '/account/search/users/v1/',
               queryParameters: queryParameters,
               data: _data,
+              cancelToken: cancelToken,
             )
             .copyWith(
                 baseUrl: _combineBaseUrls(
@@ -216,6 +218,7 @@ class _ApiService implements ApiService {
   Future<ApiResponse<SearchPostsResponse>> searchPost(
     String token,
     SearchPostsRequest request,
+    CancelToken cancelToken,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -233,6 +236,7 @@ class _ApiService implements ApiService {
               '/post/search/v1/',
               queryParameters: queryParameters,
               data: _data,
+              cancelToken: cancelToken,
             )
             .copyWith(
                 baseUrl: _combineBaseUrls(

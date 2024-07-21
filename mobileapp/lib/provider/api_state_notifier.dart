@@ -23,6 +23,9 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
           onFailure: (error) {
             state = ApiState.failure;
             onFailure(error);
+          },
+          onCancel: () {
+            // NOP
           });
     });
   }
@@ -44,6 +47,9 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
           state = ApiState.failure;
           onFailure(error);
         },
+        onCancel: () {
+          // NOP
+        }
       ),
     );
   }
@@ -66,6 +72,9 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
             state = ApiState.failure;
             onFailure(err);
           },
+          onCancel: () {
+            // NOP
+          }
         ),
       },
     );
@@ -90,6 +99,9 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
             state = ApiState.failure;
             onFailure(err);
           },
+          onCancel: () {
+            // NOP
+          }
         ),
       },
     );
@@ -113,6 +125,9 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
             state = ApiState.failure;
             onFailure(err);
           },
+          onCancel: () {
+            // NOP
+          }
         ),
       },
     );

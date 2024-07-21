@@ -20,18 +20,21 @@ mixin _$ApiResult<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) onSuccess,
     required TResult Function(ErrorResponse error) onFailure,
+    required TResult Function() onCancel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? onSuccess,
     TResult? Function(ErrorResponse error)? onFailure,
+    TResult? Function()? onCancel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? onSuccess,
     TResult Function(ErrorResponse error)? onFailure,
+    TResult Function()? onCancel,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$ApiResult<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) onSuccess,
     required TResult Function(Failure<T> value) onFailure,
+    required TResult Function(Cancel<T> value) onCancel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? onSuccess,
     TResult? Function(Failure<T> value)? onFailure,
+    TResult? Function(Cancel<T> value)? onCancel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? onSuccess,
     TResult Function(Failure<T> value)? onFailure,
+    TResult Function(Cancel<T> value)? onCancel,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -141,6 +147,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) onSuccess,
     required TResult Function(ErrorResponse error) onFailure,
+    required TResult Function() onCancel,
   }) {
     return onSuccess(data);
   }
@@ -150,6 +157,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? onSuccess,
     TResult? Function(ErrorResponse error)? onFailure,
+    TResult? Function()? onCancel,
   }) {
     return onSuccess?.call(data);
   }
@@ -159,6 +167,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? onSuccess,
     TResult Function(ErrorResponse error)? onFailure,
+    TResult Function()? onCancel,
     required TResult orElse(),
   }) {
     if (onSuccess != null) {
@@ -172,6 +181,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) onSuccess,
     required TResult Function(Failure<T> value) onFailure,
+    required TResult Function(Cancel<T> value) onCancel,
   }) {
     return onSuccess(this);
   }
@@ -181,6 +191,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? onSuccess,
     TResult? Function(Failure<T> value)? onFailure,
+    TResult? Function(Cancel<T> value)? onCancel,
   }) {
     return onSuccess?.call(this);
   }
@@ -190,6 +201,7 @@ class _$SuccessImpl<T> implements Success<T> {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? onSuccess,
     TResult Function(Failure<T> value)? onFailure,
+    TResult Function(Cancel<T> value)? onCancel,
     required TResult orElse(),
   }) {
     if (onSuccess != null) {
@@ -284,6 +296,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) onSuccess,
     required TResult Function(ErrorResponse error) onFailure,
+    required TResult Function() onCancel,
   }) {
     return onFailure(error);
   }
@@ -293,6 +306,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? onSuccess,
     TResult? Function(ErrorResponse error)? onFailure,
+    TResult? Function()? onCancel,
   }) {
     return onFailure?.call(error);
   }
@@ -302,6 +316,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? onSuccess,
     TResult Function(ErrorResponse error)? onFailure,
+    TResult Function()? onCancel,
     required TResult orElse(),
   }) {
     if (onFailure != null) {
@@ -315,6 +330,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) onSuccess,
     required TResult Function(Failure<T> value) onFailure,
+    required TResult Function(Cancel<T> value) onCancel,
   }) {
     return onFailure(this);
   }
@@ -324,6 +340,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? onSuccess,
     TResult? Function(Failure<T> value)? onFailure,
+    TResult? Function(Cancel<T> value)? onCancel,
   }) {
     return onFailure?.call(this);
   }
@@ -333,6 +350,7 @@ class _$FailureImpl<T> implements Failure<T> {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? onSuccess,
     TResult Function(Failure<T> value)? onFailure,
+    TResult Function(Cancel<T> value)? onCancel,
     required TResult orElse(),
   }) {
     if (onFailure != null) {
@@ -349,4 +367,112 @@ abstract class Failure<T> implements ApiResult<T> {
   @JsonKey(ignore: true)
   _$$FailureImplCopyWith<T, _$FailureImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CancelImplCopyWith<T, $Res> {
+  factory _$$CancelImplCopyWith(
+          _$CancelImpl<T> value, $Res Function(_$CancelImpl<T>) then) =
+      __$$CancelImplCopyWithImpl<T, $Res>;
+}
+
+/// @nodoc
+class __$$CancelImplCopyWithImpl<T, $Res>
+    extends _$ApiResultCopyWithImpl<T, $Res, _$CancelImpl<T>>
+    implements _$$CancelImplCopyWith<T, $Res> {
+  __$$CancelImplCopyWithImpl(
+      _$CancelImpl<T> _value, $Res Function(_$CancelImpl<T>) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CancelImpl<T> implements Cancel<T> {
+  _$CancelImpl();
+
+  @override
+  String toString() {
+    return 'ApiResult<$T>.onCancel()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CancelImpl<T>);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(T data) onSuccess,
+    required TResult Function(ErrorResponse error) onFailure,
+    required TResult Function() onCancel,
+  }) {
+    return onCancel();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(T data)? onSuccess,
+    TResult? Function(ErrorResponse error)? onFailure,
+    TResult? Function()? onCancel,
+  }) {
+    return onCancel?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(T data)? onSuccess,
+    TResult Function(ErrorResponse error)? onFailure,
+    TResult Function()? onCancel,
+    required TResult orElse(),
+  }) {
+    if (onCancel != null) {
+      return onCancel();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Success<T> value) onSuccess,
+    required TResult Function(Failure<T> value) onFailure,
+    required TResult Function(Cancel<T> value) onCancel,
+  }) {
+    return onCancel(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Success<T> value)? onSuccess,
+    TResult? Function(Failure<T> value)? onFailure,
+    TResult? Function(Cancel<T> value)? onCancel,
+  }) {
+    return onCancel?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Success<T> value)? onSuccess,
+    TResult Function(Failure<T> value)? onFailure,
+    TResult Function(Cancel<T> value)? onCancel,
+    required TResult orElse(),
+  }) {
+    if (onCancel != null) {
+      return onCancel(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Cancel<T> implements ApiResult<T> {
+  factory Cancel() = _$CancelImpl<T>;
 }

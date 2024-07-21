@@ -256,6 +256,9 @@ abstract class _SearchResultState<T, V> extends ConsumerState<SearchResultPage>
           onFailure: (err) {
             apiState = ApiState.failure;
             controller.error = err;
+          },
+          onCancel: () {
+            // NOP
           }
       );
     });
@@ -271,6 +274,10 @@ abstract class _SearchResultState<T, V> extends ConsumerState<SearchResultPage>
   Widget build(BuildContext context) {
     super.build(context);
     final form = ref.watch(searchFormProvider);
+    if (apiState == ApiState.loading) {
+      api.cancelAllRequests();
+    }
+
     if (form.keyword.isNotEmpty) {
       controller
         ..refresh()
