@@ -21,12 +21,12 @@ PostInfo _$PostInfoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PostInfo {
   String get id => throw _privateConstructorUsedError;
-  String? get body => throw _privateConstructorUsedError;
-  UserMiniInfo? get user => throw _privateConstructorUsedError;
+  String get body => throw _privateConstructorUsedError;
+  UserMiniInfo get user => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
-  String? get updatedAt => throw _privateConstructorUsedError;
-  int? get likes => throw _privateConstructorUsedError;
-  int? get comments => throw _privateConstructorUsedError;
+  String get updatedAt => throw _privateConstructorUsedError;
+  int get likes => throw _privateConstructorUsedError;
+  int get comments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,14 +41,14 @@ abstract class $PostInfoCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String? body,
-      UserMiniInfo? user,
+      String body,
+      UserMiniInfo user,
       String createdAt,
-      String? updatedAt,
-      int? likes,
-      int? comments});
+      String updatedAt,
+      int likes,
+      int comments});
 
-  $UserMiniInfoCopyWith<$Res>? get user;
+  $UserMiniInfoCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -65,53 +65,49 @@ class _$PostInfoCopyWithImpl<$Res, $Val extends PostInfo>
   @override
   $Res call({
     Object? id = null,
-    Object? body = freezed,
-    Object? user = freezed,
+    Object? body = null,
+    Object? user = null,
     Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? likes = freezed,
-    Object? comments = freezed,
+    Object? updatedAt = null,
+    Object? likes = null,
+    Object? comments = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      body: freezed == body
+      body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
-              as String?,
-      user: freezed == user
+              as String,
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserMiniInfo?,
+              as UserMiniInfo,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
-      updatedAt: freezed == updatedAt
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      likes: freezed == likes
+              as String,
+      likes: null == likes
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      comments: freezed == comments
+              as int,
+      comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserMiniInfoCopyWith<$Res>? get user {
-    if (_value.user == null) {
-      return null;
-    }
-
-    return $UserMiniInfoCopyWith<$Res>(_value.user!, (value) {
+  $UserMiniInfoCopyWith<$Res> get user {
+    return $UserMiniInfoCopyWith<$Res>(_value.user, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -127,15 +123,15 @@ abstract class _$$PostInfoImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String? body,
-      UserMiniInfo? user,
+      String body,
+      UserMiniInfo user,
       String createdAt,
-      String? updatedAt,
-      int? likes,
-      int? comments});
+      String updatedAt,
+      int likes,
+      int comments});
 
   @override
-  $UserMiniInfoCopyWith<$Res>? get user;
+  $UserMiniInfoCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -150,42 +146,42 @@ class __$$PostInfoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? body = freezed,
-    Object? user = freezed,
+    Object? body = null,
+    Object? user = null,
     Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? likes = freezed,
-    Object? comments = freezed,
+    Object? updatedAt = null,
+    Object? likes = null,
+    Object? comments = null,
   }) {
     return _then(_$PostInfoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      body: freezed == body
+      body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
-              as String?,
-      user: freezed == user
+              as String,
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserMiniInfo?,
+              as UserMiniInfo,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
-      updatedAt: freezed == updatedAt
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      likes: freezed == likes
+              as String,
+      likes: null == likes
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      comments: freezed == comments
+              as int,
+      comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ));
   }
 }
@@ -195,12 +191,12 @@ class __$$PostInfoImplCopyWithImpl<$Res>
 class _$PostInfoImpl implements _PostInfo {
   _$PostInfoImpl(
       {required this.id,
-      this.body,
-      this.user,
+      required this.body,
+      required this.user,
       required this.createdAt,
-      this.updatedAt,
-      this.likes,
-      this.comments});
+      required this.updatedAt,
+      required this.likes,
+      required this.comments});
 
   factory _$PostInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PostInfoImplFromJson(json);
@@ -208,17 +204,17 @@ class _$PostInfoImpl implements _PostInfo {
   @override
   final String id;
   @override
-  final String? body;
+  final String body;
   @override
-  final UserMiniInfo? user;
+  final UserMiniInfo user;
   @override
   final String createdAt;
   @override
-  final String? updatedAt;
+  final String updatedAt;
   @override
-  final int? likes;
+  final int likes;
   @override
-  final int? comments;
+  final int comments;
 
   @override
   String toString() {
@@ -264,12 +260,12 @@ class _$PostInfoImpl implements _PostInfo {
 abstract class _PostInfo implements PostInfo {
   factory _PostInfo(
       {required final String id,
-      final String? body,
-      final UserMiniInfo? user,
+      required final String body,
+      required final UserMiniInfo user,
       required final String createdAt,
-      final String? updatedAt,
-      final int? likes,
-      final int? comments}) = _$PostInfoImpl;
+      required final String updatedAt,
+      required final int likes,
+      required final int comments}) = _$PostInfoImpl;
 
   factory _PostInfo.fromJson(Map<String, dynamic> json) =
       _$PostInfoImpl.fromJson;
@@ -277,17 +273,17 @@ abstract class _PostInfo implements PostInfo {
   @override
   String get id;
   @override
-  String? get body;
+  String get body;
   @override
-  UserMiniInfo? get user;
+  UserMiniInfo get user;
   @override
   String get createdAt;
   @override
-  String? get updatedAt;
+  String get updatedAt;
   @override
-  int? get likes;
+  int get likes;
   @override
-  int? get comments;
+  int get comments;
   @override
   @JsonKey(ignore: true)
   _$$PostInfoImplCopyWith<_$PostInfoImpl> get copyWith =>

@@ -182,7 +182,6 @@ class ApiClient {
               ErrorResponse.unexpectedError(detail: error.message));
       }
     } else {
-      print("this is error" + error.toString());
       // その他エラー
       return ApiResult<T>.onFailure(
           ErrorResponse.unexpectedError(detail: error.toString()));

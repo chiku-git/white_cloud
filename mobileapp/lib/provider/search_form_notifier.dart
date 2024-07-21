@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/search_form.dart';
 
 final searchFormProvider = StateNotifierProvider<SearchFormNotifier, SearchForm>(
         (ref) => throw UnimplementedError());

@@ -7,12 +7,12 @@ part 'post_info.g.dart';
 class PostInfo with _$PostInfo {
   factory PostInfo({
     required String id,
-    String? body,
-    UserMiniInfo? user,
+    required String body,
+    required UserMiniInfo user,
     required String createdAt,
-    String? updatedAt,
-    int? likes,
-    int? comments,
+    required String updatedAt,
+    required int likes,
+    required int comments,
   }) = _PostInfo;
 
   factory PostInfo.fromJson(Map<String, dynamic> json)

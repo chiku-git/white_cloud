@@ -9,12 +9,12 @@ part of 'post_info.dart';
 _$PostInfoImpl _$$PostInfoImplFromJson(Map<String, dynamic> json) =>
     _$PostInfoImpl(
       id: json['id'] as String,
-      body: json['body'] as String?,
-      user: json['user'] == null ? null : UserMiniInfo.fromJson(json['user']),
+      body: json['body'] as String,
+      user: UserMiniInfo.fromJson(json['user']),
       createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String?,
-      likes: (json['likes'] as num?)?.toInt(),
-      comments: (json['comments'] as num?)?.toInt(),
+      updatedAt: json['updatedAt'] as String,
+      likes: (json['likes'] as num).toInt(),
+      comments: (json['comments'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$PostInfoImplToJson(_$PostInfoImpl instance) =>

@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/user_mini_info.dart';
 
 part 'search_user.freezed.dart';
 part 'search_user.g.dart';

@@ -6,7 +6,7 @@ class PostContentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = post.user!;
+    final user = post.user;
     final imagePath = user.image;
 
     return Padding(
@@ -39,7 +39,7 @@ class PostContentTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Margin.vertical(5),
-                  Text(post.body!),
+                  Text(post.body),
                   Margin.vertical(5),
                   _PostContentReactionBar(post: post,),
                 ],
@@ -62,14 +62,14 @@ class _PostContentReactionBar extends StatelessWidget {
       children: [
         PostReactionButton(
           icon: Icons.favorite_border,
-          text: post.likes!.toString(),
+          text: post.likes.toString(),
           onTap: () {
 
           },
         ),
         PostReactionButton(
           icon: Icons.mode_comment_outlined,
-          text: post.comments!.toString(),
+          text: post.comments.toString(),
           onTap: () {
 
           },
