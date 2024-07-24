@@ -3,7 +3,18 @@ from common.bases.api_bases import LoggedInAPI
 from common.models.responses import APISuccessResponse
 
 from .models import Post, PostResponse
-from .serializers import CreatePostSerializer, SearchPostSerializer
+from .serializers import CreatePostSerializer, GetDigestSerializer, SearchPostSerializer
+
+
+class PostListMixin:
+    def create_post_response(self, posts):
+        results = []
+
+        for post in posts:
+            res = PostResponse(post=post)
+            results.append(res)
+
+        return results
 
 
 # Create your views here.
@@ -34,7 +45,7 @@ class CreatePostV1API(LoggedInAPI):
             self.post = PostResponse(post=post)
 
 
-class SearchPostV1API(LoggedInAPI):
+class SearchPostV1API(LoggedInAPI, PostListMixin):
     """投稿検索API"""
 
     MAX_SIZE = 100
@@ -49,7 +60,7 @@ class SearchPostV1API(LoggedInAPI):
                 params=serializer.validated_data,
                 me=request.user,
             )
-            results = self._create_result(posts=posts)
+            results = self.create_post_response(posts=posts)
 
             return APISuccessResponse(
                 body=SearchPostV1API.Response(
@@ -70,15 +81,44 @@ class SearchPostV1API(LoggedInAPI):
             .exclude(user=me)[start:end]
         )
 
-    def _create_result(self, posts):
-        results = []
-
-        for post in posts:
-            res = PostResponse(post=post)
-            results.append(res)
-
-        return results
-
     class Response:
         def __init__(self, posts: list[PostResponse]):
+            self.posts = posts
+
+
+class GetDigestV1API(LoggedInAPI, PostListMixin):
+    """ダイジェスト取得API"""
+
+    MAX_SIZE = 100
+    PAGE_SIZE = 20
+    MAX_PAGE = MAX_SIZE / PAGE_SIZE
+
+    def post(self, request, *args, **kwargs):
+        serializer = GetDigestSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+
+            posts = self._search(
+                params=serializer.validated_data,
+                me=request.user,
+            )
+
+            results = self.create_post_response(posts=posts)
+
+            return APISuccessResponse(
+                body=GetDigestV1API.Response(
+                    posts=results,
+                ),
+            )
+
+    def _search(self, params, me):
+        page = params["page"]
+
+        start = page * self.PAGE_SIZE
+        end = start + self.PAGE_SIZE
+
+        return Post.objects.order_by("-updated_at").exclude(user=me)[start:end]
+
+    class Response:
+        def __init__(self, posts: list[PostResponse]) -> None:
             self.posts = posts

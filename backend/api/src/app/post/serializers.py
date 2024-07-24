@@ -1,4 +1,8 @@
-from common.bases.serializer_bases import SearchSerializer, SerializerMixin
+from common.bases.serializer_bases import (
+    PostListSerializer,
+    SearchSerializer,
+    SerializerMixin,
+)
 from rest_framework import serializers
 
 from .models import Post
@@ -15,4 +19,8 @@ class CreatePostSerializer(SerializerMixin, serializers.ModelSerializer):
 
 
 class SearchPostSerializer(SearchSerializer):
+    pass
+
+
+class GetDigestSerializer(PostListSerializer):
     pass

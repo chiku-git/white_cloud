@@ -17,7 +17,17 @@ class BaseSerializer(SerializerMixin, serializers.Serializer):
         self.replaceErrorMessage()
 
 
-class SearchSerializer(BaseSerializer):
+class PostListSerializer(BaseSerializer):
+    page = serializers.IntegerField(
+        label="ページ",
+        min_value=0,
+        error_messages={
+            "min_value": "ページは{min_value}以上で入力してください。",
+        },
+    )
+
+
+class SearchSerializer(PostListSerializer):
     keyword = serializers.CharField(
         label="キーワード",
         allow_blank=False,
@@ -25,12 +35,5 @@ class SearchSerializer(BaseSerializer):
         max_length=50,
         error_messages={
             "max_length": "キーワードは{max_length}以内で入力してください。",
-        },
-    )
-    page = serializers.IntegerField(
-        label="ページ",
-        min_value=0,
-        error_messages={
-            "min_value": "ページは{min_value}以上で入力してください。",
         },
     )
