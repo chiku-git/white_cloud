@@ -1,7 +1,5 @@
 import 'package:white_cloud/importer.dart';
 
-import '../view_model/dashboard_viewmodel.dart';
-
 final dashboardViewModelProvider =
     StateNotifierProvider<DashboardViewModelNotifier, DashboardViewmodel>(
         (ref) => throw UnimplementedError()

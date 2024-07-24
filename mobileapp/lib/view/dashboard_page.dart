@@ -1,7 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/provider/dashboard_viewmodel_provider.dart';
-import 'package:white_cloud/view/search_page.dart';
-import 'package:white_cloud/view_model/dashboard_viewmodel.dart';
 
 class DashBoardPage extends StatelessWidget with ThemeMixin {
   static const path = '/dashboard/';
@@ -38,16 +35,18 @@ class _Body extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(dashboardViewModelProvider);
     switch(vm.bottomNavIndex) {
+      case _BottomNavigation.digestIndex:
+        return const DigestPage();
       case _BottomNavigation.searchIndex:
         return SearchPage();
       default:
-        return Placeholder();
+        return const Placeholder();
     }
   }
 }
 
 class _BottomNavigation extends ConsumerWidget {
-  static const int homeIndex   = 0;
+  static const int digestIndex = 0;
   static const int searchIndex = 1;
   static const int postIndex   = 2;
   static const int favIndex    = 3;
@@ -85,32 +84,33 @@ class _BottomNavigation extends ConsumerWidget {
       type: BottomNavigationBarType.fixed,
       currentIndex: vm.bottomNavIndex,
       onTap: (index) {
-        _notifierNavigationChanged(index, ref);
-        _onTapMenu(index, context);
+        _onTapMenu(
+            index,
+            context,
+            ref.read(dashboardViewModelProvider.notifier),
+        );
       },
     );
   }
 
-  _notifierNavigationChanged(int index, WidgetRef ref) {
-    if (index != postIndex) {
-      ref.read(dashboardViewModelProvider.notifier).update(bottomNavIndex: index);
-    }
-  }
-
-  _onTapMenu(int index, BuildContext context) {
+  _onTapMenu(int index, BuildContext context, DashboardViewModelNotifier notifier) {
     switch(index){
-      case homeIndex:
+      case digestIndex:
+        notifier.update(bottomNavIndex: index);
         break;
       case searchIndex:
+        notifier.update(bottomNavIndex: index);
         break;
       case postIndex:
         final user = DBRepository().getLatestUser();
-        final form = PostForm(user: user, body: "");
+        final form = PostForm.empty(user: user);
         Navigator.of(context).pushNamed(PostPage.path, arguments: form);
         break;
       case favIndex:
+        notifier.update(bottomNavIndex: index);
         break;
       case profIndex:
+        notifier.update(bottomNavIndex: index);
         break;
       default:
         break;

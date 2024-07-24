@@ -48,4 +48,12 @@ abstract class ApiService {
       @Body() SearchPostsRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
+
+  /// ダイジェスト取得API
+  @POST('/post/digest/v1/')
+  Future<ApiResponse<GetDigestPostsResponse>> getDigestPosts(
+      @Header('Authorization') String token,
+      @Body() GetDigestPostsRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
 }

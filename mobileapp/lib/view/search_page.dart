@@ -5,7 +5,7 @@ import 'package:white_cloud/importer.dart';
 // メイン
 // =========================================
 class SearchPage extends StatelessWidget {
-  static const String path = "/search/";
+  static const String path = "/dashboard/search/";
 
   final List<SearchResultPage> pages = [];
 

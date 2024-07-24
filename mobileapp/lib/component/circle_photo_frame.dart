@@ -78,12 +78,14 @@ class CirclePhotoFrame extends StatelessWidget with ThemeMixin {
           gradient: gradient,
           backgroundBlendMode: backgroundBlendMode,
           shape: shape ?? BoxShape.circle,
-          border: Border.all(
+          border: borderWidth != 0
+              ? Border.all(
             color: borderColor ?? colorScheme.primary,
             width: borderWidth,
             style: borderStyle,
             strokeAlign: borderStrokeAlign,
-          ),
+          )
+              : null,
       ),
       child: ClipOval(
         clipper: clipper,

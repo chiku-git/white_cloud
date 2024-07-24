@@ -35,6 +35,9 @@ class Strings {
   static const firstSearchPrefixMessage = "検索ワードを入力して、キーボードの";
   static const firstSearchSuffixMessage = "をタップしてください。";
   static const noSearchResults = "'%s'の検索結果はありません";
+  static const noPosts = "表示できる投稿がありません。";
+  static const errorHasOccurred = "エラーが発生しました。";
+  static const retry = "もう一度実行";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

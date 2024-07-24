@@ -10,6 +10,8 @@ abstract class PostForm implements _$PostForm {
     required String body,
   }) = _PostForm;
 
+  factory PostForm.empty({required User user}) => PostForm(user: user, body: "");
+
   bool isValid() {
     return body.trim().isNotEmpty;
   }

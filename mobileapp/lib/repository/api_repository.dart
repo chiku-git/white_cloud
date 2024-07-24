@@ -115,5 +115,16 @@ class ApiRepository {
     );
   }
 
+  /// ダイジェストを取得する
+  Future<ApiResult<GetDigestPostsResponse>> getDigestPosts({
+    required int page,
+  }) async {
+    return await _client.getDigestPosts(
+      request: GetDigestPostsRequest(
+        page: page,
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

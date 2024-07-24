@@ -128,6 +128,20 @@ class ApiClient {
     }
   }
 
+  /// ダイジェスト取得
+  Future<ApiResult<GetDigestPostsResponse>> getDigestPosts({
+    required GetDigestPostsRequest request,
+  }) async {
+    try {
+      final response = await _request<GetDigestPostsResponse>((cancelToken) {
+        return _service.getDigestPosts(_authorization, request, cancelToken);
+      });
+      return ApiResult<GetDigestPostsResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<GetDigestPostsResponse>(error: error);
+    }
+  }
+
   Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
     // リクエスト前処理
     final cancelToken = CancelToken();
