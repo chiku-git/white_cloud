@@ -27,6 +27,8 @@ class CirclePhotoFrame extends StatelessWidget with ThemeMixin {
   // clipOval
   final CustomClipper<Rect>? clipper;
   final Clip circleClipBehavior;
+  // listener
+  final Function()? onTap;
 
   const CirclePhotoFrame({
     super.key,
@@ -55,160 +57,68 @@ class CirclePhotoFrame extends StatelessWidget with ThemeMixin {
     // clipOval
     this.clipper,
     this.circleClipBehavior = Clip.antiAlias,
+    // listener
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      alignment: alignment,
-      padding: padding,
-      foregroundDecoration: foregroundDecoration,
-      width: diameter,
-      height: diameter,
-      constraints: constraints,
-      margin: margin,
-      transform: transform,
-      transformAlignment: transformAlignment,
-      clipBehavior: clipBehavior,
-      decoration: BoxDecoration(
-          color: color,
-          boxShadow: boxShadow,
-          gradient: gradient,
-          backgroundBlendMode: backgroundBlendMode,
-          shape: shape ?? BoxShape.circle,
-          border: borderWidth != 0
-              ? Border.all(
-            color: borderColor ?? colorScheme.primary,
-            width: borderWidth,
-            style: borderStyle,
-            strokeAlign: borderStrokeAlign,
-          )
-              : null,
-      ),
-      child: ClipOval(
-        clipper: clipper,
-        clipBehavior: circleClipBehavior,
-        child: Builder(
-          builder: (BuildContext context) => image
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        alignment: alignment,
+        padding: padding,
+        foregroundDecoration: foregroundDecoration,
+        width: diameter,
+        height: diameter,
+        constraints: constraints,
+        margin: margin,
+        transform: transform,
+        transformAlignment: transformAlignment,
+        clipBehavior: clipBehavior,
+        decoration: BoxDecoration(
+            color: color,
+            boxShadow: boxShadow,
+            gradient: gradient,
+            backgroundBlendMode: backgroundBlendMode,
+            shape: shape ?? BoxShape.circle,
+            border: borderWidth != 0
+                ? Border.all(
+              color: borderColor ?? colorScheme.primary,
+              width: borderWidth,
+              style: borderStyle,
+              strokeAlign: borderStrokeAlign,
+            )
+                : null,
+        ),
+        child: ClipOval(
+          clipper: clipper,
+          clipBehavior: circleClipBehavior,
+          child: Builder(
+            builder: (BuildContext context) => image
+          ),
         ),
       ),
     );
   }
 }
 
-class TappableCirclePhotoFrame extends CirclePhotoFrame {
-  final void Function() onTap;
-  final void Function()? onDoubleTap;
-  final void Function()? onLongPress;
-  final void Function(TapDownDetails)? onTapDown;
-  final void Function(TapUpDetails)? onTapUp;
-  final void Function()? onTapCancel;
-  final void Function()? onSecondaryTap;
-  final void Function(TapUpDetails)? onSecondaryTapUp;
-  final void Function(TapDownDetails)? onSecondaryTapDown;
-  final void Function()? onSecondaryTapCancel;
-  final void Function(bool)? onHighlightChanged;
-  final void Function(bool)? onHover;
-  final MouseCursor? mouseCursor;
-  final Color? focusColor;
-  final Color? hoverColor;
-  final Color? highlightColor;
-  final Color? splashColor;
-  final InteractiveInkFeatureFactory? splashFactory;
-  final double? radius;
-  final BorderRadius? borderRadius;
-  final ShapeBorder? customBorder;
-  final bool? enableFeedback;
-  final bool excludeFromSemantics;
-  final FocusNode? focusNode;
-  final bool canRequestFocus;
-  final void Function(bool)? onFocusChange;
-  final bool autofocus;
-  final Duration? hoverDuration;
-
-  const TappableCirclePhotoFrame({
-    super.key, 
-    required super.image,
-    required this.onTap,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTapCancel,
-    this.onSecondaryTap,
-    this.onSecondaryTapUp,
-    this.onSecondaryTapDown,
-    this.onSecondaryTapCancel,
-    this.onHighlightChanged,
-    this.onHover,
-    this.mouseCursor,
-    this.focusColor,
-    this.hoverColor,
-    this.highlightColor,
-    this.splashColor,
-    this.splashFactory,
-    this.radius,
-    this.borderRadius,
-    this.customBorder,
-    this.focusNode,
-    this.onFocusChange,
-    this.hoverDuration,
-    this.enableFeedback = true,
-    this.excludeFromSemantics = false,
-    this.canRequestFocus = false,
-    this.autofocus = false,
-    super.alignment,
-    super.padding,
-    super.color,
-    super.foregroundDecoration,
-    super.diameter,
-    super.constraints,
-    super.margin,
-    super.transform,
-    super.transformAlignment,
-    super.clipBehavior,
+class UserImageIcon extends CirclePhotoFrame {
+  UserImageIcon({
+    super.key,
+    required String? userImage,
+    super.diameter = 25,
+    super.borderWidth = 0.0,
     super.boxShadow,
-    super.gradient,
-    super.backgroundBlendMode,
-    super.shape,
-    super.borderColor,
-    super.borderWidth,
-    super.borderStyle,
-    super.borderStrokeAlign,
-    super.clipper,
-    super.circleClipBehavior,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      onDoubleTap: onDoubleTap,
-      onLongPress: onLongPress,
-      onTapDown: onTapDown,
-      onTapUp: onTapUp,
-      onTapCancel: onTapCancel,
-      onSecondaryTap: onSecondaryTap,
-      onSecondaryTapUp: onSecondaryTapUp,
-      onSecondaryTapDown: onSecondaryTapDown,
-      onSecondaryTapCancel: onSecondaryTapCancel,
-      onHighlightChanged: onHighlightChanged,
-      onHover: onHover,
-      mouseCursor: mouseCursor,
-      focusColor: focusColor,
-      hoverColor: hoverColor,
-      highlightColor: highlightColor,
-      splashColor: splashColor,
-      splashFactory: splashFactory,
-      radius: radius,
-      borderRadius: borderRadius ?? BorderRadius.circular(super.diameter ?? 0),
-      customBorder: customBorder,
-      focusNode: focusNode,
-      onFocusChange: onFocusChange,
-      hoverDuration: hoverDuration,
-      child: super.build(context),
-    );
-  }
+    Function()? onTap,
+  }): super(
+    image: userImage != null
+        ? Image.network(
+          "${Config.localhost}$userImage",
+          fit: BoxFit.cover,
+        )
+        : const PlaceHolderPersonImage(),
+  );
 }

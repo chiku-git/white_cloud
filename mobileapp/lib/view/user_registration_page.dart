@@ -207,7 +207,7 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
 
     return Stack(
       children: [
-        TappableCirclePhotoFrame(
+        CirclePhotoFrame(
             image: image,
             diameter: photoFrameSize,
             borderWidth: 3.0,
@@ -218,7 +218,7 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
         Positioned(
           right: 0,
           bottom: 0,
-          child: TappableCirclePhotoFrame(
+          child: CirclePhotoFrame(
               image: Padding(
                 padding: const EdgeInsets.all(8),
                 child: SVGLoader(

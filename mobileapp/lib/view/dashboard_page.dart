@@ -45,7 +45,7 @@ class _Body extends ConsumerWidget {
   }
 }
 
-class _BottomNavigation extends ConsumerWidget {
+class _BottomNavigation extends ConsumerWidget with ThemeMixin {
   static const int digestIndex = 0;
   static const int searchIndex = 1;
   static const int postIndex   = 2;
@@ -57,25 +57,36 @@ class _BottomNavigation extends ConsumerWidget {
     final vm = ref.watch(dashboardViewModelProvider);
 
     return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: "",
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.search),
           label: "",
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.add),
           label: "",
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.favorite_border),
           label: "",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_3_rounded),
+          icon: UserImageIcon(
+            userImage: vm.currentUser.image,
+            boxShadow: vm.bottomNavIndex == profIndex
+              ? [
+                BoxShadow(
+                  color: getColorScheme(context).primary,
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                )
+              ]
+              : null,
+          ),
           label: "",
         )
       ],

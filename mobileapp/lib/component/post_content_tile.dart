@@ -7,7 +7,6 @@ class PostContentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = post.user;
-    final imagePath = user.image;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
@@ -17,15 +16,9 @@ class PostContentTile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 5.0),
-            child: CirclePhotoFrame(
-              image: imagePath != null
-                  ? Image.network(
-                "${Config.localhost}$imagePath",
-                fit: BoxFit.cover,
-              )
-                  : const PlaceHolderPersonImage(),
-              borderWidth: 0,
-              diameter: 35,
+            child: UserImageIcon(
+              userImage: user.image,
+              diameter: 33,
             ),
           ),
           Margin.horizontal(10),

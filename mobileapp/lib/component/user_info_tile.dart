@@ -6,20 +6,12 @@ class UserInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imagePath = user.image;
-
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       horizontalTitleGap: 10,
-      leading: CirclePhotoFrame(
-        image: imagePath != null
-            ? Image.network(
-          "${Config.localhost}$imagePath",
-          fit: BoxFit.cover,
-        )
-            : const PlaceHolderPersonImage(),
-        borderWidth: 0,
-        diameter: 35,
+      leading: UserImageIcon(
+        userImage: user.image,
+        diameter: 33,
       ),
       title: Text(
         user.userName,

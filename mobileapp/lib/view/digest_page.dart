@@ -28,18 +28,12 @@ class _TopBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardVm = ref.read(dashboardViewModelProvider);
-    final currentUser = dashboardVm.currentUser;
 
     return AppBar(
       automaticallyImplyLeading: false,
-      title: CirclePhotoFrame(
-        image: currentUser.image != null
-            ? Image.network("${Config.localhost}${currentUser.image}",
-              fit: BoxFit.cover,
-        )
-        : const PlaceHolderPersonImage(),
+      title: UserImageIcon(
+        userImage: dashboardVm.currentUser.image,
         diameter: 30,
-        borderWidth: 0,
       ),
       centerTitle: true,
     );

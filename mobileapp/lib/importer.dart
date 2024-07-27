@@ -81,3 +81,4 @@ export 'view/digest_page.dart';
 export 'view/search_page.dart';
 export 'view_model/dashboard_viewmodel.dart';
 export 'provider/digest_viewmodel_provider.dart';
+export 'provider/post_form_notifier.dart';

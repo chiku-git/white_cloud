@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/provider/post_form_notifier.dart';
 
 class PostPage extends StatelessWidget with ThemeMixin {
   static const path = '/post/';
@@ -90,15 +89,9 @@ class _ImageWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final form = ref.read(postFormProvider);
 
-    return CirclePhotoFrame(
-        image: form.user.image != null
-            ? Image.network(
-                "${Config.localhost}${form.user.image}",
-                fit: BoxFit.cover,
-              )
-            : const PlaceHolderPersonImage(),
-        borderWidth: 0,
-        diameter: 30,
+    return UserImageIcon(
+      userImage: form.user.image,
+      diameter: 30,
     );
   }
 }
