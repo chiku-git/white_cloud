@@ -85,30 +85,37 @@ class _DigestContentsState
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return PagedListView(
-        pagingController: viewModel.controller,
-        builderDelegate: PagedChildBuilderDelegate<PostInfo>(
-            itemBuilder: (BuildContext context, PostInfo item, int index) {
-              return PostContentTile(post: item);
-            },
-            firstPageErrorIndicatorBuilder: (context) {
-              return _FirstPageErrorWidget(error: viewModel.pagingError);
-            },
-            newPageErrorIndicatorBuilder: (context) {
-              return InkWell(
-                  onTap: () => viewModel.retryRequestNewPage(),
-                  child: _NewPageErrorWidget(
-                    error: viewModel.pagingError,
-                  )
-              );
-            },
-            newPageProgressIndicatorBuilder: (context) {
-              return _NewPageProgressIndicator();
-            },
-            noItemsFoundIndicatorBuilder: (context) {
-              return _NoItemsFoundWidget();
-            }
-        )
+    return RefreshIndicator(
+      onRefresh: () async {
+        viewModel.controller
+          ..refresh()
+          ..notifyPageRequestListeners(0);
+      },
+      child: PagedListView(
+          pagingController: viewModel.controller,
+          builderDelegate: PagedChildBuilderDelegate<PostInfo>(
+              itemBuilder: (BuildContext context, PostInfo item, int index) {
+                return PostContentTile(post: item);
+              },
+              firstPageErrorIndicatorBuilder: (context) {
+                return _FirstPageErrorWidget(error: viewModel.pagingError);
+              },
+              newPageErrorIndicatorBuilder: (context) {
+                return InkWell(
+                    onTap: () => viewModel.retryRequestNewPage(),
+                    child: _NewPageErrorWidget(
+                      error: viewModel.pagingError,
+                    )
+                );
+              },
+              newPageProgressIndicatorBuilder: (context) {
+                return _NewPageProgressIndicator();
+              },
+              noItemsFoundIndicatorBuilder: (context) {
+                return _NoItemsFoundWidget();
+              }
+          )
+      ),
     );
   }
 }
