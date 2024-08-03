@@ -132,6 +132,30 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
       },
     );
   }
+
+  /// お気に入り登録 or 解除をする
+  toggleFavorite({
+    required PostInfo post,
+    required Function(FavoriteToggleResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().toggleFavorite(post: post).then((result) =>
+      result.when(
+          onSuccess: (res) {
+            state = ApiState.success;
+            onSuccess(res);
+          },
+          onFailure: (err) {
+            state = ApiState.failure;
+            onFailure(err);
+          },
+          onCancel: () {
+            // NOP
+          }
+      )
+    );
+  }
 }
 
 enum ApiState {

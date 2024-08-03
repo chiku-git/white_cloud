@@ -23,13 +23,13 @@ Map<String, dynamic> _$$SearchPostsRequestImplToJson(
 _$SearchPostsResponseImpl _$$SearchPostsResponseImplFromJson(
         Map<String, dynamic> json) =>
     _$SearchPostsResponseImpl(
-      posts: (json['posts'] as List<dynamic>)
-          .map((e) => PostInfo.fromJson(e as Map<String, dynamic>))
+      digests: (json['digests'] as List<dynamic>)
+          .map((e) => PostDigest.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$$SearchPostsResponseImplToJson(
         _$SearchPostsResponseImpl instance) =>
     <String, dynamic>{
-      'posts': instance.posts,
+      'digests': instance.digests,
     };

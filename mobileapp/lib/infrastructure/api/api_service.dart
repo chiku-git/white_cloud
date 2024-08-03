@@ -56,4 +56,12 @@ abstract class ApiService {
       @Body() GetDigestPostsRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
+
+  /// お気に入り登録／解除API
+  @POST('/post/favorite/toggle/v1/')
+  Future<ApiResponse<FavoriteToggleResponse>> toggleFavorite(
+      @Header('Authorization') String token,
+      @Body() FavoriteToggleRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
 }

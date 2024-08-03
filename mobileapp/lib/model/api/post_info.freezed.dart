@@ -25,8 +25,6 @@ mixin _$PostInfo {
   UserMiniInfo get user => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
-  int get likes => throw _privateConstructorUsedError;
-  int get comments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,9 +42,7 @@ abstract class $PostInfoCopyWith<$Res> {
       String body,
       UserMiniInfo user,
       String createdAt,
-      String updatedAt,
-      int likes,
-      int comments});
+      String updatedAt});
 
   $UserMiniInfoCopyWith<$Res> get user;
 }
@@ -69,8 +65,6 @@ class _$PostInfoCopyWithImpl<$Res, $Val extends PostInfo>
     Object? user = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? likes = null,
-    Object? comments = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -93,14 +87,6 @@ class _$PostInfoCopyWithImpl<$Res, $Val extends PostInfo>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      likes: null == likes
-          ? _value.likes
-          : likes // ignore: cast_nullable_to_non_nullable
-              as int,
-      comments: null == comments
-          ? _value.comments
-          : comments // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 
@@ -126,9 +112,7 @@ abstract class _$$PostInfoImplCopyWith<$Res>
       String body,
       UserMiniInfo user,
       String createdAt,
-      String updatedAt,
-      int likes,
-      int comments});
+      String updatedAt});
 
   @override
   $UserMiniInfoCopyWith<$Res> get user;
@@ -150,8 +134,6 @@ class __$$PostInfoImplCopyWithImpl<$Res>
     Object? user = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? likes = null,
-    Object? comments = null,
   }) {
     return _then(_$PostInfoImpl(
       id: null == id
@@ -174,14 +156,6 @@ class __$$PostInfoImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      likes: null == likes
-          ? _value.likes
-          : likes // ignore: cast_nullable_to_non_nullable
-              as int,
-      comments: null == comments
-          ? _value.comments
-          : comments // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -194,9 +168,7 @@ class _$PostInfoImpl implements _PostInfo {
       required this.body,
       required this.user,
       required this.createdAt,
-      required this.updatedAt,
-      required this.likes,
-      required this.comments});
+      required this.updatedAt});
 
   factory _$PostInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PostInfoImplFromJson(json);
@@ -211,14 +183,10 @@ class _$PostInfoImpl implements _PostInfo {
   final String createdAt;
   @override
   final String updatedAt;
-  @override
-  final int likes;
-  @override
-  final int comments;
 
   @override
   String toString() {
-    return 'PostInfo(id: $id, body: $body, user: $user, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, comments: $comments)';
+    return 'PostInfo(id: $id, body: $body, user: $user, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -232,16 +200,13 @@ class _$PostInfoImpl implements _PostInfo {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.likes, likes) || other.likes == likes) &&
-            (identical(other.comments, comments) ||
-                other.comments == comments));
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, body, user, createdAt, updatedAt, likes, comments);
+  int get hashCode =>
+      Object.hash(runtimeType, id, body, user, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -263,9 +228,7 @@ abstract class _PostInfo implements PostInfo {
       required final String body,
       required final UserMiniInfo user,
       required final String createdAt,
-      required final String updatedAt,
-      required final int likes,
-      required final int comments}) = _$PostInfoImpl;
+      required final String updatedAt}) = _$PostInfoImpl;
 
   factory _PostInfo.fromJson(Map<String, dynamic> json) =
       _$PostInfoImpl.fromJson;
@@ -280,10 +243,6 @@ abstract class _PostInfo implements PostInfo {
   String get createdAt;
   @override
   String get updatedAt;
-  @override
-  int get likes;
-  @override
-  int get comments;
   @override
   @JsonKey(ignore: true)
   _$$PostInfoImplCopyWith<_$PostInfoImpl> get copyWith =>

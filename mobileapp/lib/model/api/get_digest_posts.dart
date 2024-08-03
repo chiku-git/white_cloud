@@ -16,7 +16,7 @@ class GetDigestPostsRequest with _$GetDigestPostsRequest {
 @freezed
 class GetDigestPostsResponse with _$GetDigestPostsResponse {
   factory GetDigestPostsResponse({
-    required List<PostInfo> posts,
+    required List<PostDigest> digests,
   }) = _GetDigestPostsResponse;
 
   factory GetDigestPostsResponse.fromJson(Map<String, dynamic> json)

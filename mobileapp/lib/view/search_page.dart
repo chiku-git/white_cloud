@@ -322,16 +322,16 @@ abstract class _SearchResultState<T, V> extends ConsumerState<SearchResultPage>
 
 /// "最新の投稿" State
 class _SearchLatestPostResultState
-    extends _SearchResultState<PostInfo, SearchPostsResponse> {
+    extends _SearchResultState<PostDigest, SearchPostsResponse> {
   @override
   Future<ApiResult> fetchSearchResults(String keyword, int page) =>
       api.searchPost(keyword: keyword, page: page);
 
   @override
-  List<PostInfo> getSearchResults(SearchPostsResponse res) => res.posts;
+  List<PostDigest> getSearchResults(SearchPostsResponse res) => res.digests;
 
   @override
-  Widget getTile(PostInfo item) => PostContentTile(post: item);
+  Widget getTile(PostDigest item) => PostContentTile(digest: item);
 }
 
 /// "ユーザー" State

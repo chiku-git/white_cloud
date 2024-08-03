@@ -13,8 +13,6 @@ _$PostInfoImpl _$$PostInfoImplFromJson(Map<String, dynamic> json) =>
       user: UserMiniInfo.fromJson(json['user']),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      likes: (json['likes'] as num).toInt(),
-      comments: (json['comments'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$PostInfoImplToJson(_$PostInfoImpl instance) =>
@@ -24,6 +22,4 @@ Map<String, dynamic> _$$PostInfoImplToJson(_$PostInfoImpl instance) =>
       'user': instance.user,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'likes': instance.likes,
-      'comments': instance.comments,
     };

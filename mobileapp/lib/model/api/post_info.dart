@@ -11,8 +11,6 @@ class PostInfo with _$PostInfo {
     required UserMiniInfo user,
     required String createdAt,
     required String updatedAt,
-    required int likes,
-    required int comments,
   }) = _PostInfo;
 
   factory PostInfo.fromJson(Map<String, dynamic> json)

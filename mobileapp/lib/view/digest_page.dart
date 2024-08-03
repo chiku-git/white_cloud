@@ -87,9 +87,9 @@ class _DigestContentsState
       },
       child: PagedListView(
           pagingController: viewModel.controller,
-          builderDelegate: PagedChildBuilderDelegate<PostInfo>(
-              itemBuilder: (BuildContext context, PostInfo item, int index) {
-                return PostContentTile(post: item);
+          builderDelegate: PagedChildBuilderDelegate<PostDigest>(
+              itemBuilder: (BuildContext context, PostDigest item, int index) {
+                return PostContentTile(digest: item);
               },
               firstPageErrorIndicatorBuilder: (context) {
                 return _FirstPageErrorWidget(error: viewModel.pagingError);

@@ -5,36 +5,69 @@ class PostReactionButton extends StatelessWidget {
   final double iconSize;
   final String text;
   final double gap;
+  final Color? color;
   final Function() onTap;
-  late final EdgeInsetsGeometry padding;
+  final bool isLoading;
+  final double width;
+  final double height;
 
-  PostReactionButton({
-    super.key,
-    required this.icon,
-    this.iconSize = 20,
-    required this.text,
-    this.gap = 3,
-    EdgeInsetsGeometry? padding,
-    required this.onTap,
-    }) {
-    this.padding = padding ?? const EdgeInsets.fromLTRB(0, 5, 25, 5);
-  }
+  const PostReactionButton(
+      {super.key,
+      required this.icon,
+      this.iconSize = 20,
+      required this.text,
+      this.gap = 3,
+      required this.onTap,
+      this.color,
+      this.isLoading = false,
+      this.width = 50,
+      this.height = 30,
+      });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: padding,
-        child: Wrap(
-          children: [
-            Icon(icon,
-                size: iconSize),
-            Margin.horizontal(gap),
-            Text(text)
-          ],
-        ),
+      splashColor: Colors.transparent,
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: _getContent(),
       ),
     );
+  }
+
+  Widget _getContent() {
+    if (isLoading) {
+      final paddingEnd = width - iconSize;
+      final paddingVertical = height - iconSize;
+      return Padding(
+        padding: EdgeInsets.fromLTRB(
+            0,
+            paddingVertical / 2,
+            paddingEnd,
+            paddingVertical / 2
+        ),
+        child: const CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    } else {
+      return Wrap(
+        runAlignment: WrapAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: iconSize,
+            color: color,
+          ),
+          Margin.horizontal(gap),
+          Text(
+            text,
+            style: TextStyle(color: color),
+          )
+        ],
+      );
+    }
   }
 }

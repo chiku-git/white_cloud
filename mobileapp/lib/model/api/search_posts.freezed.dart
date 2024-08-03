@@ -175,7 +175,7 @@ SearchPostsResponse _$SearchPostsResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SearchPostsResponse {
-  List<PostInfo> get posts => throw _privateConstructorUsedError;
+  List<PostDigest> get digests => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -189,7 +189,7 @@ abstract class $SearchPostsResponseCopyWith<$Res> {
           SearchPostsResponse value, $Res Function(SearchPostsResponse) then) =
       _$SearchPostsResponseCopyWithImpl<$Res, SearchPostsResponse>;
   @useResult
-  $Res call({List<PostInfo> posts});
+  $Res call({List<PostDigest> digests});
 }
 
 /// @nodoc
@@ -205,13 +205,13 @@ class _$SearchPostsResponseCopyWithImpl<$Res, $Val extends SearchPostsResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? posts = null,
+    Object? digests = null,
   }) {
     return _then(_value.copyWith(
-      posts: null == posts
-          ? _value.posts
-          : posts // ignore: cast_nullable_to_non_nullable
-              as List<PostInfo>,
+      digests: null == digests
+          ? _value.digests
+          : digests // ignore: cast_nullable_to_non_nullable
+              as List<PostDigest>,
     ) as $Val);
   }
 }
@@ -224,7 +224,7 @@ abstract class _$$SearchPostsResponseImplCopyWith<$Res>
       __$$SearchPostsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<PostInfo> posts});
+  $Res call({List<PostDigest> digests});
 }
 
 /// @nodoc
@@ -238,13 +238,13 @@ class __$$SearchPostsResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? posts = null,
+    Object? digests = null,
   }) {
     return _then(_$SearchPostsResponseImpl(
-      posts: null == posts
-          ? _value._posts
-          : posts // ignore: cast_nullable_to_non_nullable
-              as List<PostInfo>,
+      digests: null == digests
+          ? _value._digests
+          : digests // ignore: cast_nullable_to_non_nullable
+              as List<PostDigest>,
     ));
   }
 }
@@ -252,23 +252,23 @@ class __$$SearchPostsResponseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SearchPostsResponseImpl implements _SearchPostsResponse {
-  _$SearchPostsResponseImpl({required final List<PostInfo> posts})
-      : _posts = posts;
+  _$SearchPostsResponseImpl({required final List<PostDigest> digests})
+      : _digests = digests;
 
   factory _$SearchPostsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$SearchPostsResponseImplFromJson(json);
 
-  final List<PostInfo> _posts;
+  final List<PostDigest> _digests;
   @override
-  List<PostInfo> get posts {
-    if (_posts is EqualUnmodifiableListView) return _posts;
+  List<PostDigest> get digests {
+    if (_digests is EqualUnmodifiableListView) return _digests;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_posts);
+    return EqualUnmodifiableListView(_digests);
   }
 
   @override
   String toString() {
-    return 'SearchPostsResponse(posts: $posts)';
+    return 'SearchPostsResponse(digests: $digests)';
   }
 
   @override
@@ -276,13 +276,13 @@ class _$SearchPostsResponseImpl implements _SearchPostsResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SearchPostsResponseImpl &&
-            const DeepCollectionEquality().equals(other._posts, _posts));
+            const DeepCollectionEquality().equals(other._digests, _digests));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_posts));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_digests));
 
   @JsonKey(ignore: true)
   @override
@@ -300,14 +300,14 @@ class _$SearchPostsResponseImpl implements _SearchPostsResponse {
 }
 
 abstract class _SearchPostsResponse implements SearchPostsResponse {
-  factory _SearchPostsResponse({required final List<PostInfo> posts}) =
+  factory _SearchPostsResponse({required final List<PostDigest> digests}) =
       _$SearchPostsResponseImpl;
 
   factory _SearchPostsResponse.fromJson(Map<String, dynamic> json) =
       _$SearchPostsResponseImpl.fromJson;
 
   @override
-  List<PostInfo> get posts;
+  List<PostDigest> get digests;
   @override
   @JsonKey(ignore: true)
   _$$SearchPostsResponseImplCopyWith<_$SearchPostsResponseImpl> get copyWith =>

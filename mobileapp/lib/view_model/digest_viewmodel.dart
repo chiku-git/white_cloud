@@ -3,8 +3,8 @@ import 'package:white_cloud/importer.dart';
 
 @immutable
 class DigestViewModel {
-  late final PagingController<int, PostInfo> _controller;
-  PagingController<int, PostInfo> get controller => _controller;
+  late final PagingController<int, PostDigest> _controller;
+  PagingController<int, PostDigest> get controller => _controller;
   ErrorResponse get pagingError => _controller.error;
 
   setUpController() {
@@ -19,7 +19,7 @@ class DigestViewModel {
   _onRequestPageChanging(int page) async {
     (await ApiRepository().getDigestPosts(page: page)).when(
         onSuccess: (res) {
-          final digests = res.posts;
+          final digests = res.digests;
           if (digests.isNotEmpty) {
             _controller.appendPage(digests, page + 1);
           } else {

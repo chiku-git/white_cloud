@@ -126,5 +126,16 @@ class ApiRepository {
     );
   }
 
+  /// お気に入り登録 or 解除をする
+  Future<ApiResult<FavoriteToggleResponse>> toggleFavorite({
+    required PostInfo post,
+  }) async {
+    return await _client.toggleFavorite(
+      request: FavoriteToggleRequest(
+        postId: post.id
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

@@ -17,7 +17,7 @@ class SearchPostsRequest with _$SearchPostsRequest {
 @freezed
 class SearchPostsResponse with _$SearchPostsResponse {
   factory SearchPostsResponse({
-    required List<PostInfo> posts,
+    required List<PostDigest> digests,
   }) = _SearchPostsResponse;
 
   factory SearchPostsResponse.fromJson(Map<String, dynamic> json)

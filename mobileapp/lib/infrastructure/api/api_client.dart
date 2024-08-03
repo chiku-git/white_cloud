@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
 
@@ -139,6 +138,20 @@ class ApiClient {
       return ApiResult<GetDigestPostsResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<GetDigestPostsResponse>(error: error);
+    }
+  }
+
+  /// お気に入り登録／解除
+  Future<ApiResult<FavoriteToggleResponse>> toggleFavorite({
+    required FavoriteToggleRequest request,
+  }) async {
+    try {
+      final response = await _request<FavoriteToggleResponse>((cancelToken) {
+        return _service.toggleFavorite(_authorization, request, cancelToken);
+      });
+      return ApiResult<FavoriteToggleResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<FavoriteToggleResponse>(error: error);
     }
   }
 
