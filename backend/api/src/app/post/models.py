@@ -15,6 +15,9 @@ class PostManager(models.Manager):
 
         return post
 
+    def findById(self, id):
+        return self.filter(id=id).first()
+
 
 class Post(models.Model):
     id = models.UUIDField(
@@ -62,14 +65,3 @@ class Post(models.Model):
         verbose_name = "投稿"
         verbose_name_plural = "投稿"
         db_table = "posts"
-
-
-class PostResponse:
-    def __init__(self, post: Post) -> None:
-        self.id = post.id
-        self.body = post.body
-        self.user = post.user.get_public_properties()
-        self.createdAt = post.created_at
-        self.updatedAt = post.updated_at
-        self.likes = 0
-        self.comments = 0

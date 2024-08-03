@@ -82,6 +82,20 @@ class UserExistsError(BusinessError):
         )
 
 
+class PostNotExistsError(BusinessError):
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_POST_NOT_EXISTS"
+        message = "この投稿は削除されています。"
+        detail = message
+        super().__init__(
+            status_code,
+            code,
+            message,
+            detail,
+        )
+
+
 class LoginError(BusinessError):
     def __init__(self):
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -128,20 +142,6 @@ class ServerError(BusinessError):
                 e.get_full_details() if hasattr(e, "get_full_details") else str(e)
             ),
         }
-        super().__init__(
-            status_code=status_code,
-            code=code,
-            message=message,
-            detail=detail,
-        )
-
-
-class TestError(BusinessError):
-    def __init__(self):
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        code = "ERR_TEST"
-        message = "テストエラー！ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"
-        detail = message
         super().__init__(
             status_code=status_code,
             code=code,

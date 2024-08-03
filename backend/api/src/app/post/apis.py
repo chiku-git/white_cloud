@@ -2,16 +2,17 @@ from account.models import User
 from common.bases.api_bases import LoggedInAPI
 from common.models.responses import APISuccessResponse
 
-from .models import Post, PostResponse
+from .dtos import PostDigestResponse, PostResponse
+from .models import Post
 from .serializers import CreatePostSerializer, GetDigestSerializer, SearchPostSerializer
 
 
 class PostListMixin:
-    def create_post_response(self, posts):
+    def create_post_digest_response(self, posts, me) -> list[PostDigestResponse]:
         results = []
 
         for post in posts:
-            res = PostResponse(post=post)
+            res = PostDigestResponse(post=post, me=me)
             results.append(res)
 
         return results
@@ -54,17 +55,18 @@ class SearchPostV1API(LoggedInAPI, PostListMixin):
 
     def post(self, request, *args, **kwargs):
         serializer = SearchPostSerializer(data=request.data)
+        me = request.user
 
         if serializer.is_valid(raise_exception=True):
             posts = self._search(
                 params=serializer.validated_data,
-                me=request.user,
+                me=me,
             )
-            results = self.create_post_response(posts=posts)
+            digests = self.create_post_digest_response(posts=posts, me=me)
 
             return APISuccessResponse(
                 body=SearchPostV1API.Response(
-                    posts=results,
+                    digests=digests,
                 ),
             )
 
@@ -79,11 +81,12 @@ class SearchPostV1API(LoggedInAPI, PostListMixin):
             Post.objects.filter(body__icontains=keyword)
             .order_by("-updated_at")
             .exclude(user=me)[start:end]
+            .prefetch_related("favorites")
         )
 
     class Response:
-        def __init__(self, posts: list[PostResponse]):
-            self.posts = posts
+        def __init__(self, digests: list[PostDigestResponse]):
+            self.digests = digests
 
 
 class GetDigestV1API(LoggedInAPI, PostListMixin):
@@ -97,17 +100,21 @@ class GetDigestV1API(LoggedInAPI, PostListMixin):
         serializer = GetDigestSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
+            me = request.user
 
             posts = self._search(
                 params=serializer.validated_data,
-                me=request.user,
+                me=me,
             )
 
-            results = self.create_post_response(posts=posts)
+            digests = self.create_post_digest_response(
+                posts=posts,
+                me=me,
+            )
 
             return APISuccessResponse(
                 body=GetDigestV1API.Response(
-                    posts=results,
+                    digests=digests,
                 ),
             )
 
@@ -117,8 +124,12 @@ class GetDigestV1API(LoggedInAPI, PostListMixin):
         start = page * self.PAGE_SIZE
         end = start + self.PAGE_SIZE
 
-        return Post.objects.order_by("-updated_at").exclude(user=me)[start:end]
+        return (
+            Post.objects.order_by("-updated_at")
+            .exclude(user=me)[start:end]
+            .prefetch_related("favorites")
+        )
 
     class Response:
-        def __init__(self, posts: list[PostResponse]) -> None:
-            self.posts = posts
+        def __init__(self, digests: list[PostDigestResponse]) -> None:
+            self.digests = digests

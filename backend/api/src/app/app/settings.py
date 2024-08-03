@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # myself
     "account",
     "post",
+    "favorite",
     # third party
     "rest_framework",
     "drf_extra_fields",
