@@ -4,9 +4,8 @@ from comment.models import Comment
 from comment.serializers import PostReplySerializer
 from common.bases.api_bases import LoggedInAPI
 from common.models.responses import APISuccessResponse
+from post.dtos import PostDigestResponse
 from post.models import Post
-
-from app.post.dtos import PostDigestResponse
 
 
 class PostReplyV1API(LoggedInAPI):
@@ -21,21 +20,26 @@ class PostReplyV1API(LoggedInAPI):
 
             # 投稿を作成
             reply = Post.objects.create(user=me, body=data["body"])
-            reply_to = Post.objects.findById(id=data["replyToId"])
+            to = Post.objects.findById(id=data["replyToId"])
 
             # 返信先とリレーション
-            Comment.objects.create(reply_to=reply_to, reply=reply)
+            Comment.objects.reply(to=to, reply=reply)
 
             return APISuccessResponse(
                 body=PostReplyV1API.Response(
-                    digest=reply,
+                    replyTo=to,
+                    reply=reply,
                     me=me,
                 ),
             )
 
     class Response:
-        def __init__(self, digest: Post, me: User) -> None:
-            self.digest = PostDigestResponse(
-                post=digest,
+        def __init__(self, replyTo: Post, reply: Post, me: User) -> None:
+            self.replyTo = PostDigestResponse(
+                post=replyTo,
+                me=me,
+            )
+            self.reply = PostDigestResponse(
+                post=reply,
                 me=me,
             )

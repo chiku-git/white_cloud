@@ -11,6 +11,6 @@ class PostReplySerializer(BaseSerializer):
     body = serializers.CharField(
         label="返信内容",
         max_length=500,
-        allow_Null=False,
-        allow_Blank=False,
+        allow_null=False,
+        allow_blank=False,
     )

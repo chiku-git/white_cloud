@@ -3,9 +3,9 @@ from post.models import Post
 
 
 class CommentManager(models.Manager):
-    def reply(self, reply_to: Post, reply: Post):
+    def reply(self, to: Post, reply: Post):
         comment = self.model(
-            reply_to=reply_to,
+            reply_to=to,
             reply_from=reply,
         )
         comment.full_clean()
@@ -41,3 +41,8 @@ class Comment(models.Model):
         verbose_name = "返信"
         verbose_name_plural = "返信"
         db_table = "comments"
+
+
+class CommentSummary:
+    def __init__(self, count: int):
+        self.count = count

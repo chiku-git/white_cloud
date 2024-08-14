@@ -1,4 +1,5 @@
 from account.models import User
+from comment.models import CommentSummary
 from favorite.models import FavoriteSummary
 from post.models import Post
 
@@ -14,10 +15,14 @@ class PostResponse:
 
 class PostDigestResponse:
     def __init__(self, post: Post, me: User) -> None:
+        comments_query = post.reply_to
         favorite_query = post.favorites
+
         self.post = PostResponse(post=post)
         self.favorite = FavoriteSummary(
             count=favorite_query.count(),
             isMyFavorite=favorite_query.filter(user=me).exists(),
         )
-        self.reply = {"count": 0}
+        self.reply = CommentSummary(
+            count=comments_query.count(),
+        )
