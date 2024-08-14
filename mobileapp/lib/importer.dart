@@ -84,3 +84,4 @@ export 'provider/digest_viewmodel_provider.dart';
 export 'provider/post_form_notifier.dart';
 export 'model/api/post_digest.dart';
 export 'model/api/favorite_toggle.dart';
+export 'model/api/reply_post.dart';

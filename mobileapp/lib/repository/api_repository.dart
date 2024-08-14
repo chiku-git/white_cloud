@@ -137,5 +137,18 @@ class ApiRepository {
     );
   }
 
+  /// 投稿に返信する
+  Future<ApiResult<ReplyPostResponse>> replyPost({
+    required PostInfo replyTo,
+    required String body,
+  }) async {
+    return await _client.replyPost(
+      request: ReplyPostRequest(
+          replyToId: replyTo.id,
+          body: body,
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

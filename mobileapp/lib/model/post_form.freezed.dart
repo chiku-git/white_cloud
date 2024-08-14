@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PostForm {
   User get user => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  PostDigest? get replyTo => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PostFormCopyWith<PostForm> get copyWith =>
@@ -29,7 +30,9 @@ abstract class $PostFormCopyWith<$Res> {
   factory $PostFormCopyWith(PostForm value, $Res Function(PostForm) then) =
       _$PostFormCopyWithImpl<$Res, PostForm>;
   @useResult
-  $Res call({User user, String body});
+  $Res call({User user, String body, PostDigest? replyTo});
+
+  $PostDigestCopyWith<$Res>? get replyTo;
 }
 
 /// @nodoc
@@ -47,6 +50,7 @@ class _$PostFormCopyWithImpl<$Res, $Val extends PostForm>
   $Res call({
     Object? user = null,
     Object? body = null,
+    Object? replyTo = freezed,
   }) {
     return _then(_value.copyWith(
       user: null == user
@@ -57,7 +61,23 @@ class _$PostFormCopyWithImpl<$Res, $Val extends PostForm>
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      replyTo: freezed == replyTo
+          ? _value.replyTo
+          : replyTo // ignore: cast_nullable_to_non_nullable
+              as PostDigest?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PostDigestCopyWith<$Res>? get replyTo {
+    if (_value.replyTo == null) {
+      return null;
+    }
+
+    return $PostDigestCopyWith<$Res>(_value.replyTo!, (value) {
+      return _then(_value.copyWith(replyTo: value) as $Val);
+    });
   }
 }
 
@@ -69,7 +89,10 @@ abstract class _$$PostFormImplCopyWith<$Res>
       __$$PostFormImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({User user, String body});
+  $Res call({User user, String body, PostDigest? replyTo});
+
+  @override
+  $PostDigestCopyWith<$Res>? get replyTo;
 }
 
 /// @nodoc
@@ -85,6 +108,7 @@ class __$$PostFormImplCopyWithImpl<$Res>
   $Res call({
     Object? user = null,
     Object? body = null,
+    Object? replyTo = freezed,
   }) {
     return _then(_$PostFormImpl(
       user: null == user
@@ -95,6 +119,10 @@ class __$$PostFormImplCopyWithImpl<$Res>
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
               as String,
+      replyTo: freezed == replyTo
+          ? _value.replyTo
+          : replyTo // ignore: cast_nullable_to_non_nullable
+              as PostDigest?,
     ));
   }
 }
@@ -102,16 +130,19 @@ class __$$PostFormImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$PostFormImpl extends _PostForm {
-  _$PostFormImpl({required this.user, required this.body}) : super._();
+  _$PostFormImpl({required this.user, required this.body, this.replyTo})
+      : super._();
 
   @override
   final User user;
   @override
   final String body;
+  @override
+  final PostDigest? replyTo;
 
   @override
   String toString() {
-    return 'PostForm(user: $user, body: $body)';
+    return 'PostForm(user: $user, body: $body, replyTo: $replyTo)';
   }
 
   @override
@@ -120,11 +151,12 @@ class _$PostFormImpl extends _PostForm {
         (other.runtimeType == runtimeType &&
             other is _$PostFormImpl &&
             (identical(other.user, user) || other.user == user) &&
-            (identical(other.body, body) || other.body == body));
+            (identical(other.body, body) || other.body == body) &&
+            (identical(other.replyTo, replyTo) || other.replyTo == replyTo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user, body);
+  int get hashCode => Object.hash(runtimeType, user, body, replyTo);
 
   @JsonKey(ignore: true)
   @override
@@ -134,14 +166,18 @@ class _$PostFormImpl extends _PostForm {
 }
 
 abstract class _PostForm extends PostForm {
-  factory _PostForm({required final User user, required final String body}) =
-      _$PostFormImpl;
+  factory _PostForm(
+      {required final User user,
+      required final String body,
+      final PostDigest? replyTo}) = _$PostFormImpl;
   _PostForm._() : super._();
 
   @override
   User get user;
   @override
   String get body;
+  @override
+  PostDigest? get replyTo;
   @override
   @JsonKey(ignore: true)
   _$$PostFormImplCopyWith<_$PostFormImpl> get copyWith =>

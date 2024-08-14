@@ -59,7 +59,7 @@ class _DigestContentsState
     extends ConsumerState<_DigestContents>
     with AutomaticKeepAliveClientMixin {
 
-  DigestViewModel get viewModel => ref.read(digestViewModelProvider);
+  late DigestViewModel _viewModel;
 
   @override
   bool get wantKeepAlive => true;
@@ -67,12 +67,13 @@ class _DigestContentsState
   @override
   void initState() {
     super.initState();
-    viewModel.setUpController();
+    _viewModel = ref.read(digestViewModelProvider);
+    _viewModel.setUpController();
   }
 
   @override
   void dispose() {
-    viewModel.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
@@ -81,24 +82,24 @@ class _DigestContentsState
     super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
-        viewModel.controller
+        _viewModel.controller
           ..refresh()
           ..notifyPageRequestListeners(0);
       },
       child: PagedListView(
-          pagingController: viewModel.controller,
+          pagingController: _viewModel.controller,
           builderDelegate: PagedChildBuilderDelegate<PostDigest>(
               itemBuilder: (BuildContext context, PostDigest item, int index) {
                 return PostContentTile(digest: item);
               },
               firstPageErrorIndicatorBuilder: (context) {
-                return _FirstPageErrorWidget(error: viewModel.pagingError);
+                return _FirstPageErrorWidget(error: _viewModel.pagingError);
               },
               newPageErrorIndicatorBuilder: (context) {
                 return InkWell(
-                    onTap: () => viewModel.retryRequestNewPage(),
+                    onTap: () => _viewModel.retryRequestNewPage(),
                     child: _NewPageErrorWidget(
-                      error: viewModel.pagingError,
+                      error: _viewModel.pagingError,
                     )
                 );
               },

@@ -156,6 +156,34 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
       )
     );
   }
+
+  /// 投稿に返信する
+  replyPost({
+    required PostInfo replyTo,
+    required String body,
+    required Function(ReplyPostResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().replyPost(
+      replyTo: replyTo,
+      body: body,
+    ).then((result) =>
+        result.when(
+            onSuccess: (res) {
+              state = ApiState.success;
+              onSuccess(res);
+            },
+            onFailure: (err) {
+              state = ApiState.failure;
+              onFailure(err);
+            },
+            onCancel: () {
+              // NOP
+            }
+        )
+    );
+  }
 }
 
 enum ApiState {

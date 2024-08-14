@@ -155,6 +155,20 @@ class ApiClient {
     }
   }
 
+  /// 投稿返信
+  Future<ApiResult<ReplyPostResponse>> replyPost({
+    required ReplyPostRequest request,
+  }) async {
+    try {
+      final response = await _request<ReplyPostResponse>((cancelToken) {
+        return _service.replyPost(_authorization, request, cancelToken);
+      });
+      return ApiResult<ReplyPostResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<ReplyPostResponse>(error: error);
+    }
+  }
+
   Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
     // リクエスト前処理
     final cancelToken = CancelToken();

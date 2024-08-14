@@ -64,4 +64,12 @@ abstract class ApiService {
       @Body() FavoriteToggleRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
+
+  /// 投稿返信API
+  @POST('/post/reply/v1/')
+  Future<ApiResponse<ReplyPostResponse>> replyPost(
+      @Header('Authorization') String token,
+      @Body() ReplyPostRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
 }

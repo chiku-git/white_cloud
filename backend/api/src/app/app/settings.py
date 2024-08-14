@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "account",
     "post",
     "favorite",
+    "comment",
     # third party
     "rest_framework",
     "drf_extra_fields",

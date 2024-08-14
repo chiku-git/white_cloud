@@ -36,50 +36,87 @@ class _Leading extends StatelessWidget {
   }
 }
 
-class _Title extends StatelessWidget {
+class _Title extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return const Text(
-      Strings.createPostTitle,
-      style: TextStyle(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isReplying = ref.read(postFormProvider).isReplying();
+
+    return Text(
+      isReplying ? Strings.reply : Strings.createPostTitle,
+      style: const TextStyle(
         fontSize: 17,
       ),
     );
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.read(postFormProvider);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
       child: Stack(
-        children: [
-          Flex(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: _ImageWidget(),
-              ),
-              Margin.horizontal(10),
-              Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: SingleChildScrollView(
-                      child: _Editor(),
-                    ),
-                  )
-              )
-            ],
-          ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: _BottomContainer(),
-          )
-        ],
+        children: _createContent(form),
       ),
+    );
+  }
+
+  List<Widget> _createContent(PostForm form) {
+    final List<Widget> contents = [];
+
+    if (form.isReplying()) {
+      contents.add(
+          ListView(
+            children: [
+              PostContentTile(
+                digest: form.replyTo!,
+                readonly: true,
+              ),
+              Margin.vertical(10),
+              _EditorContent(),
+            ],
+          )
+      );
+    } else {
+      contents.add(
+          _EditorContent()
+      );
+    }
+
+    contents.add(
+        Container(
+          alignment: Alignment.bottomCenter,
+          child: _BottomContainer(),
+        )
+    );
+
+    return contents;
+  }
+}
+
+class _EditorContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: _ImageWidget(),
+        ),
+        Margin.horizontal(10),
+        Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: SingleChildScrollView(
+                child: _Editor(),
+              ),
+            )
+        )
+      ],
     );
   }
 }
@@ -91,7 +128,7 @@ class _ImageWidget extends ConsumerWidget {
 
     return UserImageIcon(
       userImage: form.user.image,
-      diameter: 30,
+      diameter: 33,
     );
   }
 }
@@ -99,10 +136,13 @@ class _ImageWidget extends ConsumerWidget {
 class _Editor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.read(postFormProvider);
 
     return TextFormField(
-      decoration: const InputDecoration(
-          hintText: Strings.createPostHint,
+      decoration: InputDecoration(
+          hintText: form.isReplying()
+              ? "${form.user.userName}${Strings.replyTo}"
+              : Strings.createPostHint,
           border: InputBorder.none,
       ),
       autofocus: true,
@@ -130,24 +170,39 @@ class _BottomContainer extends ConsumerWidget with ThemeMixin, UIMixin {
         RoundedProgressButton(
           state: ButtonState.fromApiState(apiState),
           onPressed: form.isValid() ? () {
-            ref.read(apiProvider.notifier).createPost(
-                body: form.body,
-                onSuccess: (res) {
-                  Future.delayed(const Duration(milliseconds: 300), () {
-                    Navigator.of(context).pop(res);
-                  });
-                },
-                onFailure: (err) {
-                  showErrorBanner(context, err.message);
-                }
-            );
+            if (form.isReplying()) {
+              ref.read(apiProvider.notifier).replyPost(
+                  replyTo: form.replyTo!.post,
+                  body: form.body,
+                  onSuccess: (res) {
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      Navigator.of(context).pop(res);
+                    });
+                  },
+                  onFailure: (err) {
+                    showErrorBanner(context, err.message);
+                  }
+              );
+            } else {
+              ref.read(apiProvider.notifier).createPost(
+                  body: form.body,
+                  onSuccess: (res) {
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      Navigator.of(context).pop(res);
+                    });
+                  },
+                  onFailure: (err) {
+                    showErrorBanner(context, err.message);
+                  }
+              );
+            }
           } : null,
           backgroundColor: colors.tertiary,
           disabledForegroundColor: colors.tertiary.withOpacity(0.2),
           progressColor: colors.onTertiary,
           successColor: colors.onTertiary,
           child: Text(
-            Strings.doPost,
+            form.isReplying() ? Strings.reply : Strings.doPost,
             style: TextStyle(
                 color: colors.onTertiary
             ),

@@ -35,7 +35,7 @@ class Post(models.Model):
 
     body = models.TextField(
         verbose_name="本文",
-        max_length=1000,
+        max_length=500,
         blank=False,
         null=False,
     )

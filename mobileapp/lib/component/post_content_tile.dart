@@ -1,46 +1,46 @@
 import 'package:white_cloud/importer.dart';
 
-
 class PostContentTile extends StatelessWidget {
   final PostDigest digest;
-  const PostContentTile({super.key, required this.digest});
+  final bool readonly;
+  const PostContentTile({super.key, required this.digest, this.readonly = false});
 
   @override
   Widget build(BuildContext context) {
     final user = digest.post.user;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-      child: Flex(
-        direction: Axis.horizontal,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: UserImageIcon(
-              userImage: user.image,
-              diameter: 33,
-            ),
+    return Flex(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: UserImageIcon(
+            userImage: user.image,
+            diameter: 33,
           ),
-          Margin.horizontal(10),
-          Expanded(
-              child: Flex(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                direction: Axis.vertical,
-                children: [
-                  Text(
-                    user.userName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Margin.vertical(5),
-                  Text(digest.post.body),
-                  Margin.vertical(5),
-                  _PostContentReactionBar(digest: digest,),
-                ],
-              )
-          )
-        ],
-      ),
+        ),
+        Margin.horizontal(10),
+        Expanded(
+            child: Flex(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              direction: Axis.vertical,
+              children: [
+                Text(
+                  user.userName,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Margin.vertical(5),
+                Text(digest.post.body),
+                Margin.vertical(5),
+                Visibility(
+                    visible: !readonly,
+                    child: _PostContentReactionBar(digest: digest,)
+                ),
+              ],
+            )
+        )
+      ],
     );
   }
 }
@@ -92,13 +92,23 @@ class _PostContentReactionState
         PostReactionButton(
           icon: Icons.mode_comment_outlined,
           text: _digest.reply.count.toString(),
-          onTap: () {
-
-          },
+          onTap: () =>  _reply(),
           gap: 5,
         )
       ],
     );
+  }
+
+  _reply() async {
+    final user = DBRepository().getLatestUser();
+    final form = PostForm(user: user, body: "", replyTo: _digest);
+    Navigator.of(context).pushNamed(PostPage.path, arguments: form).then((res) {
+      if (res != null) {
+        setState(() {
+          _digest = (res as ReplyPostResponse).replyTo;
+        });
+      }
+    });
   }
 
   _toggleFavorite() {

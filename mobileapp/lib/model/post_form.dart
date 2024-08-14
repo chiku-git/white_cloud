@@ -8,6 +8,7 @@ abstract class PostForm implements _$PostForm {
   factory PostForm({
     required User user,
     required String body,
+    PostDigest? replyTo,
   }) = _PostForm;
 
   factory PostForm.empty({required User user}) => PostForm(user: user, body: "");
@@ -15,4 +16,6 @@ abstract class PostForm implements _$PostForm {
   bool isValid() {
     return body.trim().isNotEmpty;
   }
+
+  bool isReplying() => replyTo != null;
 }
