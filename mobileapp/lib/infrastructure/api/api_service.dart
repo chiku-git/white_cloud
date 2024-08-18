@@ -72,4 +72,12 @@ abstract class ApiService {
       @Body() ReplyPostRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
+
+  /// 返信取得API
+  @POST('/post/replies/v1/')
+  Future<ApiResponse<GetRepliesResponse>> getReplies(
+      @Header('Authorization') String token,
+      @Body() GetRepliesRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
 }

@@ -169,6 +169,20 @@ class ApiClient {
     }
   }
 
+  /// 返信取得
+  Future<ApiResult<GetRepliesResponse>> getReplies({
+    required GetRepliesRequest request,
+  }) async {
+    try {
+      final response = await _request<GetRepliesResponse>((cancelToken) {
+        return _service.getReplies(_authorization, request, cancelToken);
+      });
+      return ApiResult<GetRepliesResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<GetRepliesResponse>(error: error);
+    }
+  }
+
   Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
     // リクエスト前処理
     final cancelToken = CancelToken();

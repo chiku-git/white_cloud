@@ -59,7 +59,7 @@ class _Body extends StatelessWidget with ThemeMixin {
                               _tryLogin(context);
                             },
                             text: Strings.login),
-                        const _Divider(),
+                        const StackDivider(text: Strings.or,),
                         _ButtonWidget(
                             onPressed: () {
                               Navigator.pushNamed(context, TosPage.path);
@@ -85,8 +85,9 @@ class _Body extends StatelessWidget with ThemeMixin {
   }
 }
 
-class _Divider extends StatelessWidget with ThemeMixin {
-  const _Divider();
+class StackDivider extends StatelessWidget with ThemeMixin {
+  final String text;
+  const StackDivider({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +101,15 @@ class _Divider extends StatelessWidget with ThemeMixin {
         children: [
           Divider(
             color: themeColor.outline,
-            indent: 10,
-            endIndent: 10,
           ),
           Container(
             color: isLight ? AppColors.lightSkyBlue : themeColor.surface,
             padding: const EdgeInsets.symmetric(
-                horizontal: 20
+                horizontal: 10
             ),
-            child: const Text(
-                Strings.or,
-                style: TextStyle(
+            child: Text(
+                text,
+                style: const TextStyle(
                   fontSize: 13
                 )
             )

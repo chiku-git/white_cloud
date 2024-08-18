@@ -150,5 +150,18 @@ class ApiRepository {
     );
   }
 
+  /// 返信を取得する
+  Future<ApiResult<GetRepliesResponse>> getReplies({
+    required PostInfo post,
+    required int page,
+  }) async {
+    return await _client.getReplies(
+      request: GetRepliesRequest(
+        postId: post.id,
+        page: page
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

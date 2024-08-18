@@ -1,4 +1,5 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/view/post_detail_page.dart';
 
 class AppRouter {
   static AppRouter of({required RouteSettings settings}) {
@@ -39,6 +40,9 @@ class AppRouter {
       case PostPage.path:
         final form = settings.arguments as PostForm;
         return _getSlideAnimRouter(page: PostPage(form: form,));
+      case PostDetailPage.path:
+        final digest = settings.arguments as PostDigest;
+        return _getDefaultRouter(page: PostDetailPage(digest: digest));
       default:
         return null;
     }

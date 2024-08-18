@@ -1,46 +1,62 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/view/post_detail_page.dart';
 
 class PostContentTile extends StatelessWidget {
   final PostDigest digest;
-  final bool readonly;
-  const PostContentTile({super.key, required this.digest, this.readonly = false});
+  final bool canNavigateDetail;
+  final bool canReaction;
+
+  const PostContentTile({
+    super.key,
+    required this.digest,
+    this.canNavigateDetail = true,
+    this.canReaction = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final user = digest.post.user;
 
-    return Flex(
-      direction: Axis.horizontal,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 5.0),
-          child: UserImageIcon(
-            userImage: user.image,
-            diameter: 33,
+    return InkWell(
+      onTap: canNavigateDetail ? () {
+        Navigator.of(context).pushNamed(
+            PostDetailPage.path,
+            arguments: digest
+        );
+      } : null,
+      child: Flex(
+        direction: Axis.horizontal,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: UserImageIcon(
+              userImage: user.image,
+              diameter: 33,
+            ),
           ),
-        ),
-        Margin.horizontal(10),
-        Expanded(
-            child: Flex(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              direction: Axis.vertical,
-              children: [
-                Text(
-                  user.userName,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Margin.vertical(5),
-                Text(digest.post.body),
-                Margin.vertical(5),
-                Visibility(
-                    visible: !readonly,
-                    child: _PostContentReactionBar(digest: digest,)
-                ),
-              ],
-            )
-        )
-      ],
+          Margin.horizontal(10),
+          Expanded(
+              child: Flex(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                direction: Axis.vertical,
+                children: [
+                  Text(
+                    user.userName,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Margin.vertical(5),
+                  Text(digest.post.body),
+                  Margin.vertical(5),
+                  Visibility(
+                      visible: !canReaction,
+                      child: _PostContentReactionBar(digest: digest,)
+                  ),
+                ],
+              )
+          )
+        ],
+      ),
     );
   }
 }

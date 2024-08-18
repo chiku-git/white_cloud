@@ -72,7 +72,7 @@ class _Body extends ConsumerWidget {
             children: [
               PostContentTile(
                 digest: form.replyTo!,
-                readonly: true,
+                canReaction: true,
               ),
               Margin.vertical(10),
               _EditorContent(),
