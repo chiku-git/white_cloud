@@ -1,4 +1,4 @@
-from comment.apis import PostReplyV1API
+from comment.apis import GetRepliesV1API, PostReplyV1API
 from django.urls import path
 from favorite.apis import FavoriteToggleV1API
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path("digest/v1/", GetDigestV1API.as_view()),
     path("favorite/toggle/v1/", FavoriteToggleV1API.as_view()),
     path("reply/v1/", PostReplyV1API.as_view()),
+    path("replies/v1/", GetRepliesV1API.as_view()),
 ]

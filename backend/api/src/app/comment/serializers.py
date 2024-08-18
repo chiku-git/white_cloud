@@ -14,3 +14,18 @@ class PostReplySerializer(BaseSerializer):
         allow_null=False,
         allow_blank=False,
     )
+
+
+class GetRepliesSerializer(BaseSerializer):
+    postId = serializers.UUIDField(
+        label="投稿ID",
+        allow_null=False,
+    )
+
+    page = serializers.IntegerField(
+        label="ページ",
+        min_value=0,
+        error_messages={
+            "min_value": "ページは{min_value}以上で入力してください。",
+        },
+    )
