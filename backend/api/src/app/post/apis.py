@@ -1,10 +1,16 @@
 from account.models import User
 from common.bases.api_bases import LoggedInAPI
+from common.models.errors import PostNotExistsError
 from common.models.responses import APISuccessResponse
 
 from .dtos import PostDigestResponse, PostResponse
 from .models import Post
-from .serializers import CreatePostSerializer, GetDigestSerializer, SearchPostSerializer
+from .serializers import (
+    CreatePostSerializer,
+    GetDigestSerializer,
+    GetDigestsSerializer,
+    SearchPostSerializer,
+)
 
 
 class PostListMixin:
@@ -89,7 +95,7 @@ class SearchPostV1API(LoggedInAPI, PostListMixin):
             self.digests = digests
 
 
-class GetDigestV1API(LoggedInAPI, PostListMixin):
+class GetDigestsV1API(LoggedInAPI, PostListMixin):
     """ダイジェスト取得API"""
 
     MAX_SIZE = 100
@@ -97,7 +103,7 @@ class GetDigestV1API(LoggedInAPI, PostListMixin):
     MAX_PAGE = MAX_SIZE / PAGE_SIZE
 
     def post(self, request, *args, **kwargs):
-        serializer = GetDigestSerializer(data=request.data)
+        serializer = GetDigestsSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             me = request.user
@@ -113,7 +119,7 @@ class GetDigestV1API(LoggedInAPI, PostListMixin):
             )
 
             return APISuccessResponse(
-                body=GetDigestV1API.Response(
+                body=GetDigestsV1API.Response(
                     digests=digests,
                 ),
             )
@@ -133,3 +139,24 @@ class GetDigestV1API(LoggedInAPI, PostListMixin):
     class Response:
         def __init__(self, digests: list[PostDigestResponse]) -> None:
             self.digests = digests
+
+
+class GetDigestV1API(LoggedInAPI):
+    def post(self, request, *args, **kwargs):
+        serializer = GetDigestSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            id = serializer.validated_data["id"]
+            me = request.user
+            post = Post.objects.filter(id=id).first()
+
+            if post is None:
+                raise PostNotExistsError()
+
+            return APISuccessResponse(
+                body=GetDigestV1API.Response(post=post, me=me),
+            )
+
+    class Response:
+        def __init__(self, post: Post, me: User) -> None:
+            self.digest = PostDigestResponse(post=post, me=me)

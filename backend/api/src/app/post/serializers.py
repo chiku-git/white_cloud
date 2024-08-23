@@ -1,4 +1,5 @@
 from common.bases.serializer_bases import (
+    BaseSerializer,
     PostListSerializer,
     SearchSerializer,
     SerializerMixin,
@@ -22,5 +23,12 @@ class SearchPostSerializer(SearchSerializer):
     pass
 
 
-class GetDigestSerializer(PostListSerializer):
+class GetDigestsSerializer(PostListSerializer):
     pass
+
+
+class GetDigestSerializer(BaseSerializer):
+    id = serializers.UUIDField(
+        label="投稿ID",
+        allow_null=False,
+    )
