@@ -40,6 +40,8 @@ class Strings {
   static const retry = "もう一度実行";
   static const reply = "返信";
   static const replyTo = "に返信...";
+  static const thread = "スレッド";
+  static const noReplies = "返信はありません";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

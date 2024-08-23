@@ -50,7 +50,7 @@ abstract class ApiService {
       );
 
   /// ダイジェスト取得API
-  @POST('/post/digest/v1/')
+  @POST('/post/digests/v1/')
   Future<ApiResponse<GetDigestPostsResponse>> getDigestPosts(
       @Header('Authorization') String token,
       @Body() GetDigestPostsRequest request,
@@ -78,6 +78,14 @@ abstract class ApiService {
   Future<ApiResponse<GetRepliesResponse>> getReplies(
       @Header('Authorization') String token,
       @Body() GetRepliesRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
+
+  /// ダイジェスト取得（単独）API
+  @POST('/post/digest/v1/')
+  Future<ApiResponse<GetDigestPostResponse>> getDigestPost(
+      @Header('Authorization') String token,
+      @Body() GetDigestPostRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
 }

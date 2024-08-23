@@ -1,7 +1,7 @@
 import 'package:white_cloud/importer.dart';
 import 'package:white_cloud/view/post_detail_page.dart';
 
-class PostContentTile extends StatelessWidget {
+class PostContentTile extends ConsumerStatefulWidget {
   final PostDigest digest;
   final bool canNavigateDetail;
   final bool canReaction;
@@ -14,15 +14,33 @@ class PostContentTile extends StatelessWidget {
   });
 
   @override
+  ConsumerState<ConsumerStatefulWidget> createState() => PostContentState();
+}
+
+class PostContentState extends ConsumerState<PostContentTile> {
+  late PostDigest _digest;
+
+  @override
+  void initState() {
+    super.initState();
+    _digest = widget.digest;
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    final user = digest.post.user;
+    final user = _digest.post.user;
 
     return InkWell(
-      onTap: canNavigateDetail ? () {
+      onTap: widget.canNavigateDetail ? () async {
         Navigator.of(context).pushNamed(
             PostDetailPage.path,
-            arguments: digest
-        );
+            arguments: DBRepository().findDigestBy(_digest)
+        ).then((_) {
+          setState(() {
+            _digest = DBRepository().findDigestBy(_digest);
+          });
+        });
       } : null,
       child: Flex(
         direction: Axis.horizontal,
@@ -46,11 +64,11 @@ class PostContentTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Margin.vertical(5),
-                  Text(digest.post.body),
+                  Text(_digest.post.body),
                   Margin.vertical(5),
                   Visibility(
-                      visible: !canReaction,
-                      child: _PostContentReactionBar(digest: digest,)
+                      visible: !widget.canReaction,
+                      child: _PostContentReactionBar(digest: widget.digest,)
                   ),
                 ],
               )
@@ -89,14 +107,15 @@ class _PostContentReactionState
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isMyFavorite = _digest.favorite.isMyFavorite;
+    final digest = DBRepository().findDigestBy(_digest);
+    final isMyFavorite = digest.favorite.isMyFavorite;
 
     return Wrap(
       direction: Axis.horizontal,
       children: [
         PostReactionButton(
           icon: isMyFavorite ? Icons.favorite :Icons.favorite_border,
-          text: _digest.favorite.count.toString(),
+          text: digest.favorite.count.toString(),
           color: isMyFavorite ? Colors.red : null,
           onTap: () {
             if (_apiState == ApiState.loading) return;
@@ -107,7 +126,7 @@ class _PostContentReactionState
         Margin.horizontal(10),
         PostReactionButton(
           icon: Icons.mode_comment_outlined,
-          text: _digest.reply.count.toString(),
+          text: digest.reply.count.toString(),
           onTap: () =>  _reply(),
           gap: 5,
         )
@@ -121,7 +140,7 @@ class _PostContentReactionState
     Navigator.of(context).pushNamed(PostPage.path, arguments: form).then((res) {
       if (res != null) {
         setState(() {
-          _digest = (res as ReplyPostResponse).replyTo;
+          DBRepository().update((res as ReplyPostResponse).replyTo);
         });
       }
     });
@@ -135,7 +154,7 @@ class _PostContentReactionState
             Future(() {
               setState(() {
                 _apiState = ApiState.idle;
-                _digest = res.digest;
+                DBRepository().update(res.digest);
               });
             });
           },

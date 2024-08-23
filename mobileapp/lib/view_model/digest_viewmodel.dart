@@ -21,6 +21,7 @@ class DigestViewModel {
         onSuccess: (res) {
           final digests = res.digests;
           if (digests.isNotEmpty) {
+            DBRepository().add(digests);
             _controller.appendPage(digests, page + 1);
           } else {
             _controller.appendLastPage([]);

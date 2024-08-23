@@ -10,13 +10,11 @@ class PostDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      overrides: [
-
-      ],
+      overrides: const [],
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: Text("スレッド"),
+            title: const Text(Strings.thread),
           ),
           body: Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -78,6 +76,7 @@ class _RepliesState extends ConsumerState<_RepliesWidget> with ThemeMixin {
             onSuccess: (res) {
               final replies = res.replies;
               if (replies.isNotEmpty) {
+                DBRepository().add(replies);
                 _controller.appendPage(replies, page + 1);
               } else {
                 _controller.appendLastPage([]);
@@ -124,17 +123,17 @@ class _RepliesState extends ConsumerState<_RepliesWidget> with ThemeMixin {
           },
           noItemsFoundIndicatorBuilder: (context) {
             return const _Adjust(
-                child: Text("返信はありません")
+                child: Text(Strings.noReplies)
             );
           },
           firstPageErrorIndicatorBuilder: (context) {
             return const _Adjust(
-                child: Text("エラーが発生しました。")
+                child: Text(Strings.errorHasOccurred)
             );
           },
           newPageErrorIndicatorBuilder: (context) {
             return const _Adjust(
-                child: Text("エラーが発生しました。")
+                child: Text(Strings.errorHasOccurred)
             );
           }
       ),

@@ -15,6 +15,26 @@ class DBRepository {
     _database = Database();
   }
 
+  final List<PostDigest> _digests = [];
+
+  add(List<PostDigest> digests) {
+    for (var digest in digests) {
+      final index = _digests.indexWhere((d) => d.post.id == digest.post.id);
+      if (index != -1) {
+        _digests[index] = digest;
+      } else {
+        _digests.add(digest);
+      }
+    }
+  }
+
+  update(PostDigest digest) {
+    add([digest]);
+  }
+
+  PostDigest findDigestBy(PostDigest digest) {
+    return _digests.where((e) => e.post.id == digest.post.id).first;
+  }
 
   saveUser({required User user}) {
     _database.saveUser(user: user);

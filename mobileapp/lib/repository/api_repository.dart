@@ -126,6 +126,17 @@ class ApiRepository {
     );
   }
 
+  /// ダイジェストを取得する
+  Future<ApiResult<GetDigestPostResponse>> getDigestPost({
+    required String id,
+  }) async {
+    return await _client.getDigestPost(
+      request: GetDigestPostRequest(
+        id: id
+      ),
+    );
+  }
+
   /// お気に入り登録 or 解除をする
   Future<ApiResult<FavoriteToggleResponse>> toggleFavorite({
     required PostInfo post,
