@@ -42,6 +42,9 @@ class Strings {
   static const replyTo = "に返信...";
   static const thread = "スレッド";
   static const noReplies = "返信はありません";
+  static const favorite = "お気に入り";
+  static const following = "フォロー中";
+  static const noFavorite = "お気に入りはありません";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

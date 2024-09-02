@@ -88,4 +88,12 @@ abstract class ApiService {
       @Body() GetDigestPostRequest request,
       @CancelRequest() CancelToken cancelToken,
       );
+
+  /// お気に入り取得API
+  @POST('/post/favorites/v1/')
+  Future<ApiResponse<GetFavoritesResponse>> getFavorites(
+      @Header('Authorization') String token,
+      @Body() GetFavoritesRequest request,
+      @CancelRequest() CancelToken cancelToken,
+      );
 }

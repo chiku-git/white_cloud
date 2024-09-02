@@ -174,5 +174,16 @@ class ApiRepository {
     );
   }
 
+  /// お気に入りを取得する
+  Future<ApiResult<GetFavoritesResponse>> getFavorites({
+    required int page,
+  }) async {
+    return await _client.getFavorites(
+      request: GetFavoritesRequest(
+          page: page
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

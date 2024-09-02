@@ -87,3 +87,8 @@ export 'model/api/favorite_toggle.dart';
 export 'model/api/reply_post.dart';
 export 'model/api/get_replies.dart';
 export 'model/api/get_digest_post.dart';
+export 'model/api/get_favorites.dart';
+export 'view_model/activity_viewmodel.dart';
+export 'model/api/activity_page_model.dart';
+export 'provider/activity_viewmodel_provider.dart';
+export 'view/activity_page.dart';

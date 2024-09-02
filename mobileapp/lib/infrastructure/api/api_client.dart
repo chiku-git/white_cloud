@@ -197,6 +197,20 @@ class ApiClient {
     }
   }
 
+  /// お気に入り取得
+  Future<ApiResult<GetFavoritesResponse>> getFavorites({
+    required GetFavoritesRequest request,
+  }) async {
+    try {
+      final response = await _request<GetFavoritesResponse>((cancelToken) {
+        return _service.getFavorites(_authorization, request, cancelToken);
+      });
+      return ApiResult<GetFavoritesResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<GetFavoritesResponse>(error: error);
+    }
+  }
+
   Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
     // リクエスト前処理
     final cancelToken = CancelToken();

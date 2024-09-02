@@ -39,6 +39,8 @@ class _Body extends ConsumerWidget {
         return const DigestPage();
       case _BottomNavigation.searchIndex:
         return SearchPage();
+      case _BottomNavigation.favIndex:
+        return const ActivityPage();
       default:
         return const Placeholder();
     }
