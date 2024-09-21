@@ -50,5 +50,6 @@ abstract class ImageData implements _$ImageData {
     @Default("image") String fileName,
     @Default("image/jpg") String mimeType,
     Uint8List? bytes,
+    String? url,
   }) = _ImageData;
 }

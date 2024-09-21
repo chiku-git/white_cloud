@@ -8,36 +8,43 @@ class UserRegistrationPage extends ConsumerWidget with UIMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future(() {
-      ref.read(userFormProvider.notifier).updateUser(user: user);
-    });
+    final notifier = UserFormNotifier(user: user);
 
-    return SafeArea(
-        child: PopScope(
-          canPop: false,
-          onPopInvoked: (_) async {
-            final state = await showDialog<ConfirmDialogState>(
-                context: context, 
-                builder: (context) {
-                  return const ConfirmDialog(
-                      content: Strings.confirmAbortRegistration,
-                      options: {
-                        Strings.no : ConfirmDialogState.negative,
-                        Strings.yes: ConfirmDialogState.positive,
-                      }
-                  );
-                }
-            );
+    return ProviderScope(
+      overrides: [
+        userFormProvider.overrideWith((ref) {
+          return notifier;
+        })
+      ],
+      child: SafeArea(
+          child: PopScope(
+            canPop: notifier.isEdit,
+            onPopInvoked: (_) async {
+              if (notifier.isEdit) return;
 
-            if (state?.isPositive == true && context.mounted) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            }
-          },
-          child: Scaffold(
-            appBar: AppBar(),
-            body: const _Body(),
-          ),
-        )
+              final state = await showDialog<ConfirmDialogState>(
+                  context: context,
+                  builder: (context) {
+                    return const ConfirmDialog(
+                        content: Strings.confirmAbortRegistration,
+                        options: {
+                          Strings.no : ConfirmDialogState.negative,
+                          Strings.yes: ConfirmDialogState.positive,
+                        }
+                    );
+                  }
+              );
+
+              if (state?.isPositive == true && context.mounted) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(),
+              body: const _Body(),
+            ),
+          )
+      ),
     );
   }
 }
@@ -79,6 +86,8 @@ class _Body extends StatelessWidget with ThemeMixin {
 class _BodyContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(userFormProvider.notifier);
+
     return Column(
       children: [
         Margin.vertical(20),
@@ -86,8 +95,16 @@ class _BodyContent extends ConsumerWidget {
         Margin.vertical(40),
         const _UserNameInputWidget(),
         Margin.vertical(20),
-        _PasswordInputWidget(),
-        Margin.vertical(40),
+        Visibility(
+          visible: !notifier.isEdit,
+            child: Column(
+              children: [
+                _PasswordInputWidget(),
+                Margin.vertical(40),
+              ],
+            )
+        ),
+
         const _BioInputWidget(),
       ],
     );
@@ -102,7 +119,7 @@ class _UserNameInputWidget extends ConsumerWidget {
     final form = ref.watch(userFormProvider);
 
     return TextFormField(
-      initialValue: form.userName,
+      controller: TextEditingController(text: form.userName),
       decoration: const InputDecoration(
         labelText: Strings.userName,
         border: OutlineInputBorder(),
@@ -178,7 +195,7 @@ class _BioInputWidget extends ConsumerWidget {
     final form = ref.watch(userFormProvider);
 
     return TextFormField(
-      initialValue: form.bio,
+      controller: TextEditingController(text: form.bio),
       decoration: const InputDecoration(
         labelText: Strings.introMessage,
         border: OutlineInputBorder(),
@@ -200,15 +217,12 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = getColorScheme(context);
     final form = ref.watch(userFormProvider);
-    final image = form.image != null && form.image!.bytes != null
-        ? Image.memory(form.image!.bytes!, fit: BoxFit.cover,)
-        : const PlaceHolderPersonImage();
     final photoFrameSize = MediaQuery.of(context).size.width * 0.35;
 
     return Stack(
       children: [
         CirclePhotoFrame(
-            image: image,
+            image: _getImage(form: form),
             diameter: photoFrameSize,
             borderWidth: 3.0,
             onTap: () {
@@ -241,6 +255,18 @@ class _UserImageWidget extends ConsumerWidget with ThemeMixin {
     );
   }
 
+  Widget _getImage({required UserForm form}) {
+    if (form.image?.bytes != null) {
+      return Image.memory(form.image!.bytes!, fit: BoxFit.cover,);
+    }
+
+    if (form.image?.url != null) {
+      return UserImageIcon(userImage: form.image!.url);
+    }
+
+    return const PlaceHolderPersonImage();
+  }
+
   _onTapPhotoFrame(BuildContext context, WidgetRef ref) {
     Future(() {
       ImageCropPage.pickAndTrim(Navigator.of(context)).then((image) => {
@@ -259,26 +285,48 @@ class _RegisterUserButtonWidget extends ConsumerWidget with UIMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     final apiState = ref.watch(apiProvider);
     final form = ref.watch(userFormProvider);
+    final notifier = ref.read(userFormProvider.notifier);
+    final isValid = notifier.isEdit ? form.userName.isNotEmpty : form.isValid;
 
     return OutlinedProgressButton(
         state: ButtonState.fromApiState(apiState),
-        onPressed: form.isValid ? () {
+        onPressed: isValid ? () {
           hideBanner(context);
-          ref.read(apiProvider.notifier).registerUser(
-              form: form,
-              onSuccess: (res) {
-                DBRepository().saveUserFromJson(json: res.user.toJson());
-                _navigateToDashBoardPage(context, ref);
-              },
-              onFailure: (err) {
-                ScaffoldMessenger.of(context).showMaterialBanner(
-                    ErrorBanner(
+          if (notifier.isEdit) {
+            ref.read(apiProvider.notifier).updateUser(
+                form: form,
+                onSuccess: (res) {
+                  DBRepository().saveUserFromJson(json: res.user.toJson());
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).pop(res.user);
+                  });
+                },
+                onFailure: (err) {
+                  ScaffoldMessenger.of(context).showMaterialBanner(
+                      ErrorBanner(
                         context: context,
                         message: err.message,
-                    )
-                );
-              }
-          );
+                      )
+                  );
+                }
+            );
+          } else {
+            ref.read(apiProvider.notifier).registerUser(
+                form: form,
+                onSuccess: (res) {
+                  DBRepository().saveUserFromJson(json: res.user.toJson());
+                  _navigateToDashBoardPage(context, ref);
+                },
+                onFailure: (err) {
+                  ScaffoldMessenger.of(context).showMaterialBanner(
+                      ErrorBanner(
+                        context: context,
+                        message: err.message,
+                      )
+                  );
+                }
+            );
+          }
         } : null,
         child: const Text(Strings.register)
     );

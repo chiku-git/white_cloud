@@ -1,4 +1,5 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/view/user_page.dart';
 
 class DashBoardPage extends StatelessWidget with ThemeMixin {
   static const path = '/dashboard/';
@@ -41,6 +42,9 @@ class _Body extends ConsumerWidget {
         return SearchPage();
       case _BottomNavigation.favIndex:
         return const ActivityPage();
+      case _BottomNavigation.profIndex:
+        final user = DBRepository().findUserById(id: vm.currentUser.id);
+        return UserPage.from(user: user!, isMe: true,);
       default:
         return const Placeholder();
     }

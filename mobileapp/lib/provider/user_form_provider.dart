@@ -1,11 +1,15 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/user_form.dart';
 
 final userFormProvider =
     StateNotifierProvider.autoDispose<UserFormNotifier, UserForm>(
-        (ref) => UserFormNotifier());
+        (ref) => throw UnimplementedError());
 
 class UserFormNotifier extends StateNotifier<UserForm> {
-  UserFormNotifier() : super(UserForm.init());
+  late final bool isEdit;
+  UserFormNotifier({required UserForm user}): super(user) {
+    isEdit = user.userName.isNotEmpty;
+  }
 
   updateUser({
     required UserForm user,

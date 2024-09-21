@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/get_user_digests.dart';
+import 'package:white_cloud/model/api/update_user.dart';
+import 'package:white_cloud/model/api/user_info.dart';
 
 class ApiRepository {
   static ApiRepository? _instance;
@@ -183,6 +186,42 @@ class ApiRepository {
           page: page
       ),
     );
+  }
+
+  /// ユーザーの投稿ダイジェストを取得する
+  Future<ApiResult<GetUserDigestsResponse>> getUserDigests({
+    required int page,
+    required UserInfo user,
+  }) async {
+    return await _client.getUserDigests(
+      request: GetUserDigestsRequest(
+          page: page,
+          userId: user.id
+      ),
+    );
+  }
+
+  /// 会員更新する
+  Future<ApiResult<UpdateUserResponse>> updateUser({
+    required UserForm form,
+  }) async {
+    final request = FormData.fromMap(
+      {
+        "user": MultipartFile.fromString(
+          json.encode(form.toJson()),
+          contentType: MediaType.parse('application/json'),
+        ),
+        "image": form.image != null && form.image!.bytes != null
+            ? MultipartFile.fromBytes(
+          form.image!.bytes!,
+          filename: form.image!.fileName,
+          contentType: MediaType.parse(form.image!.mimeType),
+        )
+            : null
+      },
+      ListFormat.multiCompatible,
+    );
+    return await _client.updateUser(request: request);
   }
 
   cancelAllRequests() => _client.cancelAllRequests();

@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/get_user_digests.dart';
+import 'package:white_cloud/model/api/update_user.dart';
 
 class ApiClient {
   static ApiClient? _instance;
@@ -208,6 +210,34 @@ class ApiClient {
       return ApiResult<GetFavoritesResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<GetFavoritesResponse>(error: error);
+    }
+  }
+
+  /// ユーザダイジェスト取得
+  Future<ApiResult<GetUserDigestsResponse>> getUserDigests({
+    required GetUserDigestsRequest request,
+  }) async {
+    try {
+      final response = await _request<GetUserDigestsResponse>((cancelToken) {
+        return _service.getUserDigests(_authorization, request, cancelToken);
+      });
+      return ApiResult<GetUserDigestsResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<GetUserDigestsResponse>(error: error);
+    }
+  }
+
+  /// 会員更新する
+  Future<ApiResult<UpdateUserResponse>> updateUser({
+    required FormData request,
+  }) async {
+    try {
+      final response = await _request<UpdateUserResponse>((cancelToken) {
+        return  _service.updateUser(_authorization, request, cancelToken);
+      });
+      return ApiResult<UpdateUserResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<UpdateUserResponse>(error: error);
     }
   }
 

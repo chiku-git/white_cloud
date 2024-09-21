@@ -241,6 +241,7 @@ mixin _$ImageData {
   String get fileName => throw _privateConstructorUsedError;
   String get mimeType => throw _privateConstructorUsedError;
   Uint8List? get bytes => throw _privateConstructorUsedError;
+  String? get url => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ImageDataCopyWith<ImageData> get copyWith =>
@@ -252,7 +253,7 @@ abstract class $ImageDataCopyWith<$Res> {
   factory $ImageDataCopyWith(ImageData value, $Res Function(ImageData) then) =
       _$ImageDataCopyWithImpl<$Res, ImageData>;
   @useResult
-  $Res call({String fileName, String mimeType, Uint8List? bytes});
+  $Res call({String fileName, String mimeType, Uint8List? bytes, String? url});
 }
 
 /// @nodoc
@@ -271,6 +272,7 @@ class _$ImageDataCopyWithImpl<$Res, $Val extends ImageData>
     Object? fileName = null,
     Object? mimeType = null,
     Object? bytes = freezed,
+    Object? url = freezed,
   }) {
     return _then(_value.copyWith(
       fileName: null == fileName
@@ -285,6 +287,10 @@ class _$ImageDataCopyWithImpl<$Res, $Val extends ImageData>
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
+      url: freezed == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -297,7 +303,7 @@ abstract class _$$ImageDataImplCopyWith<$Res>
       __$$ImageDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String fileName, String mimeType, Uint8List? bytes});
+  $Res call({String fileName, String mimeType, Uint8List? bytes, String? url});
 }
 
 /// @nodoc
@@ -314,6 +320,7 @@ class __$$ImageDataImplCopyWithImpl<$Res>
     Object? fileName = null,
     Object? mimeType = null,
     Object? bytes = freezed,
+    Object? url = freezed,
   }) {
     return _then(_$ImageDataImpl(
       fileName: null == fileName
@@ -328,6 +335,10 @@ class __$$ImageDataImplCopyWithImpl<$Res>
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
+      url: freezed == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -336,7 +347,10 @@ class __$$ImageDataImplCopyWithImpl<$Res>
 
 class _$ImageDataImpl extends _ImageData {
   _$ImageDataImpl(
-      {this.fileName = "image", this.mimeType = "image/jpg", this.bytes})
+      {this.fileName = "image",
+      this.mimeType = "image/jpg",
+      this.bytes,
+      this.url})
       : super._();
 
   @override
@@ -347,10 +361,12 @@ class _$ImageDataImpl extends _ImageData {
   final String mimeType;
   @override
   final Uint8List? bytes;
+  @override
+  final String? url;
 
   @override
   String toString() {
-    return 'ImageData(fileName: $fileName, mimeType: $mimeType, bytes: $bytes)';
+    return 'ImageData(fileName: $fileName, mimeType: $mimeType, bytes: $bytes, url: $url)';
   }
 
   @override
@@ -362,12 +378,13 @@ class _$ImageDataImpl extends _ImageData {
                 other.fileName == fileName) &&
             (identical(other.mimeType, mimeType) ||
                 other.mimeType == mimeType) &&
-            const DeepCollectionEquality().equals(other.bytes, bytes));
+            const DeepCollectionEquality().equals(other.bytes, bytes) &&
+            (identical(other.url, url) || other.url == url));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, fileName, mimeType,
-      const DeepCollectionEquality().hash(bytes));
+      const DeepCollectionEquality().hash(bytes), url);
 
   @JsonKey(ignore: true)
   @override
@@ -380,7 +397,8 @@ abstract class _ImageData extends ImageData {
   factory _ImageData(
       {final String fileName,
       final String mimeType,
-      final Uint8List? bytes}) = _$ImageDataImpl;
+      final Uint8List? bytes,
+      final String? url}) = _$ImageDataImpl;
   _ImageData._() : super._();
 
   @override
@@ -389,6 +407,8 @@ abstract class _ImageData extends ImageData {
   String get mimeType;
   @override
   Uint8List? get bytes;
+  @override
+  String? get url;
   @override
   @JsonKey(ignore: true)
   _$$ImageDataImplCopyWith<_$ImageDataImpl> get copyWith =>

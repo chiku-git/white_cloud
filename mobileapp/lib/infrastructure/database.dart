@@ -25,11 +25,16 @@ class Database {
   }
 
   saveUser({required User user}) async {
+    await isar.users.filter().idEqualTo(user.id).deleteAll();
     await isar.writeTxn(() async => await isar.users.put(user));
   }
 
   /// 最新のユーザー（ログイン日時が最も新しいもの）を取得する
   User getLatestUser() {
     return isar.users.where().sortByLastLoginAtDesc().findFirstSync()!;
+  }
+
+  User? findUserById({required String id}) {
+    return isar.users.filter().idEqualTo(id).findFirstSync();
   }
 }

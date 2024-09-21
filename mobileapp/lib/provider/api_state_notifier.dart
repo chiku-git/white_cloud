@@ -1,4 +1,5 @@
 import 'package:white_cloud/importer.dart';
+import 'package:white_cloud/model/api/update_user.dart';
 
 final apiProvider =
 StateNotifierProvider<ApiStateNotifier, ApiState>(
@@ -210,6 +211,32 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
               // NOP
             }
         )
+    );
+  }
+
+  /// 会員更新する
+  updateUser({
+    required UserForm form,
+    required Function(UpdateUserResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().updateUser(form: form).then(
+          (result) => {
+        result.when(
+            onSuccess: (res) {
+              state = ApiState.success;
+              onSuccess(res);
+            },
+            onFailure: (err) {
+              state = ApiState.failure;
+              onFailure(err);
+            },
+            onCancel: () {
+              // NOP
+            }
+        ),
+      },
     );
   }
 }

@@ -47,4 +47,8 @@ class DBRepository {
   User getLatestUser() {
     return _database.getLatestUser();
   }
+
+  User? findUserById({required String id}) {
+    return _database.findUserById(id: id);
+  }
 }
