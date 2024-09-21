@@ -9,6 +9,7 @@ from .serializers import (
     CreatePostSerializer,
     GetDigestSerializer,
     GetDigestsSerializer,
+    GetUserDigestsSerializer,
     SearchPostSerializer,
 )
 
@@ -160,3 +161,45 @@ class GetDigestV1API(LoggedInAPI):
     class Response:
         def __init__(self, post: Post, me: User) -> None:
             self.digest = PostDigestResponse(post=post, me=me)
+
+
+class GetUserDigestsV1API(LoggedInAPI, PostListMixin):
+    MAX_SIZE = 100
+    PAGE_SIZE = 20
+    MAX_PAGE = MAX_SIZE / PAGE_SIZE
+
+    def post(self, request, *args, **kwargs):
+        serializer = GetUserDigestsSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            user_id = serializer.validated_data["userId"]
+            user = User.objects.filter(id=user_id).first()
+
+            posts = self._search(params=serializer.validated_data, user=user)
+
+            digests = self.create_post_digest_response(
+                posts=posts,
+                me=user,
+            )
+
+            return APISuccessResponse(
+                body=GetDigestsV1API.Response(
+                    digests=digests,
+                ),
+            )
+
+    def _search(self, params, user):
+        page = params["page"]
+
+        start = page * self.PAGE_SIZE
+        end = start + self.PAGE_SIZE
+
+        return (
+            Post.objects.filter(user=user)
+            .order_by("-updated_at")[start:end]
+            .prefetch_related("favorites")
+        )
+
+    class Response:
+        def __init__(self, digests: list[PostDigestResponse]) -> None:
+            self.digests = digests

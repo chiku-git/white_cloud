@@ -82,6 +82,20 @@ class UserExistsError(BusinessError):
         )
 
 
+class UserNotExistsError(BusinessError):
+    def __init__(self):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        code = "ERR_USER_NOT_EXISTS"
+        message = "会員が存在しません。削除されている可能性があります。"
+        detail = message
+        super().__init__(
+            status_code,
+            code,
+            message,
+            detail,
+        )
+
+
 class PostNotExistsError(BusinessError):
     def __init__(self):
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

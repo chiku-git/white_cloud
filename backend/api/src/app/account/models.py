@@ -178,6 +178,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
+    def update(self, username, bio, image=None, email=None, password=None):
+        self.username = username
+        self.bio = bio
+
+        if image is not None:
+            self.image = image
+
+        if email is not None:
+            self.email = self.normalize_username(email)
+
+        if password is not None:
+            self.set_password(password)
+
+        self.full_clean()
+        self.save()
+
     def get_public_full_properties(self) -> dict:
         image = None
         if self.image:

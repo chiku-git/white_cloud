@@ -32,3 +32,10 @@ class GetDigestSerializer(BaseSerializer):
         label="投稿ID",
         allow_null=False,
     )
+
+
+class GetUserDigestsSerializer(PostListSerializer):
+    userId = serializers.UUIDField(
+        label="ユーザーID",
+        allow_null=False,
+    )

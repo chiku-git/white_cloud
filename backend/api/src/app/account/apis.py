@@ -21,6 +21,7 @@ from .serializers import (
     RegisterUserSerializer,
     SearchUserSerializer,
     SendAuthCodeSerializer,
+    UpdateUserSerializer,
 )
 
 
@@ -280,3 +281,31 @@ class SearchUserV1API(LoggedInAPI):
     class Response:
         def __init__(self, users: list[User]):
             self.users = users
+
+
+class UpdateUserV1API(LoggedInAPI):
+    """会員更新API"""
+
+    def post(self, request, *args, **kwargs):
+        user = json.loads(request.data["user"])
+        image = request.FILES.get("image")
+
+        serializer = UpdateUserSerializer(data=user)
+
+        if serializer.is_valid(raise_exception=True):
+            return self._handleRequest(
+                me=request.user,
+                data=serializer.validated_data,
+                image=image,
+            )
+
+    def _handleRequest(self, me: User, data, image):
+        me.update(username=data["userName"], bio=data["bio"], image=image)
+
+        return APISuccessResponse(
+            body=UpdateUserV1API.Response(user=me),
+        )
+
+    class Response:
+        def __init__(self, user: User):
+            self.user = user.get_public_full_properties()

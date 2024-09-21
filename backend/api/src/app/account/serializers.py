@@ -75,6 +75,52 @@ class RegisterUserSerializer(BaseSerializer):
     )
 
 
+class UpdateUserSerializer(BaseSerializer):
+    userName = serializers.CharField(
+        label="ユーザー名",
+        max_length=20,
+        allow_blank=False,
+        allow_null=False,
+        validators=[
+            validate_user_name,
+        ],
+        error_messages={
+            "max_length": "ユーザー名は{max_length}以内で入力してください。",
+        },
+    )
+
+    password = serializers.CharField(
+        label="パスワード",
+        min_length=8,
+        allow_blank=True,
+        allow_null=True,
+        required=False,
+        error_messages={
+            "min_length": "パスワードは{min_length}以内で入力してください。",
+        },
+    )
+
+    email = serializers.EmailField(
+        label="メールアドレス",
+        max_length=50,
+        validators=[validate_email],
+        required=False,
+        error_messages={
+            "max_length": "メールアドレスは{max_length}文字以内で入力してください",
+        },
+    )
+
+    bio = serializers.CharField(
+        label="bio",
+        max_length=100,
+        allow_blank=True,
+        allow_null=True,
+        error_messages={
+            "max_length": "bioは{max_length}以内で入力してください。",
+        },
+    )
+
+
 class LoginSerializer(BaseSerializer):
     email = _get_default_email_field()
     password = _get_default_password_field()
