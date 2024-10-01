@@ -12,6 +12,9 @@ _$UserMiniInfoImpl _$$UserMiniInfoImplFromJson(Map<String, dynamic> json) =>
       userName: json['userName'] as String,
       bio: json['bio'] as String,
       image: json['image'] as String?,
+      followInfo: json['follow_info'] == null
+          ? null
+          : FollowInfo.fromJson(json['follow_info'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$UserMiniInfoImplToJson(_$UserMiniInfoImpl instance) =>
@@ -20,4 +23,5 @@ Map<String, dynamic> _$$UserMiniInfoImplToJson(_$UserMiniInfoImpl instance) =>
       'userName': instance.userName,
       'bio': instance.bio,
       'image': instance.image,
+      'follow_info': instance.followInfo,
     };

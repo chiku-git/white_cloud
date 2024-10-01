@@ -1,7 +1,5 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/provider/user_viewmodel_provider.dart';
-import 'package:white_cloud/view_model/user_viewmodel.dart';
 
 class UserPage extends StatelessWidget {
   static const path = '/user/profile';
@@ -134,22 +132,23 @@ class _EditProfileButton extends ConsumerWidget {
             ref.read(userViewModelProvider.notifier).update(user: result);
           }
         },
-        child: Text("プロフィール編集")
+        child: const Text(Strings.editingProfile)
     );
   }
 }
 
-class _FollowingInfoWidget extends StatelessWidget {
+class _FollowingInfoWidget extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userViewModelProvider).user;
     return SizedBox(
       width: double.infinity,
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.start,
         spacing: 10,
         children: [
-          Text("XXXXX フォロー"),
-          Text("YYYYYY フォロワー"),
+          Text("${user.followInfo?.following ?? 0} フォロー"),
+          Text("${user.followInfo?.followers ?? 0} フォロワー"),
         ],
       ),
     );
@@ -160,6 +159,7 @@ class _UserPostsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.read(userViewModelProvider);
+    final notifier = ref.read(userViewModelProvider.notifier);
 
     return PagedListView(
       shrinkWrap: true,
@@ -167,6 +167,12 @@ class _UserPostsWidget extends ConsumerWidget {
       pagingController: vm.controller,
       builderDelegate: PagedChildBuilderDelegate<PostDigest>(
         itemBuilder: (BuildContext context, PostDigest item, int index) {
+          Future(() {
+            notifier.updateFromUserMiniInfo(user: item.post.user);
+            if (vm.isMe) {
+              DBRepository().saveUserFromJson(json: vm.user.toJson());
+            }
+          });
           return PostContentTile(digest: item);
         }
       ),

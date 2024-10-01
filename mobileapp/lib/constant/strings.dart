@@ -45,6 +45,7 @@ class Strings {
   static const favorite = "お気に入り";
   static const following = "フォロー中";
   static const noFavorite = "お気に入りはありません";
+  static const editingProfile = "プロフィール編集";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

@@ -32,28 +32,34 @@ const UserSchema = CollectionSchema(
       name: r'email',
       type: IsarType.string,
     ),
-    r'id': PropertySchema(
+    r'followInfo': PropertySchema(
       id: 3,
+      name: r'followInfo',
+      type: IsarType.object,
+      target: r'FollowInfo',
+    ),
+    r'id': PropertySchema(
+      id: 4,
       name: r'id',
       type: IsarType.string,
     ),
     r'image': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'image',
       type: IsarType.string,
     ),
     r'lastLoginAt': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'lastLoginAt',
       type: IsarType.dateTime,
     ),
     r'updatedAt': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'userName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'userName',
       type: IsarType.string,
     )
@@ -65,7 +71,7 @@ const UserSchema = CollectionSchema(
   idName: r'localId',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'FollowInfo': FollowInfoSchema},
   getId: _userGetId,
   getLinks: _userGetLinks,
   attach: _userAttach,
@@ -80,6 +86,14 @@ int _userEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.bio.length * 3;
   bytesCount += 3 + object.email.length * 3;
+  {
+    final value = object.followInfo;
+    if (value != null) {
+      bytesCount += 3 +
+          FollowInfoSchema.estimateSize(
+              value, allOffsets[FollowInfo]!, allOffsets);
+    }
+  }
   bytesCount += 3 + object.id.length * 3;
   {
     final value = object.image;
@@ -100,11 +114,17 @@ void _userSerialize(
   writer.writeString(offsets[0], object.bio);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.email);
-  writer.writeString(offsets[3], object.id);
-  writer.writeString(offsets[4], object.image);
-  writer.writeDateTime(offsets[5], object.lastLoginAt);
-  writer.writeDateTime(offsets[6], object.updatedAt);
-  writer.writeString(offsets[7], object.userName);
+  writer.writeObject<FollowInfo>(
+    offsets[3],
+    allOffsets,
+    FollowInfoSchema.serialize,
+    object.followInfo,
+  );
+  writer.writeString(offsets[4], object.id);
+  writer.writeString(offsets[5], object.image);
+  writer.writeDateTime(offsets[6], object.lastLoginAt);
+  writer.writeDateTime(offsets[7], object.updatedAt);
+  writer.writeString(offsets[8], object.userName);
 }
 
 User _userDeserialize(
@@ -117,12 +137,17 @@ User _userDeserialize(
   object.bio = reader.readString(offsets[0]);
   object.createdAt = reader.readDateTime(offsets[1]);
   object.email = reader.readString(offsets[2]);
-  object.id = reader.readString(offsets[3]);
-  object.image = reader.readStringOrNull(offsets[4]);
-  object.lastLoginAt = reader.readDateTime(offsets[5]);
+  object.followInfo = reader.readObjectOrNull<FollowInfo>(
+    offsets[3],
+    FollowInfoSchema.deserialize,
+    allOffsets,
+  );
+  object.id = reader.readString(offsets[4]);
+  object.image = reader.readStringOrNull(offsets[5]);
+  object.lastLoginAt = reader.readDateTime(offsets[6]);
   object.localId = id;
-  object.updatedAt = reader.readDateTime(offsets[6]);
-  object.userName = reader.readString(offsets[7]);
+  object.updatedAt = reader.readDateTime(offsets[7]);
+  object.userName = reader.readString(offsets[8]);
   return object;
 }
 
@@ -140,14 +165,20 @@ P _userDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectOrNull<FollowInfo>(
+        offset,
+        FollowInfoSchema.deserialize,
+        allOffsets,
+      )) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readDateTime(offset)) as P;
     case 7:
+      return (reader.readDateTime(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -547,6 +578,22 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'email',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> followInfoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'followInfo',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> followInfoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'followInfo',
       ));
     });
   }
@@ -1111,7 +1158,14 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 }
 
-extension UserQueryObject on QueryBuilder<User, User, QFilterCondition> {}
+extension UserQueryObject on QueryBuilder<User, User, QFilterCondition> {
+  QueryBuilder<User, User, QAfterFilterCondition> followInfo(
+      FilterQuery<FollowInfo> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'followInfo');
+    });
+  }
+}
 
 extension UserQueryLinks on QueryBuilder<User, User, QFilterCondition> {}
 
@@ -1403,6 +1457,12 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
     });
   }
 
+  QueryBuilder<User, FollowInfo?, QQueryOperations> followInfoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'followInfo');
+    });
+  }
+
   QueryBuilder<User, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1446,7 +1506,10 @@ User _$UserFromJson(Map<String, dynamic> json) => User()
   ..image = json['image'] as String?
   ..createdAt = DateTime.parse(json['createdAt'] as String)
   ..updatedAt = DateTime.parse(json['updatedAt'] as String)
-  ..lastLoginAt = DateTime.parse(json['lastLoginAt'] as String);
+  ..lastLoginAt = DateTime.parse(json['lastLoginAt'] as String)
+  ..followInfo = json['follow_info'] == null
+      ? null
+      : FollowInfo.fromJson(json['follow_info'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
@@ -1457,4 +1520,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'lastLoginAt': instance.lastLoginAt.toIso8601String(),
+      'follow_info': instance.followInfo,
     };

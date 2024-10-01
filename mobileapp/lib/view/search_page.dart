@@ -328,7 +328,12 @@ class _SearchLatestPostResultState
       api.searchPost(keyword: keyword, page: page);
 
   @override
-  List<PostDigest> getSearchResults(SearchPostsResponse res) => res.digests;
+  List<PostDigest> getSearchResults(SearchPostsResponse res) {
+    final digests = res.digests;
+
+    DBRepository().add(digests);
+    return digests;
+  }
 
   @override
   Widget getTile(PostDigest item) => PostContentTile(digest: item);

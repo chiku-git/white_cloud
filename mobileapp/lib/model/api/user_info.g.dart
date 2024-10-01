@@ -16,6 +16,9 @@ _$UserInfoImpl _$$UserInfoImplFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       lastLoginAt: json['lastLoginAt'] as String,
+      followInfo: json['follow_info'] == null
+          ? null
+          : FollowInfo.fromJson(json['follow_info'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
@@ -28,4 +31,5 @@ Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'lastLoginAt': instance.lastLoginAt,
+      'follow_info': instance.followInfo,
     };

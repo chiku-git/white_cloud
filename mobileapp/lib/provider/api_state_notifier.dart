@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/update_user.dart';
 
 final apiProvider =
 StateNotifierProvider<ApiStateNotifier, ApiState>(
@@ -222,6 +221,58 @@ class ApiStateNotifier extends StateNotifier<ApiState> {
   }) {
     state = ApiState.loading;
     ApiRepository().updateUser(form: form).then(
+          (result) => {
+        result.when(
+            onSuccess: (res) {
+              state = ApiState.success;
+              onSuccess(res);
+            },
+            onFailure: (err) {
+              state = ApiState.failure;
+              onFailure(err);
+            },
+            onCancel: () {
+              // NOP
+            }
+        ),
+      },
+    );
+  }
+
+  /// フォローする
+  follow({
+    required String userId,
+    required Function(FollowResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().follow(userId: userId).then(
+          (result) => {
+        result.when(
+            onSuccess: (res) {
+              state = ApiState.success;
+              onSuccess(res);
+            },
+            onFailure: (err) {
+              state = ApiState.failure;
+              onFailure(err);
+            },
+            onCancel: () {
+              // NOP
+            }
+        ),
+      },
+    );
+  }
+
+  /// フォロー解除する
+  unfollow({
+    required String userId,
+    required Function(UnFollowResponse) onSuccess,
+    required Function(ErrorResponse) onFailure,
+  }) {
+    state = ApiState.loading;
+    ApiRepository().unfollow(userId: userId).then(
           (result) => {
         result.when(
             onSuccess: (res) {

@@ -1,8 +1,6 @@
 import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/get_user_digests.dart';
-import 'package:white_cloud/model/api/update_user.dart';
 
 class ApiClient {
   static ApiClient? _instance;
@@ -238,6 +236,34 @@ class ApiClient {
       return ApiResult<UpdateUserResponse>.onSuccess(response.data!);
     } catch (error) {
       return _handleCommonError<UpdateUserResponse>(error: error);
+    }
+  }
+
+  /// フォローする
+  Future<ApiResult<FollowResponse>> follow({
+    required FollowRequest request,
+  }) async {
+    try {
+      final response = await _request<FollowResponse>((cancelToken) {
+        return  _service.follow(_authorization, request, cancelToken);
+      });
+      return ApiResult<FollowResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<FollowResponse>(error: error);
+    }
+  }
+
+  /// フォロー解除する
+  Future<ApiResult<UnFollowResponse>> unFollow({
+    required UnFollowRequest request,
+  }) async {
+    try {
+      final response = await _request<UnFollowResponse>((cancelToken) {
+        return  _service.unFollow(_authorization, request, cancelToken);
+      });
+      return ApiResult<UnFollowResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<UnFollowResponse>(error: error);
     }
   }
 

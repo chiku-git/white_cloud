@@ -14,7 +14,13 @@ class UserInfo with _$UserInfo {
     required String createdAt,
     required String updatedAt,
     required String lastLoginAt,
+    @JsonKey(name: "follow_info") FollowInfo? followInfo,
   }) = _UserInfo;
 
-  factory UserInfo.fromJson(json) => _$UserInfoFromJson(json);
+  factory UserInfo.fromJson(json) {
+    if (json["follow_info"].runtimeType == FollowInfo) {
+      json["follow_info"] = json["follow_info"].toJson();
+    }
+    return _$UserInfoFromJson(json);
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:white_cloud/importer.dart';
 
 part 'user.g.dart';
 
@@ -18,8 +18,12 @@ class User {
   late DateTime createdAt;
   late DateTime updatedAt;
   late DateTime lastLoginAt;
+  @JsonKey(name: "follow_info") FollowInfo? followInfo;
 
   factory User.fromJson(Map<String, dynamic> json) {
+    if (json["follow_info"].runtimeType == FollowInfo) {
+      json["follow_info"] = json["follow_info"].toJson();
+    }
     return _$UserFromJson(json);
   }
 

@@ -1,9 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/model/api/get_user_digests.dart';
-import 'package:white_cloud/model/api/update_user.dart';
-import 'package:white_cloud/model/api/user_info.dart';
 
 class ApiRepository {
   static ApiRepository? _instance;
@@ -222,6 +219,28 @@ class ApiRepository {
       ListFormat.multiCompatible,
     );
     return await _client.updateUser(request: request);
+  }
+
+  /// フォローする
+  Future<ApiResult<FollowResponse>> follow({
+    required String userId,
+  }) async {
+    return await _client.follow(
+      request: FollowRequest(
+          userId: userId
+      ),
+    );
+  }
+
+  /// フォロー解除する
+  Future<ApiResult<UnFollowResponse>> unfollow({
+    required String userId,
+  }) async {
+    return await _client.unFollow(
+      request: UnFollowRequest(
+          userId: userId
+      ),
+    );
   }
 
   cancelAllRequests() => _client.cancelAllRequests();

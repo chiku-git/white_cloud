@@ -24,6 +24,8 @@ mixin _$UserMiniInfo {
   String get userName => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
+  @JsonKey(name: "follow_info")
+  FollowInfo? get followInfo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +39,12 @@ abstract class $UserMiniInfoCopyWith<$Res> {
           UserMiniInfo value, $Res Function(UserMiniInfo) then) =
       _$UserMiniInfoCopyWithImpl<$Res, UserMiniInfo>;
   @useResult
-  $Res call({String id, String userName, String bio, String? image});
+  $Res call(
+      {String id,
+      String userName,
+      String bio,
+      String? image,
+      @JsonKey(name: "follow_info") FollowInfo? followInfo});
 }
 
 /// @nodoc
@@ -57,6 +64,7 @@ class _$UserMiniInfoCopyWithImpl<$Res, $Val extends UserMiniInfo>
     Object? userName = null,
     Object? bio = null,
     Object? image = freezed,
+    Object? followInfo = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +83,10 @@ class _$UserMiniInfoCopyWithImpl<$Res, $Val extends UserMiniInfo>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String?,
+      followInfo: freezed == followInfo
+          ? _value.followInfo
+          : followInfo // ignore: cast_nullable_to_non_nullable
+              as FollowInfo?,
     ) as $Val);
   }
 }
@@ -87,7 +99,12 @@ abstract class _$$UserMiniInfoImplCopyWith<$Res>
       __$$UserMiniInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String userName, String bio, String? image});
+  $Res call(
+      {String id,
+      String userName,
+      String bio,
+      String? image,
+      @JsonKey(name: "follow_info") FollowInfo? followInfo});
 }
 
 /// @nodoc
@@ -105,6 +122,7 @@ class __$$UserMiniInfoImplCopyWithImpl<$Res>
     Object? userName = null,
     Object? bio = null,
     Object? image = freezed,
+    Object? followInfo = freezed,
   }) {
     return _then(_$UserMiniInfoImpl(
       id: null == id
@@ -123,6 +141,10 @@ class __$$UserMiniInfoImplCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String?,
+      followInfo: freezed == followInfo
+          ? _value.followInfo
+          : followInfo // ignore: cast_nullable_to_non_nullable
+              as FollowInfo?,
     ));
   }
 }
@@ -134,7 +156,8 @@ class _$UserMiniInfoImpl implements _UserMiniInfo {
       {required this.id,
       required this.userName,
       required this.bio,
-      this.image});
+      this.image,
+      @JsonKey(name: "follow_info") this.followInfo});
 
   factory _$UserMiniInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserMiniInfoImplFromJson(json);
@@ -147,10 +170,13 @@ class _$UserMiniInfoImpl implements _UserMiniInfo {
   final String bio;
   @override
   final String? image;
+  @override
+  @JsonKey(name: "follow_info")
+  final FollowInfo? followInfo;
 
   @override
   String toString() {
-    return 'UserMiniInfo(id: $id, userName: $userName, bio: $bio, image: $image)';
+    return 'UserMiniInfo(id: $id, userName: $userName, bio: $bio, image: $image, followInfo: $followInfo)';
   }
 
   @override
@@ -162,12 +188,15 @@ class _$UserMiniInfoImpl implements _UserMiniInfo {
             (identical(other.userName, userName) ||
                 other.userName == userName) &&
             (identical(other.bio, bio) || other.bio == bio) &&
-            (identical(other.image, image) || other.image == image));
+            (identical(other.image, image) || other.image == image) &&
+            (identical(other.followInfo, followInfo) ||
+                other.followInfo == followInfo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userName, bio, image);
+  int get hashCode =>
+      Object.hash(runtimeType, id, userName, bio, image, followInfo);
 
   @JsonKey(ignore: true)
   @override
@@ -185,10 +214,12 @@ class _$UserMiniInfoImpl implements _UserMiniInfo {
 
 abstract class _UserMiniInfo implements UserMiniInfo {
   factory _UserMiniInfo(
-      {required final String id,
-      required final String userName,
-      required final String bio,
-      final String? image}) = _$UserMiniInfoImpl;
+          {required final String id,
+          required final String userName,
+          required final String bio,
+          final String? image,
+          @JsonKey(name: "follow_info") final FollowInfo? followInfo}) =
+      _$UserMiniInfoImpl;
 
   factory _UserMiniInfo.fromJson(Map<String, dynamic> json) =
       _$UserMiniInfoImpl.fromJson;
@@ -201,6 +232,9 @@ abstract class _UserMiniInfo implements UserMiniInfo {
   String get bio;
   @override
   String? get image;
+  @override
+  @JsonKey(name: "follow_info")
+  FollowInfo? get followInfo;
   @override
   @JsonKey(ignore: true)
   _$$UserMiniInfoImplCopyWith<_$UserMiniInfoImpl> get copyWith =>

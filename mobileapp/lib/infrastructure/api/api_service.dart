@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:white_cloud/importer.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:white_cloud/model/api/get_user_digests.dart';
-import 'package:white_cloud/model/api/update_user.dart';
 part 'api_service.g.dart';
 
 @RestApi(baseUrl: Config.apiUrlLocal)
@@ -102,5 +100,19 @@ abstract class ApiService {
   Future<ApiResponse<UpdateUserResponse>> updateUser(
       @Header('Authorization') String token,
       @Body() FormData request,
+      @CancelRequest() CancelToken cancelToken);
+
+  /// フォローAPI
+  @POST('/account/follow/v1/')
+  Future<ApiResponse<FollowResponse>> follow(
+      @Header('Authorization') String token,
+      @Body() FollowRequest request,
+      @CancelRequest() CancelToken cancelToken);
+
+  /// フォロー解除API
+  @POST('/account/unfollow/v1/')
+  Future<ApiResponse<UnFollowResponse>> unFollow(
+      @Header('Authorization') String token,
+      @Body() UnFollowRequest request,
       @CancelRequest() CancelToken cancelToken);
 }

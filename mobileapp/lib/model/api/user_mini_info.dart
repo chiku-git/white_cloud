@@ -10,6 +10,7 @@ class UserMiniInfo with _$UserMiniInfo {
     required String userName,
     required String bio,
     String? image,
+    @JsonKey(name: "follow_info") FollowInfo? followInfo,
   }) = _UserMiniInfo;
 
   factory UserMiniInfo.fromJson(json) => _$UserMiniInfoFromJson(json);

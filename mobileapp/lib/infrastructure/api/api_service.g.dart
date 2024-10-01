@@ -538,6 +538,78 @@ class _ApiService implements ApiService {
     return value;
   }
 
+  @override
+  Future<ApiResponse<FollowResponse>> follow(
+    String token,
+    FollowRequest request,
+    CancelToken cancelToken,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = request;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResponse<FollowResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/account/follow/v1/',
+              queryParameters: queryParameters,
+              data: _data,
+              cancelToken: cancelToken,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ApiResponse<FollowResponse>.fromJson(
+      _result.data!,
+      (json) => FollowResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResponse<UnFollowResponse>> unFollow(
+    String token,
+    UnFollowRequest request,
+    CancelToken cancelToken,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = request;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResponse<UnFollowResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/account/unfollow/v1/',
+              queryParameters: queryParameters,
+              data: _data,
+              cancelToken: cancelToken,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ApiResponse<UnFollowResponse>.fromJson(
+      _result.data!,
+      (json) => UnFollowResponse.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
