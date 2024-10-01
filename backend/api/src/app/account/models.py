@@ -194,12 +194,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.full_clean()
         self.save()
 
-    def get_public_full_properties(self) -> dict:
+    def get_public_full_properties(self, me=None) -> dict:
         image = None
         if self.image:
             image = self.image
 
-        return {
+        prop = {
             "id": self.id,
             "userName": self.username,
             "image": image,
@@ -208,19 +208,39 @@ class User(AbstractBaseUser, PermissionsMixin):
             "lastLoginAt": self.last_login_at,
             "createdAt": self.created_at,
             "updatedAt": self.updated_at,
+            "follow_info": None,
         }
 
-    def get_public_properties(self) -> dict:
+        if me is not None:
+            prop["follow_info"] = {
+                "followers": self.follow_to.count(),
+                "following": self.follow_by.count(),
+                "is_following": me.follow_by.filter(to_id=self.id).exists(),
+            }
+
+        return prop
+
+    def get_public_properties(self, me=None) -> dict:
         image = None
         if self.image:
             image = self.image
 
-        return {
+        prop = {
             "id": self.id,
             "userName": self.username,
             "image": image,
             "bio": self.bio,
+            "follow_info": None,
         }
+
+        if me is not None:
+            prop["follow_info"] = {
+                "followers": self.follow_to.count(),
+                "following": self.follow_by.count(),
+                "is_following": me.follow_by.filter(to_id=self.id).exists(),
+            }
+
+        return prop
 
     def __str__(self):
         return self.username

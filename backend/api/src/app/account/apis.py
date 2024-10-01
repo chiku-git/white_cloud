@@ -12,6 +12,7 @@ from common.models.errors import (
     UserLockedError,
 )
 from common.models.responses import APISuccessResponse
+from follow.models import Follow
 from rest_framework.authtoken.models import Token
 
 from .models import AuthCode, User
@@ -221,7 +222,7 @@ class LoginV1API(NoLoginAPI):
     class Response:
         def __init__(self, user: User, token: str):
             self.token = token
-            self.user = user.get_public_full_properties()
+            self.user = user.get_public_full_properties(me=user)
 
 
 class SearchUserV1API(LoggedInAPI):
@@ -237,6 +238,7 @@ class SearchUserV1API(LoggedInAPI):
         if serializer.is_valid(raise_exception=True):
             params = serializer.validated_data
             page = params["page"]
+            me = request.user
 
             # 上限ページ数チェック
             if page >= self.MAX_PAGE:
@@ -249,12 +251,12 @@ class SearchUserV1API(LoggedInAPI):
             # ユーザを検索する
             users = self._search(
                 data=params,
-                me=request.user,
+                me=me,
             )
 
             return APISuccessResponse(
                 body=SearchUserV1API.Response(
-                    users=self._create_result(users=users),
+                    users=self._create_result(users=users, me=me),
                 ),
             )
 
@@ -271,10 +273,11 @@ class SearchUserV1API(LoggedInAPI):
             .exclude(id=me.id)[start:end]
         )
 
-    def _create_result(self, users: list[User]) -> list[dict]:
+    def _create_result(self, users: list[User], me: User) -> list[dict]:
         results = []
         for user in users:
-            results.append(user.get_public_properties())
+            result = user.get_public_properties(me=me)
+            results.append(result)
 
         return results
 
@@ -308,4 +311,4 @@ class UpdateUserV1API(LoggedInAPI):
 
     class Response:
         def __init__(self, user: User):
-            self.user = user.get_public_full_properties()
+            self.user = user.get_public_full_properties(me=user)
