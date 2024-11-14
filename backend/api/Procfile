@@ -1,2 +1,2 @@
 release: python src/app/manage.py migrate
-web: gunicorn app.wsgi
+web: gunicorn src.app.app.wsgi
