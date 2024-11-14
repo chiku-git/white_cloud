@@ -2,5 +2,5 @@
 *.pyc
 __pycache__/
 db-volumes/
-*.sqlite3
+# *.sqlite3
 **/media/**/*
