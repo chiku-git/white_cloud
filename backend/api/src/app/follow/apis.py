@@ -4,7 +4,7 @@ from common.models.errors import UserNotExistsError, ValidationFailedError
 from common.models.responses import APISuccessResponse
 
 from .models import Follow
-from .serializers import FollowSerializer
+from .serializers import FollowListSerializer, FollowSerializer
 
 
 class FollowV1API(LoggedInAPI):
@@ -92,3 +92,79 @@ class UnFollowV1API(LoggedInAPI):
     class Response:
         def __init__(self, user: User, me: User) -> None:
             self.user = user.get_public_properties(me=me)
+
+
+class GetFollowListV1APIBase(LoggedInAPI):
+    """フォロワーリスト取得API基底クラス"""
+
+    MAX_SIZE = 100
+    PAGE_SIZE = 20
+    MAX_PAGE = MAX_SIZE / PAGE_SIZE  # 1検索ワードあたり最大100投稿
+
+    def post(self, request, *args, **kwargs):
+        serializer = FollowListSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            user_id = serializer.validated_data["userId"]
+
+            # ユーザー取得
+            user = User.objects.filter(id=user_id).first()
+            # check: ユーザは存在するか
+            if user is None:
+                raise UserNotExistsError()
+
+            # フォロワーを取得する
+            page = serializer.validated_data["page"]
+            start = page * self.PAGE_SIZE
+            end = start + self.PAGE_SIZE
+
+            follow_list = self.get_query(user=user).order_by("-created_at")[start:end]
+
+            # 返却
+            return APISuccessResponse(
+                body=self.get_follow_list(follow_list=follow_list)
+            )
+
+    def get_query(self, user: User):
+        pass
+
+    def get_follow_list(self, follow_list: list[Follow]):
+        pass
+
+
+class GetFollowersV1API(GetFollowListV1APIBase):
+    """フォロワーユーザー取得API"""
+
+    def get_query(self, user: User):
+        return user.follow_to
+
+    def get_follow_list(self, follow_list: list[Follow]):
+        return GetFollowersV1API.Response(follow_list=follow_list)
+
+    class Response:
+        def __init__(self, follow_list: list[Follow]) -> None:
+            self.followers = list(
+                map(
+                    lambda follower: follower.by.get_public_properties(me=follower.by),
+                    follow_list,
+                )
+            )
+
+
+class GetFollowingV1API(GetFollowListV1APIBase):
+    """フォロー中ユーザー取得API"""
+
+    def get_query(self, user: User):
+        return user.follow_by
+
+    def get_follow_list(self, follow_list: list[Follow]):
+        return GetFollowingV1API.Response(follow_list=follow_list)
+
+    class Response:
+        def __init__(self, follow_list: list[Follow]) -> None:
+            self.following = list(
+                map(
+                    lambda follow: follow.to.get_public_properties(me=follow.by),
+                    follow_list,
+                )
+            )

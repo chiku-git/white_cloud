@@ -1,5 +1,5 @@
 from django.urls import path
-from follow.apis import FollowV1API, UnFollowV1API
+from follow.apis import FollowV1API, GetFollowersV1API, GetFollowingV1API, UnFollowV1API
 
 from app import settings
 
@@ -22,6 +22,8 @@ urlpatterns = [
     path("search/users/v1/", SearchUserV1API.as_view()),
     path("follow/v1/", FollowV1API.as_view()),
     path("unfollow/v1/", UnFollowV1API.as_view()),
+    path("followers/v1/", GetFollowersV1API.as_view()),
+    path("following/v1/", GetFollowingV1API.as_view()),
 ]
 
 if settings.DEBUG:
