@@ -16,3 +16,16 @@ class FollowInfo {
 
   Map<String, dynamic> toJson() => _$FollowInfoToJson(this);
 }
+
+class FollowInfoConverter extends JsonConverter<FollowInfo, Map<String, dynamic>> {
+  @override
+  FollowInfo fromJson(Map<String, dynamic> json) {
+    return FollowInfo.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson(FollowInfo object) {
+    return object.toJson();
+  }
+
+}

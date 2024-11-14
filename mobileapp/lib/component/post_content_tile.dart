@@ -1,5 +1,4 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/view/post_detail_page.dart';
 
 class PostContentTile extends ConsumerStatefulWidget {
   final PostDigest digest;

@@ -46,6 +46,11 @@ class Strings {
   static const following = "フォロー中";
   static const noFavorite = "お気に入りはありません";
   static const editingProfile = "プロフィール編集";
+  static const followers = "フォロワー";
+  static const hasNotFollowers = "フォロワーはいません";
+  static const followings = "フォロー中";
+  static const followings2 = "フォロー";
+  static const hasNotFollowings = "フォローしているユーザーはいません";
 
   // エラー
   static const systemErrorMessage = "システムエラーが発生しました。しばらく待ってから再度お試しください。";

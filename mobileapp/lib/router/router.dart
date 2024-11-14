@@ -1,5 +1,5 @@
 import 'package:white_cloud/importer.dart';
-import 'package:white_cloud/view/post_detail_page.dart';
+
 
 class AppRouter {
   static AppRouter of({required RouteSettings settings}) {
@@ -43,6 +43,9 @@ class AppRouter {
       case PostDetailPage.path:
         final digest = settings.arguments as PostDigest;
         return _getDefaultRouter(page: PostDetailPage(digest: digest));
+      case FollowPage.path:
+        final ivo = settings.arguments as FollowPageIvo;
+        return _getDefaultRouter(page: FollowPage(ivo: ivo));
       default:
         return null;
     }

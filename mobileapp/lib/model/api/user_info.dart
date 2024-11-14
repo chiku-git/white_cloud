@@ -1,10 +1,11 @@
 import 'package:white_cloud/importer.dart';
 
 part 'user_info.freezed.dart';
-part 'user_info.g.dart';
 
 @freezed
-class UserInfo with _$UserInfo {
+abstract class UserInfo with _$UserInfo {
+  UserInfo._();
+
   factory UserInfo({
     required String id,
     required String userName,
@@ -18,9 +19,44 @@ class UserInfo with _$UserInfo {
   }) = _UserInfo;
 
   factory UserInfo.fromJson(json) {
-    if (json["follow_info"].runtimeType == FollowInfo) {
-      json["follow_info"] = json["follow_info"].toJson();
-    }
-    return _$UserInfoFromJson(json);
+    return UserInfo(
+        id: json["id"],
+        userName: json["userName"],
+        email: json["email"],
+        bio: json["bio"],
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
+        lastLoginAt: json["lastLoginAt"],
+        image: json["image"],
+        followInfo: () {
+          final map = json["follow_info"];
+
+          if (map != null) {
+            if (map is Map<String, dynamic>) {
+              return FollowInfo.fromJson(json["follow_info"]);
+            } else if (map is FollowInfo) {
+              return map;
+            } else {
+              return null;
+            }
+          } else {
+            return null;
+          }
+        }()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "userName": userName,
+      "email": email,
+      "bio": bio,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
+      "lastLoginAt": lastLoginAt,
+      "image": image,
+      "follow_info": followInfo?.toJson(),
+    };
   }
 }

@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-UserInfo _$UserInfoFromJson(Map<String, dynamic> json) {
-  return _UserInfo.fromJson(json);
-}
-
 /// @nodoc
 mixin _$UserInfo {
   String get id => throw _privateConstructorUsedError;
@@ -31,7 +27,6 @@ mixin _$UserInfo {
   @JsonKey(name: "follow_info")
   FollowInfo? get followInfo => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserInfoCopyWith<UserInfo> get copyWith =>
       throw _privateConstructorUsedError;
@@ -201,8 +196,8 @@ class __$$UserInfoImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$UserInfoImpl implements _UserInfo {
+
+class _$UserInfoImpl extends _UserInfo {
   _$UserInfoImpl(
       {required this.id,
       required this.userName,
@@ -212,10 +207,8 @@ class _$UserInfoImpl implements _UserInfo {
       required this.createdAt,
       required this.updatedAt,
       required this.lastLoginAt,
-      @JsonKey(name: "follow_info") this.followInfo});
-
-  factory _$UserInfoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserInfoImplFromJson(json);
+      @JsonKey(name: "follow_info") this.followInfo})
+      : super._();
 
   @override
   final String id;
@@ -263,7 +256,6 @@ class _$UserInfoImpl implements _UserInfo {
                 other.followInfo == followInfo));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userName, email, bio, image,
       createdAt, updatedAt, lastLoginAt, followInfo);
@@ -273,16 +265,9 @@ class _$UserInfoImpl implements _UserInfo {
   @pragma('vm:prefer-inline')
   _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>
       __$$UserInfoImplCopyWithImpl<_$UserInfoImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$UserInfoImplToJson(
-      this,
-    );
-  }
 }
 
-abstract class _UserInfo implements UserInfo {
+abstract class _UserInfo extends UserInfo {
   factory _UserInfo(
           {required final String id,
           required final String userName,
@@ -294,9 +279,7 @@ abstract class _UserInfo implements UserInfo {
           required final String lastLoginAt,
           @JsonKey(name: "follow_info") final FollowInfo? followInfo}) =
       _$UserInfoImpl;
-
-  factory _UserInfo.fromJson(Map<String, dynamic> json) =
-      _$UserInfoImpl.fromJson;
+  _UserInfo._() : super._();
 
   @override
   String get id;

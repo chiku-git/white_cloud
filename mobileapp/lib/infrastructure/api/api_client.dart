@@ -267,6 +267,34 @@ class ApiClient {
     }
   }
 
+  /// フォロワーを取得する
+  Future<ApiResult<FetchFollowersResponse>> fetchFollowers({
+    required FetchFollowListRequest request,
+  }) async {
+    try {
+      final response = await _request<FetchFollowersResponse>((cancelToken) {
+        return  _service.fetchFollowers(_authorization, request, cancelToken);
+      });
+      return ApiResult<FetchFollowersResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<FetchFollowersResponse>(error: error);
+    }
+  }
+
+  /// フォローを取得する
+  Future<ApiResult<FetchFollowingResponse>> fetchFollowing({
+    required FetchFollowListRequest request,
+  }) async {
+    try {
+      final response = await _request<FetchFollowingResponse>((cancelToken) {
+        return  _service.fetchFollowing(_authorization, request, cancelToken);
+      });
+      return ApiResult<FetchFollowingResponse>.onSuccess(response.data!);
+    } catch (error) {
+      return _handleCommonError<FetchFollowingResponse>(error: error);
+    }
+  }
+
   Future<ApiResponse<T>> _request<T>(Function(CancelToken) caller) async {
     // リクエスト前処理
     final cancelToken = CancelToken();

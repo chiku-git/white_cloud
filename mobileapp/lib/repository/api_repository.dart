@@ -243,5 +243,31 @@ class ApiRepository {
     );
   }
 
+  /// フォローを取得する
+  Future<ApiResult<FetchFollowingResponse>> fetchFollowing({
+    required String userId,
+    required int page,
+  }) async {
+    return await _client.fetchFollowing(
+      request: FetchFollowListRequest(
+          userId: userId,
+          page: page,
+      ),
+    );
+  }
+
+  /// フォロワーを取得する
+  Future<ApiResult<FetchFollowersResponse>> fetchFollowers({
+    required String userId,
+    required int page,
+  }) async {
+    return await _client.fetchFollowers(
+      request: FetchFollowListRequest(
+        userId: userId,
+        page: page,
+      ),
+    );
+  }
+
   cancelAllRequests() => _client.cancelAllRequests();
 }

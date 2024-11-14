@@ -47,7 +47,7 @@ class _Body extends StatelessWidget {
       child: Column(
         children: [
           _UserProfileWidget(),
-          Margin.vertical(15),
+          Margin.vertical(5),
           _FollowingInfoWidget(),
           Margin.vertical(15),
           _UserPostsWidget(),
@@ -140,17 +140,44 @@ class _EditProfileButton extends ConsumerWidget {
 class _FollowingInfoWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userViewModelProvider).user;
     return SizedBox(
       width: double.infinity,
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.start,
         spacing: 10,
         children: [
-          Text("${user.followInfo?.following ?? 0} フォロー"),
-          Text("${user.followInfo?.followers ?? 0} フォロワー"),
+          _FollowingListButton(),
+          _FollowerListButton(),
         ],
       ),
+    );
+  }
+}
+
+class _FollowerListButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userViewModelProvider).user;
+    return TextButton(
+        onPressed: () {
+          final ivo = FollowPageIvo(user: user, initialPageIndex: 1);
+          Navigator.of(context).pushNamed(FollowPage.path, arguments: ivo);
+        },
+        child: Text("${user.followInfo?.followers ?? 0} ${Strings.followers}")
+    );
+  }
+}
+
+class _FollowingListButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userViewModelProvider).user;
+    return TextButton(
+        onPressed: () {
+          final ivo = FollowPageIvo(user: user, initialPageIndex: 0);
+          Navigator.of(context).pushNamed(FollowPage.path, arguments: ivo);
+        },
+        child: Text("${user.followInfo?.following ?? 0} ${Strings.followings2}")
     );
   }
 }

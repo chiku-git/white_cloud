@@ -115,4 +115,18 @@ abstract class ApiService {
       @Header('Authorization') String token,
       @Body() UnFollowRequest request,
       @CancelRequest() CancelToken cancelToken);
+
+  /// フォロワー取得API
+  @POST('/account/followers/v1/')
+  Future<ApiResponse<FetchFollowersResponse>> fetchFollowers(
+      @Header('Authorization') String token,
+      @Body() FetchFollowListRequest request,
+      @CancelRequest() CancelToken cancelToken);
+
+  /// フォロー中ユーザー取得API
+  @POST('/account/following/v1/')
+  Future<ApiResponse<FetchFollowingResponse>> fetchFollowing(
+      @Header('Authorization') String token,
+      @Body() FetchFollowListRequest request,
+      @CancelRequest() CancelToken cancelToken);
 }
