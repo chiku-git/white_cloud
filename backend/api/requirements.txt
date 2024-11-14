@@ -5,3 +5,4 @@ django-filter
 Pillow
 pytz
 drf-extra-fields
+gunicorn
